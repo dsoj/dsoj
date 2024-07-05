@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "child_process": "^1.0.2",
-    "mongo": "^0.1.0",
+    "mongodb": "^6.8.0",
     "next": "14.2.4",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18"

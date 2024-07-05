@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 export default function NavLayout() {
     const router = useRouter();
-    console.log(router.pathname);
+    console.log(router.pathname);  // TODO: remove this line
     return (
         <Navbar bg="light" expand="md">
             <Container>

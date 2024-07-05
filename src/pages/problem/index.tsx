@@ -1,26 +1,22 @@
-import { Card, Table, Spinner } from "react-bootstrap";
-// import { Link } from "next/link";
-import { genFullUrl } from "@/constants/url";
-import consts from "@/constants/url";
-import { IProblemListItem } from "@/interface/IProblem";
-import { useEffect, useState } from "react";
+import {Card, Table, Spinner} from "react-bootstrap";
+import {IProblemListItem} from "@/interface/IProblem";
+import Link from "next/link";
 
-import { MongoClient } from "mongodb";
+import {MongoClient} from "mongodb";
 import EnvVars from "@/constants/EnvVars";
+import Layout from "@/components/Layout";
 
-
-
-export default function Problem({problems} : {problems: IProblemListItem[]}) {
+export default function ProblemList({problems}: {problems: IProblemListItem[]}) {
     function genTableElement(index: number, args: IProblemListItem) {
         return (
             <tr>
-                <td className="pl-4" style={{ color: "var(--bs-gray-dark)" }}>
+                <td className='pl-4' style={{color: "var(--bs-gray-dark)"}}>
                     <span>{index}</span>
                 </td>
 
                 <td>
                     <Link
-                        href={args.id}
+                        href={`/problem/${args.id}`}
                         style={{
                             fontSize: "1.25rem",
                             textDecoration: "none",
@@ -28,50 +24,50 @@ export default function Problem({problems} : {problems: IProblemListItem[]}) {
                             fontWeight: "bold",
                         }}
                     >
-                        <span style={{ fontWeight: "normal !important" }}>
+                        <span style={{fontWeight: "normal !important"}}>
                             {args.title}
                         </span>
                     </Link>
                 </td>
                 <td>
-                    <span className="text-muted">
+                    <span className='text-muted'>
                         {args.accessed / args.challenged}
                     </span>
                 </td>
-                <td style={{ color: "#e5053a" }}>
+                <td style={{color: "#e5053a"}}>
                     <strong>{args.difficulty}</strong>
                 </td>
                 <td>
                     <span>{args.tags.toString()}</span>
                 </td>
             </tr>
-        );
+        )
     }
 
     function TableContent() {
-        console.log(problems)
         let TableElements = problems.map(
             (item: IProblemListItem, index: number) =>
                 genTableElement(index, item)
-        )
+        );
         return (
             <tbody>
                 {TableElements.length != 0 ? (
                     TableElements
                 ) : (
-                    <Spinner animation="border" variant="primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                    <Spinner animation='border' variant='primary' role='status'>
+                        <span className='visually-hidden'>Loading...</span>
                     </Spinner>
                 )}
             </tbody>
-        )
+        );
     }
 
     return (
+        <Layout>
         <Card>
             <Card.Header>
                 <Card.Title
-                    className="text-uppercase card-title mb-0"
+                    className='text-uppercase card-title mb-0'
                     style={{
                         marginTop: "1rem",
                         marginBottom: "1rem!important",
@@ -82,7 +78,7 @@ export default function Problem({problems} : {problems: IProblemListItem[]}) {
             </Card.Header>
 
             <input
-                type="search"
+                type='search'
                 style={{
                     background:
                         "url(&quot;https://icons.getbootstrap.com/assets/icons/search.svg&quot;) 8px no-repeat, var(--bs-gray-200)",
@@ -91,7 +87,7 @@ export default function Problem({problems} : {problems: IProblemListItem[]}) {
                     borderRadius: "5px",
                     width: "15rem",
                 }}
-                placeholder="Search titles or tags"
+                placeholder='Search titles or tags'
             />
 
             <Card.Body>
@@ -99,36 +95,36 @@ export default function Problem({problems} : {problems: IProblemListItem[]}) {
                     <thead>
                         <tr>
                             <th
-                                className="text-uppercase border-0 font-medium pl-4"
-                                scope="col"
-                                style={{ width: "2rem" }}
+                                className='text-uppercase border-0 font-medium pl-4'
+                                scope='col'
+                                style={{width: "2rem"}}
                             >
                                 #
                             </th>
                             <th
-                                className="text-uppercase border-0 font-medium"
-                                scope="col"
+                                className='text-uppercase border-0 font-medium'
+                                scope='col'
                             >
                                 Name
                             </th>
                             <th
-                                className="text-uppercase border-0 font-medium"
-                                scope="col"
-                                style={{ width: "7rem" }}
+                                className='text-uppercase border-0 font-medium'
+                                scope='col'
+                                style={{width: "7rem"}}
                             >
                                 Acceptance
                             </th>
                             <th
-                                className="text-uppercase border-0 font-medium"
-                                scope="col"
-                                style={{ width: "7rem" }}
-                                >
+                                className='text-uppercase border-0 font-medium'
+                                scope='col'
+                                style={{width: "7rem"}}
+                            >
                                 Difficulty
                             </th>
                             <th
-                                className="text-uppercase border-0 font-medium"
-                                scope="col"
-                                style={{ width: "10rem" }}
+                                className='text-uppercase border-0 font-medium'
+                                scope='col'
+                                style={{width: "10rem"}}
                             >
                                 Tags
                             </th>
@@ -138,49 +134,27 @@ export default function Problem({problems} : {problems: IProblemListItem[]}) {
                 </Table>
             </Card.Body>
         </Card>
-    )
+        </Layout>
+    );
 }
 
-export const GetServerSideProps = async () => {
+export async function getServerSideProps() {
     const mongoURI = EnvVars.DB.URI;
+    console.log(mongoURI);
     const mongo = new MongoClient(mongoURI);
-        
-    let problems = await mongo
+
+    let problemData = (await mongo
         .db("Judge")
         .collection("Problems")
-        .find({}, { projection: { _id: 0, details: 0 } })
+        .find({}, {projection: {_id: 0, details: 0}})
         .toArray()
         .catch((err) => {
             console.error(err);
             return [];
-        }) as IProblemListItem[]
-        
-    console.log(1);
-
+        })) as IProblemListItem[];
     return {
         props: {
-            problems,
+            problems: problemData,
         },
     };
-
 }
-
-// export const GetServerSideProps() = async () => {
-//     const mongoURI = EnvVars.DB.URI;
-//     const mongo = new MongoClient(mongoURI);
-        
-//     let problemData = await mongo
-//         .db("Judge")
-//         .collection("Problems")
-//         .find({}, { projection: { _id: 0, details: 0 } })
-//         .toArray()
-//         .catch((err) => {
-//             console.error(err);
-//             return [];
-//         }) as IProblemListItem[]
-//     return {
-//         props: {
-//             problems: problemData,
-//         },
-//     };
-// }
