@@ -6,9 +6,8 @@ import EnvVars from "@/constants/EnvVars";
 export default async function handler(req: any, res: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
-    
+
     if (req.method !== "POST") return res.status(404);
-        console.log(req.body)
         const loginForm: ILoginForm = req.body;
         const { name, password } = loginForm;
 
