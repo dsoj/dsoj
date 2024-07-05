@@ -1,16 +1,17 @@
-import {Card, Table, Spinner} from "react-bootstrap";
-import {IProblemListItem} from "@/interface/IProblem";
+import { Card, Table, Spinner } from "react-bootstrap";
+import { IProblemListItem } from "@/interface/IProblem";
 import Link from "next/link";
 
-import {MongoClient} from "mongodb";
+import { MongoClient } from "mongodb";
 import EnvVars from "@/constants/EnvVars";
 import Layout from "@/components/Layout";
+import { getSession } from "@/lib/session";
 
-export default function ProblemList({problems}: {problems: IProblemListItem[]}) {
+export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
     function genTableElement(index: number, args: IProblemListItem) {
         return (
             <tr>
-                <td className='pl-4' style={{color: "var(--bs-gray-dark)"}}>
+                <td className='pl-4' style={{ color: "var(--bs-gray-dark)" }}>
                     <span>{index}</span>
                 </td>
 
@@ -24,7 +25,7 @@ export default function ProblemList({problems}: {problems: IProblemListItem[]}) 
                             fontWeight: "bold",
                         }}
                     >
-                        <span style={{fontWeight: "normal !important"}}>
+                        <span style={{ fontWeight: "normal !important" }}>
                             {args.title}
                         </span>
                     </Link>
@@ -34,7 +35,7 @@ export default function ProblemList({problems}: {problems: IProblemListItem[]}) 
                         {args.accessed / args.challenged}
                     </span>
                 </td>
-                <td style={{color: "#e5053a"}}>
+                <td style={{ color: "#e5053a" }}>
                     <strong>{args.difficulty}</strong>
                 </td>
                 <td>
@@ -45,10 +46,11 @@ export default function ProblemList({problems}: {problems: IProblemListItem[]}) 
     }
 
     function TableContent() {
-        let TableElements = problems.map(
-            (item: IProblemListItem, index: number) =>
-                genTableElement(index, item)
-        );
+        let TableElements: React.JSX.Element[] = [];
+        for (let i = 0; i < problems.length; i++) {
+            TableElements.push(genTableElement(i, problems[i]));
+        }
+
         return (
             <tbody>
                 {TableElements.length != 0 ? (
@@ -64,88 +66,90 @@ export default function ProblemList({problems}: {problems: IProblemListItem[]}) 
 
     return (
         <Layout>
-        <Card>
-            <Card.Header>
-                <Card.Title
-                    className='text-uppercase card-title mb-0'
+            <Card>
+                <Card.Header>
+                    <Card.Title
+                        className='text-uppercase card-title mb-0'
+                        style={{
+                            marginTop: "1rem",
+                            marginBottom: "1rem!important",
+                        }}
+                    >
+                        problems
+                    </Card.Title>
+                </Card.Header>
+
+                <input
+                    type='search'
                     style={{
-                        marginTop: "1rem",
-                        marginBottom: "1rem!important",
+                        background:
+                            "url(&quot;https://icons.getbootstrap.com/assets/icons/search.svg&quot;) 8px no-repeat, var(--bs-gray-200)",
+                        paddingLeft: "calc(1.4rem + 8px)",
+                        borderStyle: "none",
+                        borderRadius: "5px",
+                        width: "15rem",
                     }}
-                >
-                    problems
-                </Card.Title>
-            </Card.Header>
+                    placeholder='Search titles or tags'
+                />
 
-            <input
-                type='search'
-                style={{
-                    background:
-                        "url(&quot;https://icons.getbootstrap.com/assets/icons/search.svg&quot;) 8px no-repeat, var(--bs-gray-200)",
-                    paddingLeft: "calc(1.4rem + 8px)",
-                    borderStyle: "none",
-                    borderRadius: "5px",
-                    width: "15rem",
-                }}
-                placeholder='Search titles or tags'
-            />
-
-            <Card.Body>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th
-                                className='text-uppercase border-0 font-medium pl-4'
-                                scope='col'
-                                style={{width: "2rem"}}
-                            >
-                                #
-                            </th>
-                            <th
-                                className='text-uppercase border-0 font-medium'
-                                scope='col'
-                            >
-                                Name
-                            </th>
-                            <th
-                                className='text-uppercase border-0 font-medium'
-                                scope='col'
-                                style={{width: "7rem"}}
-                            >
-                                Acceptance
-                            </th>
-                            <th
-                                className='text-uppercase border-0 font-medium'
-                                scope='col'
-                                style={{width: "7rem"}}
-                            >
-                                Difficulty
-                            </th>
-                            <th
-                                className='text-uppercase border-0 font-medium'
-                                scope='col'
-                                style={{width: "10rem"}}
-                            >
-                                Tags
-                            </th>
-                        </tr>
-                    </thead>
-                    <TableContent />
-                </Table>
-            </Card.Body>
-        </Card>
+                <Card.Body>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th
+                                    className='text-uppercase border-0 font-medium pl-4'
+                                    scope='col'
+                                    style={{ width: "2rem" }}
+                                >
+                                    #
+                                </th>
+                                <th
+                                    className='text-uppercase border-0 font-medium'
+                                    scope='col'
+                                >
+                                    Name
+                                </th>
+                                <th
+                                    className='text-uppercase border-0 font-medium'
+                                    scope='col'
+                                    style={{ width: "7rem" }}
+                                >
+                                    Acceptance
+                                </th>
+                                <th
+                                    className='text-uppercase border-0 font-medium'
+                                    scope='col'
+                                    style={{ width: "7rem" }}
+                                >
+                                    Difficulty
+                                </th>
+                                <th
+                                    className='text-uppercase border-0 font-medium'
+                                    scope='col'
+                                    style={{ width: "10rem" }}
+                                >
+                                    Tags
+                                </th>
+                            </tr>
+                        </thead>
+                        <TableContent />
+                    </Table>
+                </Card.Body>
+            </Card>
         </Layout>
     );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req, res }: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
+    const session = await getSession(req, res);
+    console.log(session)
 
     let problemData = (await mongo
         .db("Judge")
         .collection("Problems")
-        .find({}, {projection: {_id: 0, details: 0}})
+        .find({}, { projection: { _id: 0, details: 0 } })
         .toArray()
         .catch((err) => {
             console.error(err);

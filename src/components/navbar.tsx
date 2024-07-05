@@ -41,6 +41,7 @@ export default function NavLayout() {
                         </NavItem>
                     </Nav>
                     <Button variant="primary" href="/login">Login</Button> 
+                    {/*TODO: Login/Logout */}
                 </Navbar.Collapse>
 
             </Container>

@@ -1,12 +1,10 @@
-import { useRouter } from 'next/router';
 import { MongoClient } from "mongodb";
 import Layout from '@/components/Layout';
 
 import EnvVars from "@/constants/EnvVars";
-import { ReactElement } from 'react';
 
 export default function ProblemDetail({ problemDetail }: any) { //TODO: add problemDetail's Interface
-    const { id, title, details, samples, tags, difficulty, accessed, challenged } = problemDetail;
+    const { id, title, details, samples, tags, difficulty, accessed, challenged } = problemDetail; // TODO: add more fields
 
     function GenExamples() {
         let renderElement: React.JSX.Element[] = [];
