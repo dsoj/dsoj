@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default function Judge0() {
 
 }
@@ -26,6 +28,25 @@ function submit_judge(id: number, lang: number, code: string){
 
     }]
 
+    // postMessage("http://localhost:2358/submissions/?wait=false", attr={})
+    const car: { type: string, model: string, year: number } = {
+        type: "Toyota",
+        model: "Corolla",
+        year: 2009
+    };
+    let data: any = {
+        "submissions": [
+            {
+                "language_id": 71,
+                "source_code": "print(\"hello\")",
+                "expected_output": "hello\n\n"
+            }
+        ]
+    };
+
+    axios.post("http://localhost:2358/submissions/batch?wait=false",)
+    
+    
     Judge0.submissions.batch(~~~)
     save tokens
     

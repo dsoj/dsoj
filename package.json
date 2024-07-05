@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "child_process": "^1.0.2",

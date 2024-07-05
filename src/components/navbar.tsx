@@ -9,6 +9,8 @@ import Image from 'next/image';
 export default function NavLayout() {
     const router = useRouter();
     console.log(router.pathname);  // TODO: remove this line
+    // TODO: Add NavItem color by checking path
+    // TODO: navbar sticky top
     return (
         <Navbar bg="light" expand="md">
             <Container>

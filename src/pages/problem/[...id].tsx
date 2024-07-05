@@ -7,7 +7,6 @@ import { ReactElement } from 'react';
 
 export default function ProblemDetail({ problemDetail }: any) { //TODO: add problemDetail's Interface
     const { id, title, details, samples, tags, difficulty, accessed, challenged } = problemDetail;
-    console.log(problemDetail.details);
 
     function GenExamples() {
         let renderElement: React.JSX.Element[] = [];
@@ -72,8 +71,6 @@ export async function getServerSideProps(context: any) {
             console.error(err);
             return [];
         }))
-
-    console.log(problemDetail);
     return {
         props: {
             problemDetail,

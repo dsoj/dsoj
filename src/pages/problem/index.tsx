@@ -140,7 +140,6 @@ export default function ProblemList({problems}: {problems: IProblemListItem[]}) 
 
 export async function getServerSideProps() {
     const mongoURI = EnvVars.DB.URI;
-    console.log(mongoURI);
     const mongo = new MongoClient(mongoURI);
 
     let problemData = (await mongo

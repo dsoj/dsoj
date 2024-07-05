@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Login() {
     return (
+        // TODO: Elements have to be convert to react-bootstrap components
         <div className="position-relative py-4 py-xl-5">
             <div className="container">
                 <div className="row d-flex justify-content-center">
