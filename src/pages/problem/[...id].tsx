@@ -10,7 +10,7 @@ export default function ProblemDetail({ problemDetail }: any) { //TODO: add prob
             <ErrorPage statusCode={404} />
         )
     }
-    const { id, title, details, samples, tags, difficulty, accepted, submissions } = problemDetail; // TODO: add more fields
+    const { id, title, details, samples, tags, difficulty, accepted, submissions } = problemDetail;
 
     function GenExamples() {
         let renderElement: React.JSX.Element[] = [];
