@@ -1,4 +1,4 @@
-import { Card, Table, Spinner } from "react-bootstrap";
+import { Card, Table, Spinner, Button } from "react-bootstrap";
 import { IProblemListItem } from "@/interface/IProblem";
 import Link from "next/link";
 
@@ -6,18 +6,29 @@ import { MongoClient } from "mongodb";
 import EnvVars from "@/constants/EnvVars";
 import Layout from "@/components/Layout";
 import { getSession } from "@/lib/session";
+import { difficulty_text, DifficultyElement } from "@/lib/problem";
 
 export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
+    function genTagElement(tag: string) {
+        return (
+            <Button className="btn btn-primary" type="button" href={`/tag/${tag}`} key={tag} style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", background: "rgb(190,190,190)", borderStyle: "none", borderTopStyle: "none" }}>
+                #{tag}
+            </Button>
+        )
+    }
+
+
     function genTableElement(index: number, args: IProblemListItem) {
+        const { id, title, accepted, submissions, difficulty, tags } = problems[index];
         return (
             <tr key={index}>
                 <td className='pl-4' style={{ color: "var(--bs-gray-dark)" }}>
-                    <span>{args.id}</span>
+                    <span>{id}</span>
                 </td>
 
                 <td>
                     <Link
-                        href={`/problem/${args.id}`}
+                        href={`/problem/${id}`}
                         style={{
                             fontSize: "1.25rem",
                             textDecoration: "none",
@@ -26,20 +37,20 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                         }}
                     >
                         <span style={{ fontWeight: "normal !important" }}>
-                            {args.title}
+                            {title}
                         </span>
                     </Link>
                 </td>
                 <td>
                     <span className='text-muted'>
-                        {args.accessed / args.challenged}
+                        {Math.round((100 * accepted) / submissions)}%
                     </span>
                 </td>
                 <td style={{ color: "#e5053a" }}>
-                    <strong>{args.difficulty}</strong>
+                    <DifficultyElement difficulty={difficulty} />
                 </td>
                 <td>
-                    <span>{args.tags.toString()}</span>
+                    <span>{tags.map((item)=>genTagElement(item))}</span>
                 </td>
             </tr>
         )

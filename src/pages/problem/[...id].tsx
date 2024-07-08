@@ -3,8 +3,10 @@ import Layout from '@/components/Layout';
 import ErrorPage from 'next/error';
 
 import EnvVars from "@/constants/EnvVars";
+import {DifficultyElement, TagElement } from "@/lib/problem";
+import { IProblem } from "@/interface/IProblem";
 
-export default function ProblemDetail({ problemDetail }: any) { //TODO: add problemDetail's Interface
+export default function ProblemDetail({ problemDetail }: {problemDetail: IProblem}) {
     if (!problemDetail) {
         return (
             <ErrorPage statusCode={404} />
@@ -40,35 +42,11 @@ export default function ProblemDetail({ problemDetail }: any) { //TODO: add prob
         )
     }
 
-    function GenDificulty() {
-        let difficulty_text = "";
-        switch (difficulty) {
-            case 0:
-                difficulty_text = "Easy";
-                break;
-            case 1:
-                difficulty_text = "Medium";
-                break;
-            case 2:
-                difficulty_text = "Hard";
-                break;
-            }
-            return (
-                <button className="btn btn-warning" type="button" style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", borderStyle: "none", borderTopStyle: "none" }}>
-                    {difficulty_text}
-                </button>
-            )
-    }
-
     function GenTags() {
         let renderElement: React.JSX.Element[] = [];
         for (let i = 1; i <= tags.length; i++) {
             const tag = tags[i - 1];
-            renderElement.push(
-                <button className="btn btn-primary" type="button" key={i} style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", background: "rgb(190,190,190)", borderStyle: "none", borderTopStyle: "none" }}>
-                    #{tag}
-                </button>
-            )
+            renderElement.push(TagElement(tag));
         }
 
         return renderElement;
@@ -87,7 +65,7 @@ export default function ProblemDetail({ problemDetail }: any) { //TODO: add prob
                         </a>
                     </h2>
                     <div style={{ marginBottom: "1rem" }}>
-                        <GenDificulty />
+                        <DifficultyElement difficulty={difficulty} />
                         <GenTags />
                     </div>
                     <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}> {details} </span>

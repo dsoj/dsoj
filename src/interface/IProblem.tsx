@@ -1,27 +1,20 @@
 export interface IProblemListItem {
     id: string;
     title: string;
+    accepted: number;
+    submissions: number;
+    challenged: number;
     difficulty: number;
     tags: string[];
-    accessed: number;
-    challenged: number;
 }
 
-export interface Problem {
-    id: number;
+export interface IProblem {
+    id: string;
     title: string;
-    description: string;
-    inputDescription: string;
-    outputDescription: string;
-    samples?: any[];
-    timeLimit: number;
-    memoryLimit: number;
-    createdAt: Date;
-    tags: string[];
-    updatedAt?: Date;
+    details: string;
     difficulty: number;
-    records: {
-        accepted: number;
-        submissions: number;
-    }
+    tags: string[];
+    samples: { input: string, output: string }[];
+    accepted: number;
+    submissions: number;
 }
