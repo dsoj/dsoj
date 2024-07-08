@@ -37,7 +37,7 @@ export default function NavLayout() {
                             <NavLink href="#">About</NavLink>
                         </NavItem>
                     </Nav>
-                    <Button variant="primary" href="/login">Login</Button>
+                    <Button variant="primary" href="/login">Log in</Button>
                     {/*TODO: Login/Logout */}
                 </Navbar.Collapse>
 
