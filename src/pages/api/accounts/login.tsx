@@ -1,9 +1,9 @@
 import { ILoginForm } from "@/interface/IUser";
 import bcrypt from "bcryptjs";
-import { getSession } from "@/lib/session";
 import client from "@/lib/db";
+import { getSession } from "@/lib/session";
 
-export default async function handler(req: any, res: any) {
+export default async function LoginApiHandler(req: any, res: any) {
     if (req.method !== "POST") return res.status(404);
 
     const loginForm: ILoginForm = req.body;

@@ -3,7 +3,7 @@ import client from "@/lib/db";
 import axios from "axios";
 
 const url = EnvVars.judge0.host + "/submissions/batch";
-export default async function handler(req: any, res: any) {
+export default async function SubmitApiHandler(req: any, res: any) {
     if (req.method !== "POST") return res.status(404);
 
     const { id, code, language_id } = req.body;

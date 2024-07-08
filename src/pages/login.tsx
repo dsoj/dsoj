@@ -4,14 +4,16 @@ import { useState } from 'react';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import HeadComponent from '@/components/head';
+import apiUrl from '@/constants/apiUrl';
 
 export default function Login(req: any, res: any) {
+    const url = apiUrl.accounts.login;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
     async function Login() {
-        await fetch('/api/login', {
+        await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ export default function Login(req: any, res: any) {
                     <div className="col-md-6 col-xl-4">
                         <div className="card mb-5">
                             <div className="card-body d-flex flex-column align-items-center">
-                                <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo" /> Log in</h2>
+                                <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo"/> Log in</h2>
                                 <form className="text-center" method="post">
                                     <p style={{ color: "red" }}>{message}</p>
                                     <div className="mb-3">
