@@ -37,7 +37,7 @@ export default function Login(req: any, res: any) {
                     <div className="col-md-6 col-xl-4">
                         <div className="card mb-5">
                             <div className="card-body d-flex flex-column align-items-center">
-                                <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo" />&nbsp; Log in</h2>
+                                <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo" /> Log in</h2>
                                 <form className="text-center" method="post">
                                     <p style={{color: "red"}}>{message}</p>
                                     <div className="mb-3">
