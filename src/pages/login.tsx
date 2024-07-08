@@ -3,6 +3,7 @@ import logo from '@/assets/logo_s.png';
 import { useState } from 'react';
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import HeadComponent from '@/components/head';
 
 export default function Login(req: any, res: any) {
     const [name, setName] = useState("");
@@ -32,6 +33,7 @@ export default function Login(req: any, res: any) {
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <div className="position-relative py-4 py-xl-5">
+            <HeadComponent />
             <div className="container">
                 <div className="row d-flex justify-content-center">
                     <div className="col-md-6 col-xl-4">
@@ -39,13 +41,13 @@ export default function Login(req: any, res: any) {
                             <div className="card-body d-flex flex-column align-items-center">
                                 <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo" /> Log in</h2>
                                 <form className="text-center" method="post">
-                                    <p style={{color: "red"}}>{message}</p>
+                                    <p style={{ color: "red" }}>{message}</p>
                                     <div className="mb-3">
-                                        <input className="form-control" type="text" name="email" placeholder="Email" value={name} onChange={(e)=>setName(e.target.value)}/>
+                                        <input className="form-control" type="text" name="email" placeholder="Email" value={name} onChange={(e) => setName(e.target.value)} />
                                     </div>
 
                                     <div className="mb-3">
-                                        <input className="form-control" type="password" name="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+                                        <input className="form-control" type="password" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                     </div>
 
                                     <div className="mb-3">
