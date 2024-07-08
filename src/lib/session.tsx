@@ -10,7 +10,7 @@ const store = new MongoDBStore({
     collection: 'Sessions'
 });
 store.on('error', function (err: Error) {
-    console.log(err);
+    console.error(err);
 });
 
 export const getSession = nextSession({
