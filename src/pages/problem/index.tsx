@@ -10,9 +10,9 @@ import { getSession } from "@/lib/session";
 export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
     function genTableElement(index: number, args: IProblemListItem) {
         return (
-            <tr>
+            <tr key={index}>
                 <td className='pl-4' style={{ color: "var(--bs-gray-dark)" }}>
-                    <span>{index}</span>
+                    <span>{args.id}</span>
                 </td>
 
                 <td>
