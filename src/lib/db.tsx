@@ -1,5 +1,5 @@
-import EnvVars from "@/constants/EnvVars"
-import { MongoClient, ServerApiVersion } from "mongodb"
+import EnvVars from "@/constants/EnvVars";
+import { MongoClient, ServerApiVersion } from "mongodb";
 
  
 const uri = EnvVars.DB.URI
@@ -9,12 +9,11 @@ const options = {
     strict: true,
     deprecationErrors: true,
   },
-}
+};
  
 let client
-let clientPromise: Promise<MongoClient>
  
-if (process.env.NODE_ENV === "development") {
+if (EnvVars.NodeEnv === "development") {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
   let globalWithMongo = global as typeof globalThis & {

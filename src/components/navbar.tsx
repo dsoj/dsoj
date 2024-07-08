@@ -5,11 +5,8 @@ import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
 
 
-
 export default function NavLayout() {
     const router = useRouter();
-    console.log(router.pathname);  // TODO: remove this line
-    // TODO: Add NavItem color by checking path
     // TODO: navbar sticky top
     return (
         <Navbar bg="light" expand="md">
@@ -20,12 +17,12 @@ export default function NavLayout() {
                 </Navbar.Brand>
 
                 <Navbar.Toggle />
-                
+
                 <Navbar.Collapse>
-                    <Nav className="mx-auto">
+                    <Nav className="mx-auto" activeKey={router.pathname}>
                         {/* TODO: Add NavItem color by checking path */}
                         <NavItem>
-                            <NavLink href="/">Overview</NavLink>
+                            <NavLink href="/">Home</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/problem">Problems</NavLink>
@@ -40,7 +37,7 @@ export default function NavLayout() {
                             <NavLink href="#">About</NavLink>
                         </NavItem>
                     </Nav>
-                    <Button variant="primary" href="/login">Login</Button> 
+                    <Button variant="primary" href="/login">Login</Button>
                     {/*TODO: Login/Logout */}
                 </Navbar.Collapse>
 
@@ -49,3 +46,5 @@ export default function NavLayout() {
 
     )
 }
+
+
