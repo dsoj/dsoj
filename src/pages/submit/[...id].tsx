@@ -5,9 +5,9 @@ import client from '@/lib/db';
 
 
 import { useState } from "react";
+import { IProblem } from '@/interface/IProblem';
 
-// TODO: fix Module not found: Can't resolve 'child_process'
-export default function ProblemDetail({ problemDetail }: any) { // TODO: add problemDetail's Interface
+export default function ProblemDetail({ problemDetail }: any ){
     if (!problemDetail) {
         return (
             <ErrorPage statusCode={404} />

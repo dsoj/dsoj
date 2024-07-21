@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MongoClient } from "mongodb";
 import EnvVars from "@/constants/EnvVars";
 import Layout from "@/components/Layout";
-import { getSession } from "@/lib/session";
+// import { getSession } from "@/lib/session";
 import { difficulty_text, DifficultyElement } from "@/lib/problem";
 
 export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
@@ -154,8 +154,8 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
 export async function getServerSideProps({ req, res }: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
-    const session = await getSession(req, res);
-    console.log(session)
+    // const session = await getSession(req, res);
+    // console.log(session)
 
     let problemData = (await mongo
         .db("Judge")

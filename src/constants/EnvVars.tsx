@@ -19,7 +19,7 @@ export default {
     host: (process.env.JUDGE0_HOST ?? ''),
   },
   session: {
-    secret: (process.env.SESSION_SECRET ?? ''),
+    secret: (process.env.AUTH_SECRET ?? ''),
     maxAge: (process.env.SESSION_MAX_AGE ?? ''),
     updateAge: (process.env.SESSION_UPDATE_AGE ?? ''),
   }

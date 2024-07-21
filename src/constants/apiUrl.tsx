@@ -1,6 +1,6 @@
 export default {
     accounts: {
-        login: "/api/accounts/login",
+        login: "/api/auth/login",
     },
     judge0: {
         submit: "/api/judge0/submit",
