@@ -14,7 +14,7 @@ export default function NavLayout() {
     const [sessionState, setSessionState] = useState(false);
 
     useEffect(() => {
-        axios.get(`http://${EnvVars.host_url}/api/auth/session`)
+        axios.get(`http://localhost:3000/api/auth/session`)
             .then((res) => {
                 console.log(res.data);
                 if (res.data.session) {
