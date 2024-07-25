@@ -28,7 +28,7 @@ export default function NavLayout() {
 
     function AccountPart() {        
         if (sessionState) {
-            return <Button variant="primary" href="/logout">Log out</Button>
+            return <Button variant="primary" href="/api/auth/logout">Log out</Button>
         } else {
             return <Button variant="primary" href="/login">Log in</Button>
         }
