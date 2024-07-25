@@ -13,20 +13,18 @@ export default function NavLayout() {
     const [sessionState, setSessionState] = useState(false);
 
     useEffect(() => {
-        const getSession = async () => {
-            await axios.get("http://127.0.0.1:3000/api/auth/session")
-                .then((res) => {
-                    if (res.data.session) {
-                        setSessionState(true);
-                    }
-                })
-                .catch((err) => {
-                    console.error(`Error Occurred when Authenticating: ${err}`);
-                });
-        }
+        axios.get("http://127.0.0.1:3000/api/auth/session")
+            .then((res) => {
+                if (res.data.session) {
+                    setSessionState(true);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error Occurred when Authenticating: ${err}`);
+            });
     })
 
-    async function AccountPart() {
+    function AccountPart() {        
         if (sessionState) {
             return <Button variant="primary" href="/logout">Log out</Button>
         } else {
