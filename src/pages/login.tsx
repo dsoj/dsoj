@@ -13,10 +13,12 @@ export default function Login(req: any, res: any) {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const [isFetching, setIsFetching] = useState(false);
 
     const router = useRouter();
 
     async function Login() {
+        setIsFetching(true);
         await axios.post(
             url,
             JSON.stringify({
@@ -36,6 +38,7 @@ export default function Login(req: any, res: any) {
 
                 } else {
                     setPassword('');
+                    setIsFetching(false);
                 }
             })
             .catch((err: any) => {
@@ -63,15 +66,15 @@ export default function Login(req: any, res: any) {
                                 <div className="text-center">
                                     <p style={{ color: "red" }}>{message}</p>
                                     <div className="mb-3">
-                                        <input className="form-control" type="text" name="username" placeholder="User Name" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={onKeyDown} />
+                                        <input className="form-control" disabled={isFetching} type="text" name="username" placeholder="User Name" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={onKeyDown} />
                                     </div>
 
                                     <div className="mb-3">
-                                        <input className="form-control" type="password" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={onKeyDown} />
+                                        <input className="form-control" type="password" disabled={isFetching} name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={onKeyDown} />
                                     </div>
 
                                     <div className="mb-3">
-                                        <button className="btn btn-primary d-block w-100" type="button" style={{ marginTop: "2rem" }} onClick={Login}>Login</button>
+                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>Login</button>
                                     </div>
 
                                     <p className="text-muted">Forgot password?</p>
