@@ -9,6 +9,7 @@ import { getMongoURI } from '@/utils/MongoUtils';
 export default {
   NodeEnv: (process.env.NODE_ENV ?? ''),
   Port: (process.env.PORT ?? 0),
+  host_url: (process.env.HOST_URL ?? ''),
   DB: {
     host: (process.env.DB_HOST ?? ''),
     password: (process.env.DB_PASSWD ?? ''),

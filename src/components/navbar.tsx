@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { authentication } from "@/lib/auth";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import EnvVars from "@/constants/EnvVars";
 
 
 export default function NavLayout() {
@@ -13,8 +14,9 @@ export default function NavLayout() {
     const [sessionState, setSessionState] = useState(false);
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:3000/api/auth/session")
+        axios.get(`http://${EnvVars.host_url}/api/auth/session`)
             .then((res) => {
+                console.log(res.data);
                 if (res.data.session) {
                     setSessionState(true);
                 }
