@@ -5,7 +5,6 @@ import client from '@/lib/db';
 
 
 import { useState } from "react";
-import { IProblem } from '@/interface/IProblem';
 
 export default function ProblemDetail({ problemDetail }: any ){
     if (!problemDetail) {
