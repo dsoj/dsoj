@@ -1,4 +1,4 @@
-import { Card, Table, Spinner, Button } from "react-bootstrap";
+import { Card, Table, Spinner, Button, Container } from "react-bootstrap";
 import { IProblemListItem } from "@/interface/IProblem";
 import Link from "next/link";
 
@@ -77,76 +77,77 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
 
     return (
         <Layout>
-            <Card>
-                <Card.Header>
-                    <Card.Title
-                        className='text-uppercase card-title mb-0'
-                        style={{
-                            marginTop: "1rem",
-                            marginBottom: "1rem!important",
-                        }}
-                    >
-                        problems
-                    </Card.Title>
-                </Card.Header>
+            <Container style={{margin: "1em", minWidth: "calc(100vw - 2em)"}}>
+                <Card>
+                    <Card.Header>
+                        <Card.Title
+                            className='text-uppercase card-title mb-0'
+                            style={{
+                                marginTop: "1rem",
+                                marginBottom: "1rem!important",
+                            }}
+                        >
+                            problems
+                        </Card.Title>
+                    </Card.Header>
 
-                <input
-                    type='search'
-                    style={{
-                        background:
-                            "url(&quot;https://icons.getbootstrap.com/assets/icons/search.svg&quot;) 8px no-repeat, var(--bs-gray-200)",
-                        paddingLeft: "calc(1.4rem + 8px)",
-                        borderStyle: "none",
-                        borderRadius: "5px",
-                        width: "15rem",
-                    }}
-                    placeholder='Search titles or tags'
-                />
-
-                <Card.Body>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th
-                                    className='text-uppercase border-0 font-medium pl-4'
-                                    scope='col'
-                                    style={{ width: "2rem" }}
-                                >
-                                    #
-                                </th>
-                                <th
-                                    className='text-uppercase border-0 font-medium'
-                                    scope='col'
-                                >
-                                    Name
-                                </th>
-                                <th
-                                    className='text-uppercase border-0 font-medium'
-                                    scope='col'
-                                    style={{ width: "7rem" }}
-                                >
-                                    Acceptance
-                                </th>
-                                <th
-                                    className='text-uppercase border-0 font-medium'
-                                    scope='col'
-                                    style={{ width: "7rem" }}
-                                >
-                                    Difficulty
-                                </th>
-                                <th
-                                    className='text-uppercase border-0 font-medium'
-                                    scope='col'
-                                    style={{ width: "10rem" }}
-                                >
-                                    Tags
-                                </th>
-                            </tr>
-                        </thead>
-                        <TableContent />
-                    </Table>
-                </Card.Body>
-            </Card>
+                    <Card.Body>
+                        <input
+                            type='search'
+                            style={{
+                                background:
+                                    "url(https://icons.getbootstrap.com/assets/icons/search.svg) 8px no-repeat, var(--bs-gray-200)",
+                                paddingLeft: "calc(1.4rem + 8px)",
+                                borderStyle: "none",
+                                borderRadius: "5px",
+                                width: "15rem",
+                            }}
+                            placeholder='Search titles or tags'
+                        />
+                        <Table>
+                            <thead>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                <tr>
+                                    <th
+                                        className='text-uppercase border-0 font-medium pl-4'
+                                        scope='col'
+                                        style={{ width: "2rem" }}
+                                    >
+                                        #
+                                    </th>
+                                    <th
+                                        className='text-uppercase border-0 font-medium'
+                                        scope='col'
+                                    >
+                                        Name
+                                    </th>
+                                    <th
+                                        className='text-uppercase border-0 font-medium'
+                                        scope='col'
+                                        style={{ width: "7rem" }}
+                                    >
+                                        Acceptance
+                                    </th>
+                                    <th
+                                        className='text-uppercase border-0 font-medium'
+                                        scope='col'
+                                        style={{ width: "7rem" }}
+                                    >
+                                        Difficulty
+                                    </th>
+                                    <th
+                                        className='text-uppercase border-0 font-medium'
+                                        scope='col'
+                                        style={{ width: "10rem" }}
+                                    >
+                                        Tags
+                                    </th>
+                                </tr>
+                            </thead>
+                            <TableContent />
+                        </Table>
+                    </Card.Body>
+                </Card>
+            </Container>
         </Layout>
     );
 }
