@@ -1,6 +1,7 @@
 import EnvVars from "@/constants/EnvVars";
 import client from "@/lib/db";
 import axios from "axios";
+import { getCookie } from "cookies-next";
 
 const url = EnvVars.judge0.host + "/submissions/batch";
 export default async function SubmitApiHandler(req: any, res: any) {
@@ -34,9 +35,10 @@ export default async function SubmitApiHandler(req: any, res: any) {
     };
 
     const { data } = await axios.post(url, { submissions });
+    const username = getCookie("username", { req });  
 
     client.db('Judge').collection('Submissions').insertOne({
-        user_id: "user_id",  // TODO: user_id_should_be_here
+        username: username,  // TODO: user_id_should_be_here
         problem_id: id,
         submissions: data,
         code: code,

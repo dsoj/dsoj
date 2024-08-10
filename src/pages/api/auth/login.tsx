@@ -23,7 +23,8 @@ export default async function LoginApiHandler(req: NextApiRequest, res: NextApiR
         const session = jwt.sign({ user_id: user.id }, EnvVars.session.secret, {
             expiresIn: EnvVars.session.maxAge,
         });
-        setCookie("session", session, {req, res, maxAge: parseInt(EnvVars.session.maxAge)})
+        setCookie("session", session, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
+        setCookie("username", name, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
         return res.status(200).json({ message: "Login successful", session: session });
     }
     return res.status(200).json({ message: "Login failed", session: false });

@@ -22,7 +22,7 @@ export default function ProblemDetail({ problemDetail }: any ){
 
     async function submit() {
         if (code === "") {
-            setMessage("Please enter code")
+            setMessage("Please enter code");
             return
         }
 
