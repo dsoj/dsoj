@@ -18,6 +18,7 @@ export default {
   },
   judge0: {
     host: (process.env.JUDGE0_HOST ?? ''),
+    callback_url: (process.env.JUDGE0_CALLBACK_URL ?? ''),
   },
   session: {
     secret: (process.env.AUTH_SECRET ?? ''),

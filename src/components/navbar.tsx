@@ -4,31 +4,15 @@ import { usePathname } from "next/navigation";
 import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 
-export default function NavLayout() {
+export default function NavLayout({ session }: { session: boolean }) {
     const pathname = usePathname() ?? '';
-    const [sessionState, setSessionState] = useState(2);
-
-    useEffect(() => {
-        axios.get(`http://localhost:3000/api/auth/session`)
-            .then((res) => {
-                if (res.data.session) {
-                    setSessionState(1);
-                }else{
-                    setSessionState(0);
-                }
-            })
-            .catch((err) => {
-                console.error(`Error Occurred when Authenticating: ${err}`);
-            });
-    })
 
     function AccountPart() {        
-        if (sessionState==1) {
+        if (session) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>
-        } else if (sessionState==0) {
+        } else if (session) {
             return <Button variant="primary" href="/login">Log in</Button>
         } else {
             return (
@@ -78,4 +62,11 @@ export default function NavLayout() {
     )
 }
 
-
+export async function getClientSideProps() {
+    const res = await axios.get(`http://localhost:3000/api/auth/session`);
+    return {
+        props: {
+            session: (res.data.session) ? true : false,
+        },
+    };
+}

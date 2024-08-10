@@ -8,7 +8,6 @@ import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
 import { useState } from "react";
 
-
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
     const [copiedStatus, setCopiedStatus] = useState<boolean>(false);
     if (!problemDetail) {

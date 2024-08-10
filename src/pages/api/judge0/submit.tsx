@@ -5,6 +5,7 @@ import { getCookie } from "cookies-next";
 
 const url = EnvVars.judge0.host + "/submissions/batch";
 export default async function SubmitApiHandler(req: any, res: any) {
+
     if (req.method !== "POST") return res.status(404);
 
     const { id, code, language_id } = req.body;
@@ -34,17 +35,27 @@ export default async function SubmitApiHandler(req: any, res: any) {
         });
     };
 
-    const { data } = await axios.post(url, { submissions });
-    const username = getCookie("username", { req });  
+    console.log({
+        submissions,
+        callback_url: EnvVars.judge0.callback_url,
+    })
+    
+    const { data } = await axios.post(url, {
+        submissions,
+        callback_url: EnvVars.judge0.callback_url,
+    });
+    const username = getCookie("username", { req });
 
     client.db('Judge').collection('Submissions').insertOne({
-        username: username,  // TODO: user_id_should_be_here
+        username: username,
         problem_id: id,
         submissions: data,
         code: code,
         send_time: new Date(),
         language_id: language_id,
     })
+
+
 
     return res.status(200).send({ message: "Submit successful" });
 }

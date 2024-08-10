@@ -5,8 +5,10 @@ import client from '@/lib/db';
 
 
 import { useState } from "react";
+import { useRouter } from 'next/router';
 
 export default function ProblemDetail({ problemDetail }: any ){
+    const router = useRouter();
     if (!problemDetail) {
         return (
             <ErrorPage statusCode={404} />
@@ -38,6 +40,9 @@ export default function ProblemDetail({ problemDetail }: any ){
                 }) as unknown as BodyInit,
             }
         )
+            .then(()=>{
+                router.push('/problem');
+            })
     }
 
     return (
