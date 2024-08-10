@@ -3,10 +3,14 @@ import Layout from '@/components/Layout';
 import ErrorPage from 'next/error';
 
 import EnvVars from "@/constants/EnvVars";
-import {DifficultyElement, TagElement } from "@/lib/problem";
+import { DifficultyElement, TagElement } from "@/lib/problem";
 import { IProblem } from "@/interface/IProblem";
+import AlertMessage from "@/components/alert";
+import { useState } from "react";
 
-export default function ProblemDetail({ problemDetail }: {problemDetail: IProblem}) {
+
+export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
+    const [copiedStatus, setCopiedStatus] = useState<boolean>(false);
     if (!problemDetail) {
         return (
             <ErrorPage statusCode={404} />
@@ -21,13 +25,21 @@ export default function ProblemDetail({ problemDetail }: {problemDetail: IProble
             // TODO: add a copy appearance effect to the sample input and output
             renderElement.push(
                 <div className="row" style={{ margin: '0px' }} key={i}>
-                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={(e)=>navigator.clipboard.writeText(sample.input)}>
+                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={
+                        (e) => {
+                            navigator.clipboard.writeText(sample.input);
+                            setCopiedStatus(true)
+                            setTimeout(() => {
+                                setCopiedStatus(false);
+                            }, 1000);
+                        }
+                    }>
                         <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                             <h4>Sample Input {i}</h4>
                             <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
                         </div>
                     </div>
-                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e)=>navigator.clipboard.writeText(sample.output)}>
+                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e) => { navigator.clipboard.writeText(sample.output); }}>
                         <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                             <h4>Sample Output {i}</h4>
                             <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
@@ -56,7 +68,7 @@ export default function ProblemDetail({ problemDetail }: {problemDetail: IProble
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <Layout>
-            <div style={{ padding: '2rem', background: "var(--bs-border-color)" }}>
+            <div style={{ padding: '2rem', background: "#ededed" }}>
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                     <h2>{id}. {title}&nbsp;
                         <a href={`/submit/${id}`} style={{ borderColor: 'var(--bs-form-valid-color)', color: 'var(--bs-form-valid-color)' }}>
@@ -103,6 +115,8 @@ export default function ProblemDetail({ problemDetail }: {problemDetail: IProble
                 </div>
 
             </div>
+            <AlertMessage show={copiedStatus} text="copied" />
+
         </Layout>
     )
 }
