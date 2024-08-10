@@ -115,7 +115,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                 </div>
 
             </div>
-            <AlertMessage show={copiedStatus} text="copied" />
+            <AlertMessage show={copiedStatus} text="Copied!" />
         </Layout>
     )
 }
