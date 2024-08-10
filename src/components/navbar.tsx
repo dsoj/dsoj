@@ -66,7 +66,7 @@ export default function NavLayout() {
                             <NavLink href="#">Support</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#">About</NavLink>
+                            <NavLink href="/about">About</NavLink>
                         </NavItem>
                     </Nav>
                     <AccountPart />
