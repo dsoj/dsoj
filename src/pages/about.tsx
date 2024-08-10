@@ -1,35 +1,33 @@
 import Layout from "@/components/Layout";
 import about_info from "@/constants/about_information";
 import Link from "next/link";
+import { ReactElement } from "react";
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 
 export default function About({ about_data }: any) {
-    const { card_data, github_data } = about_info;
+    const { card_data, github_data } = about_data;
 // TODO: fix it
     function generateAboutCard() {
         console.log(card_data);
-        let about_cards = [];
-        // card
-        // for (let {key, value} of card_data) {
+        let about_cards: ReactElement[] = [];
 
-        //     console.log(key,card_data[key]);
-        //     about_cards.push(
-        //         <Col md={6}>
-        //             <Card>
-        //                 <Card>
-        //                     <Card.Title>{key}</Card.Title>
-        //                     <Card.Text>
-        //                         {card_data[key] ?? ""}
-        //                     </Card.Text>
-        //                 </Card>
-        //             </Card>
-        //         </Col>
-        //     );
-        // }
-        
-        // return about_cards;
-        return <></>;
+        for (const [key, value] of card_data) {
+            console.log(key, value);
+            about_cards.push(
+                <Col md={6}>
+                    <Card>
+                        <Card>
+                            <Card.Title>{key}</Card.Title>
+                            <Card.Text>
+                                {value ?? ""}
+                            </Card.Text>
+                        </Card>
+                    </Card>
+                </Col>
+            );
+        }
+        return about_cards;
     }
 
     return (
@@ -44,7 +42,7 @@ export default function About({ about_data }: any) {
                     </Col>
                 </Row>
                 <Row className="mt-4">
-                    {generateAboutCard()}
+                    {/* {generateAboutCard()} */}
                 </Row>
                 <Row className="mt-4">
                     <Col>
