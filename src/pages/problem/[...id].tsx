@@ -18,6 +18,14 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
     }
     const { id, title, details, samples, tags, difficulty, accepted, submissions } = problemDetail;
 
+    function copyToClipboard(content: string) {
+        navigator.clipboard.writeText(content);
+        setCopiedStatus(true)
+        setTimeout(() => {
+            setCopiedStatus(false);
+        }, 1000);
+    }
+
     function GenExamples() {
         let renderElement: React.JSX.Element[] = [];
         for (let i = 1; i <= samples.length; i++) {
@@ -25,21 +33,13 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
             // TODO: add a copy appearance effect to the sample input and output
             renderElement.push(
                 <div className="row" style={{ margin: '0px' }} key={i}>
-                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={
-                        (e) => {
-                            navigator.clipboard.writeText(sample.input);
-                            setCopiedStatus(true)
-                            setTimeout(() => {
-                                setCopiedStatus(false);
-                            }, 1000);
-                        }
-                    }>
+                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={(e) => copyToClipboard(sample.input)}>
                         <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                             <h4>Sample Input {i}</h4>
                             <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
                         </div>
                     </div>
-                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e) => { navigator.clipboard.writeText(sample.output); }}>
+                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e) => copyToClipboard(sample.output)}>
                         <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                             <h4>Sample Output {i}</h4>
                             <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
@@ -116,7 +116,6 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
             </div>
             <AlertMessage show={copiedStatus} text="copied" />
-
         </Layout>
     )
 }
