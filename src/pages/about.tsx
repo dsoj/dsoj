@@ -9,11 +9,9 @@ export default function About({ about_data }: any) {
     const { card_data, github_data } = about_data;
 // TODO: fix it
     function generateAboutCard() {
-        console.log(card_data);
         let about_cards: ReactElement[] = [];
 
         for (const [key, value] of card_data) {
-            console.log(key, value);
             about_cards.push(
                 <Col md={6}>
                     <Card>

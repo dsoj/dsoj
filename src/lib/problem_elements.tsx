@@ -14,7 +14,6 @@ export function difficulty_text(difficulty: number): string {
 }
 
 export function SubmissionStatusElement({ status }: { status: number }): ReactElement {
-    console.log(status);
     switch (status) {
         case 0:
             return (
