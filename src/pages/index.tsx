@@ -368,7 +368,7 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                     <div className="row h-100">
                         <div className="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
                             <div>
-                                <h2 className="text-uppercase fw-bold mb-3">
+                                <h2 className="text-uppercase fw-bold mb-3" style={{ fontFamily: "Copperplate", fontSize: "2.5rem" }}>
                                     "Coders together strong."
                                 </h2>
                                 <button
@@ -388,9 +388,6 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                     </div>
                 </div>
             </section>
-            <span style={{ color: "rgb(0, 0, 0)" }}>
-                This page is intentionally left blank.
-            </span>
         </Layout>
     );
 }
