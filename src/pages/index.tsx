@@ -388,7 +388,7 @@ export default function Home({ favourites }: any) { // TODO: change any to the c
 }
 
 
-export async function getServerSideProps({ req, res }: any) {
+export async function getServerSideProps() {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
 
