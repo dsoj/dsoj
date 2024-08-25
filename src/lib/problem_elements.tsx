@@ -13,16 +13,21 @@ export function difficulty_text(difficulty: number): string {
     return "";
 }
 
-export function SubmissionStatusElement(status: number): ReactElement {
+export function SubmissionStatusElement({ status }: { status: number }): ReactElement {
+    console.log(status);
     switch (status) {
         case 0:
             return (
                 <span style={{ color: 'rgb(229, 4, 59)', fontWeight: 'bold' }}>TLE</span>
             )
         case 1:
-            <span style={{ color: 'rgb(49,50,57)', fontWeight: 'bold' }}>N/A</span>
+            return (
+                <span style={{ color: 'rgb(49,50,57)', fontWeight: 'bold' }}>N/A</span>
+            )
         case 2:
-            <span style={{ color: 'rgb(0,135,114)', fontWeight: 'bold' }}>AC</span>
+            return (
+                <span style={{ color: 'rgb(0,135,114)', fontWeight: 'bold' }}>AC</span>
+            )
     }
     return <span></span>;
 }

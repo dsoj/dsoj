@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import ErrorPage from 'next/error';
 
 import EnvVars from "@/constants/EnvVars";
-import { DifficultyElement, TagElement } from "@/lib/problem";
+import { DifficultyElement, TagElement } from "@/lib/problem_elements";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
 import { useState } from "react";
@@ -111,6 +111,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                 <GenExamples />
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                     <a className="btn btn-primary" type="button" href={`/submit/${id}`} style={{ background: 'var(--bs-form-valid-color)', borderStyle: 'none' }}>Submit</a>
+                    <code-input language="HTML"></code-input>
                 </div>
 
             </div>

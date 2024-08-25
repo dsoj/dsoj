@@ -1,19 +1,21 @@
 import Layout from "@/components/Layout";
 import EnvVars from "@/constants/EnvVars";
 import { IProblemListItem } from "@/interface/IProblem";
+import { SubmissionStatusElement } from "@/lib/problem_elements";
+import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
+import Image from "next/image";
 
-export default function Home({ favourites }: any) { // TODO: change any to the correct type
-    function problemCardElement(id: number, title: string, status: string) {
+export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
+    const username = getCookie("username");
+
+
+    function problemCardElement(id: number, title: string, status: number) {
         return (
-            <tr>
+            <tr key={id}>
                 <td>{id}. {title}</td>
                 <td align="right">
-                    <span
-                        style={{ color: "rgb(229,4,59)", fontWeight: "bold" }}
-                    >
-                        {status}
-                    </span>
+                    <SubmissionStatusElement status={status} />
                 </td>
             </tr>
         )
@@ -21,6 +23,60 @@ export default function Home({ favourites }: any) { // TODO: change any to the c
 
     return (
         <Layout>
+            {/* TODO: fix: while logout */}
+            <div
+                className="carousel slide"
+                data-bs-ride="false"
+                id="carousel-2"
+                style={{ marginBottom: "2rem" }}
+            >
+                <div className="carousel-inner">
+                    <div className="carousel-item active">
+                        <Image className="w-100 d-block" src="/kk.png" alt="Slide Image" width={100} height={300} />
+                    </div>
+                </div>
+                <div>
+                    <a
+                        className="carousel-control-prev"
+                        href="#carousel-2"
+                        role="button"
+                        data-bs-slide="prev"
+                    >
+                        <span className="carousel-control-prev-icon" />
+                        <span className="visually-hidden">Previous</span>
+                    </a>
+                    <a
+                        className="carousel-control-next"
+                        href="#carousel-2"
+                        role="button"
+                        data-bs-slide="next"
+                    >
+                        <span className="carousel-control-next-icon" />
+                        <span className="visually-hidden">Next</span>
+                    </a>
+                </div>
+                <div className="carousel-indicators">
+                    <button
+                        type="button"
+                        data-bs-target="#carousel-2"
+                        data-bs-slide-to={0}
+                        className="active"
+                    />{" "}
+                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={1} />{" "}
+                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={2} />{" "}
+                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={3} />
+                </div>
+            </div>
+
+            <div style={{ marginTop: "1rem", marginLeft: "10rem" }}>
+                <span style={{ color: "var(--bs-gray-600)" }}>
+                    Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
+                </span>
+                <p style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem" }}>
+                    DSOJ
+                </p>
+            </div>
+
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
@@ -51,6 +107,8 @@ export default function Home({ favourites }: any) { // TODO: change any to the c
                                 <table className="table">
                                     <tbody>
                                         {/* {favourites.map((item: any) => problemCardElement(item.id, item.title, item.status))} */}
+                                        {/* TODO: temp fix status */}
+                                        {favourites.map((item: any) => problemCardElement(item.id, item.title, 0))}
                                     </tbody>
                                 </table>
                             </div>
@@ -85,32 +143,7 @@ export default function Home({ favourites }: any) { // TODO: change any to the c
                         <div className="table-responsive">
                             <table className="table">
                                 <tbody>
-                                    <tr>
-                                        <td>1. Hello World</td>
-                                        <td align="right">
-                                            <span style={{ color: "rgb(229,4,59)", fontWeight: "bold" }}>
-                                                TLE
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>114. Sleepy sheep</td>
-                                        <td align="right">
-                                            <span
-                                                style={{ color: "var(--bs-gray-700)", fontWeight: "bold" }}
-                                            >
-                                                N/A
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2. How do you do?</td>
-                                        <td align="right">
-                                            <span style={{ color: "rgb(0,135,114)", fontWeight: "bold" }}>
-                                                AC
-                                            </span>
-                                        </td>
-                                    </tr>
+                                    {recent.map((item: any) => problemCardElement(item.id, item.title, item.status))}
                                 </tbody>
                             </table>
                         </div>
@@ -138,32 +171,7 @@ export default function Home({ favourites }: any) { // TODO: change any to the c
                         <div className="table-responsive">
                             <table className="table">
                                 <tbody>
-                                    <tr>
-                                        <td>1. Hello World</td>
-                                        <td align="right">
-                                            <span style={{ color: "rgb(229,4,59)", fontWeight: "bold" }}>
-                                                TLE
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>114. Sleepy sheep</td>
-                                        <td align="right">
-                                            <span
-                                                style={{ color: "var(--bs-gray-700)", fontWeight: "bold" }}
-                                            >
-                                                N/A
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2. How do you do?</td>
-                                        <td align="right">
-                                            <span style={{ color: "rgb(0,135,114)", fontWeight: "bold" }}>
-                                                AC
-                                            </span>
-                                        </td>
-                                    </tr>
+                                    {my_submissions.map((item: any) => problemCardElement(item.id, item.title, item.status))}
                                 </tbody>
                             </table>
                         </div>
@@ -392,7 +400,8 @@ export async function getServerSideProps() {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
 
-    let problemData = (await mongo
+    // TODO: set filter 
+    let favourites = (await mongo
         .db("Judge")
         .collection("Problems")
         .find({}, { projection: { _id: 0, details: 0 } })
@@ -401,9 +410,12 @@ export async function getServerSideProps() {
             console.error(err);
             return [];
         })) as IProblemListItem[];
+    console.log(favourites);
     return {
         props: {
-            problems: problemData,
+            favourites: favourites,
+            recent: favourites,
+            my_submissions: favourites,
         },
     };
 }
