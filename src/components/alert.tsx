@@ -9,7 +9,7 @@ export default function AlertMessage({ show, text, varient }: { text: string, sh
     return (
         <Overlay target={target.current} show={show} placement="right">
             {(props) => (
-                <Alert style={{ maxWidth: '10em', marginRight: '2em' }} key={(varient) ? varient : 'success'} variant={(varient) ? varient : 'success'} className="fixed-bottom">
+                <Alert style={{ maxWidth: '10em', marginLeft: '1em' }} key={(varient) ? varient : 'success'} variant={(varient) ? varient : 'success'} className="fixed-bottom">
                     {text}
                 </Alert>
             )}
