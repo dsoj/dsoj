@@ -4,20 +4,35 @@ import { usePathname } from "next/navigation";
 import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 
-export default function NavLayout({ session }: { session: boolean }) {
+export default function NavLayout() {
     const pathname = usePathname() ?? '';
+    const [sessionState, setSessionState] = useState(-1);
 
-    function AccountPart() {        
-        if (session) {
+
+    useEffect(() => {
+        const getSessionState = async () => {
+            axios.get(`http://localhost:3000/api/auth/session`)
+                .then((res) => {
+                    setSessionState(res.data);
+                    console.log(sessionState);
+                })
+        }
+        getSessionState();
+    })
+
+
+    function AccountPart({ session }: { session: number }) {
+        if (session == 1) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>
-        } else if (session) {
+        } else if (session == 0) {
             return <Button variant="primary" href="/login">Log in</Button>
         } else {
             return (
                 <Button variant="primary" disabled>
-                    <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />   
+                    <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                 </Button>
             )
         }
@@ -53,20 +68,11 @@ export default function NavLayout({ session }: { session: boolean }) {
                             <NavLink href="/about">About</NavLink>
                         </NavItem>
                     </Nav>
-                    <AccountPart />
+                    <AccountPart session={sessionState} />
                 </Navbar.Collapse>
 
             </Container>
         </Navbar>
 
     )
-}
-
-export async function getClientSideProps() {
-    const res = await axios.get(`http://localhost:3000/api/auth/session`);
-    return {
-        props: {
-            session: (res.data.session) ? true : false,
-        },
-    };
 }

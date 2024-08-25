@@ -6,5 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).end();
     }
     const session = getCookie("session", { req });
-    res.status(200).json({ session });
+    if (!session) {
+        return res.status(200).send(0);
+    }
+    res.status(200).send(1);
 }
