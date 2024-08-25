@@ -27,8 +27,6 @@
   </a>
  </div>
 
- [English](/README.md) 
-
  ---
  
 DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.
