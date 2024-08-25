@@ -5,6 +5,7 @@ export default async function CallbackApiHandler(req: any, res: any) {
     
     const { stdout, time, memory, stderr, token, compile_output, message, status } = req.body;
 
+    // TODO: update the submission status
     client.db("Judge").collection("Submissions").updateOne({ "submissions.token": token }, {
         $set: {
             "submissions.$.stdout": stdout,
