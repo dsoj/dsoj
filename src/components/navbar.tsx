@@ -17,7 +17,6 @@ export default function NavLayout() {
             axios.get(`http://localhost:3000/api/auth/session`)
                 .then((res) => {
                     setSessionState(res.data);
-                    console.log(sessionState);
                 })
         }
         getSessionState();

@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { Button } from "react-bootstrap";
 
 export function difficulty_text(difficulty: number): string {
@@ -10,6 +11,20 @@ export function difficulty_text(difficulty: number): string {
             return "Hard";
     }
     return "";
+}
+
+export function SubmissionStatusElement(status: number): ReactElement {
+    switch (status) {
+        case 0:
+            return (
+                <span style={{ color: 'rgb(229, 4, 59)', fontWeight: 'bold' }}>TLE</span>
+            )
+        case 1:
+            <span style={{ color: 'rgb(49,50,57)', fontWeight: 'bold' }}>N/A</span>
+        case 2:
+            <span style={{ color: 'rgb(0,135,114)', fontWeight: 'bold' }}>AC</span>
+    }
+    return <span></span>;
 }
 
 export function DifficultyElement(props: { difficulty: number }) {
