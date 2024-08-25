@@ -33,13 +33,7 @@ export default async function SubmitApiHandler(req: any, res: any) {
             "expected_output": stdout,
             "cpu_time_limit": cpu_time_limit,
         });
-    };
-
-    console.log({
-        submissions,
-        callback_url: EnvVars.judge0.callback_url,
-    })
-    
+    };    
     const { data } = await axios.post(url, {
         submissions,
         callback_url: EnvVars.judge0.callback_url,
