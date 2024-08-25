@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DSOJ Online Judge
 
-## Getting Started
+ [![Contributors][contributors-shield]][contributors-url]
+ [![Forks][forks-shield]][forks-url]
+ [![Stargazers][stars-shield]][stars-url]
+ [![Issues][issues-shield]][issues-url]
+ [![License][license-shield]][license-url]
 
-First, run the development server:
+ [contributors-shield]: https://img.shields.io/github/contributors/dscs-club/dsoj?style=for-the-badge
+ [contributors-url]: https://github.com//dscs-club/dsoj/graphs/contributors
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ [forks-shield]: https://img.shields.io/github/forks/dscs-club/dsoj?style=for-the-badge
+ [forks-url]: https://github.com/dscs-club/dsoj/network/members
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ [stars-shield]: https://img.shields.io/github/stars/dscs-club/dsoj?style=for-the-badge
+ [stars-url]: https://github.com/dscs-club/dsoj/stargazers
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+ [issues-shield]: https://img.shields.io/github/issues/dscs-club/dsoj?style=for-the-badge
+ [issues-url]: https://github.com/dscs-club/dsoj/issues
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+ [license-shield]: https://img.shields.io/github/license/dscs-club/dsoj?style=for-the-badge
+ [license-url]: https://github.com/dscs-club/dsoj/blob/main/LICENSE
 
-## Learn More
+ <div align="center">
+  <a href="https://github.com/dscs-club/dsoj">
+   <img src="/public/logo_s.png" alt="dsoj" width="30%"/>
+  </a>
+ </div>
 
-To learn more about Next.js, take a look at the following resources:
+ [English](/README.md) 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ ---
+ 
+DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+ ---
 
-## Deploy on Vercel
+This project is powered by the frameworks [Next.js](https://nextjs.org/) and [React](https://react.dev/), and styled using [Bootstrap](https://getbootstrap.com/).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ *Note: This project is currently in development.*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Installation
+ **Node.js environment required**
+
+ ### 1. Clone the repository
+ Clone the git repository. You can obtain the source code by running:
+ ```bash
+ git clone https://github.com/dscs-club/dsoj.git
+ cd dsoj
+ ```
+ ### 2. Install dependencies
+ Install packages by running:
+ ``` bash
+ npm install
+ ```
+
+ ### 3. Set Up Environment Variables
+ Edit the `.env` file according to the format in `.env.example` and fill in the required environment variables such like `judge0`, `session`, `mongodb` settings.
+ Edit the `.env` file according to the format in `.env.example` and fill in the required environment variables, such as settings for `judge0`, `session`, and `mongodb`.
+ 
+
+ ### 4. Run the evelopment server
+ After installing the dependencies and setting the environment variables, you can start the server by running:
+ ```bash
+ npm run dev
+ ```
