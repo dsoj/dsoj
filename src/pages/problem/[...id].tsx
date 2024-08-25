@@ -7,9 +7,18 @@ import { DifficultyElement, TagElement } from "@/lib/problem_elements";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
 import { useState } from "react";
+import { Editor as CodeEditor } from "@monaco-editor/react";
+import apiUrl from "@/constants/apiUrl";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
-    const [copiedStatus, setCopiedStatus] = useState<boolean>(false);
+    const router = useRouter();
+    const [alertStatus, setAlertStatus] = useState<boolean>(false);
+    const [language_id, setLanguage_id] = useState(71);
+    const [alert_text, setAlertText] = useState<string>('');
+    const [alert_variant, setAlertVariant] = useState<string>('success');
+
     if (!problemDetail) {
         return (
             <ErrorPage statusCode={404} />
@@ -17,11 +26,32 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
     }
     const { id, title, details, samples, tags, difficulty, accepted, submissions } = problemDetail;
 
+    async function submit() {
+        if (source_code === "") {
+            setAlertText('Please enter your code!');
+            setAlertVariant('danger');
+            setAlertStatus(true);
+            return
+        }
+
+        const submit_api_url = apiUrl.judge0.submit;
+        axios.post(submit_api_url, {
+            id: id,
+            code: source_code,
+            language_id: language_id,
+        })
+            .then(() => {
+                router.push('/problem');
+            })
+    }
+
     function copyToClipboard(content: string) {
         navigator.clipboard.writeText(content);
-        setCopiedStatus(true)
+        setAlertText('Copied!');
+        setAlertVariant('success');
+        setAlertStatus(true);
         setTimeout(() => {
-            setCopiedStatus(false);
+            setAlertStatus(false);
         }, 1000);
     }
 
@@ -64,18 +94,14 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         return renderElement;
     }
 
+    const [source_code, setSourceCode] = useState(''); // TODO: source_code 
+
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <Layout>
             <div style={{ padding: '2rem', background: "#ededed" }}>
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
-                    <h2>{id}. {title}&nbsp;
-                        <a href={`/submit/${id}`} style={{ borderColor: 'var(--bs-form-valid-color)', color: 'var(--bs-form-valid-color)' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" className="bi bi-arrow-up-square">
-                                <path fillRule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z" />
-                            </svg>
-                        </a>
-                    </h2>
+                    <h2>{id}. {title}&nbsp;</h2>
                     <div style={{ marginBottom: "1rem" }}>
                         <DifficultyElement difficulty={difficulty} />
                         <GenTags />
@@ -110,12 +136,29 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                 </div>
                 <GenExamples />
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
-                    <a className="btn btn-primary" type="button" href={`/submit/${id}`} style={{ background: 'var(--bs-form-valid-color)', borderStyle: 'none' }}>Submit</a>
-                    <code-input language="HTML"></code-input>
+                    <h3>Submit</h3>
+
+
+                    <select style={{ marginBottom: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} >
+                        <option value="71" defaultChecked>C++</option>
+                        <option value="63">Python3</option>
+                    </select>
+                    <CodeEditor
+                        height="20rem"
+                        language={language_id === 71 ? 'cpp' : 'python'}
+                        theme="vs-dark"
+                        value={source_code}
+                        onChange={(value) => setSourceCode(value ?? '')}
+                        options={{
+                            selectOnLineNumbers: true,
+                            fontSize: 18,
+                        }}
+                    />
+                    <button style={{ marginTop: '0.5rem', background: 'var(--bs-form-valid-color)', borderStyle: 'none' }} className="btn btn-primary" onClick={submit}>Submit</button>
                 </div>
 
             </div>
-            <AlertMessage show={copiedStatus} text="Copied!" />
+            <AlertMessage show={alertStatus} text={alert_text} varient={alert_variant} />
         </Layout>
     )
 }
