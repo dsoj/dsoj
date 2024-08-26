@@ -169,6 +169,34 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                 {/* MySubmissions Section End */}
             </div>
             {/* Card End */}
+
+            {/* Coder Start */}
+            <section className="py-4 py-xl-5">
+                <div className="container h-100">
+                    <div className="row h-100">
+                        <div className="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
+                            <div>
+                                <h2 className="text-uppercase fw-bold mb-3" style={{ fontFamily: "Copperplate", fontSize: "2.5rem" }}>
+                                    "Coders together strong."
+                                </h2>
+                                <button
+                                    className="btn btn-primary fs-5 me-2 py-2 px-4"
+                                    type="button"
+                                >
+                                    About us
+                                </button>
+                                <button
+                                    className="btn btn-outline-primary fs-5 py-2 px-4"
+                                    type="button"
+                                >
+                                    Github
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {/* Coder End */}
         </Layout>
     );
 }
