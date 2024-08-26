@@ -5,10 +5,20 @@ import { SubmissionStatusElement } from "@/lib/problem_elements";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
-    const username = getCookie("username");
+    const [username, setUsername] = useState<string | null>(null);
 
+    useEffect(()=>{
+        const cookieUsername = getCookie('username');
+        if (cookieUsername) {
+            setUsername(cookieUsername);
+        }else{            
+            setUsername('notLogin');
+            //TODO: not login
+        }
+    })
 
     function problemCardElement(id: number, title: string, status: number) {
         return (
