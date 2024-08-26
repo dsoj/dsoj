@@ -58,12 +58,6 @@ export default function NavLayout() {
                             <NavLink href="/problem">Problems</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#">My Submissions</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="http://localhost:3000/submit/001">Support</NavLink>
-                        </NavItem>
-                        <NavItem>
                             <NavLink href="/about">About</NavLink>
                         </NavItem>
                     </Nav>
