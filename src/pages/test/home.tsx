@@ -5,10 +5,22 @@ import { SubmissionStatusElement } from "@/lib/problem_elements";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Carousel } from "react-bootstrap";
 
 export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
-    const username = getCookie("username");
+    const [username, setUsername] = useState<string | null>(null);
+    const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
 
+    useEffect(() => {
+        const cookieUsername = getCookie('username');
+        if (cookieUsername) {
+            setUsername(cookieUsername);
+        } else {
+            setUsername('no tLogin');
+            //TODO: not login
+        }
+    })
 
     function problemCardElement(id: number, title: string, status: number) {
         return (
@@ -23,51 +35,19 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
 
     return (
         <Layout>
-            {/* TODO: fix: while logout */}
-            <div
-                className="carousel slide"
-                data-bs-ride="false"
-                id="carousel-2"
-                style={{ marginBottom: "2rem" }}
-            >
-                <div className="carousel-inner">
-                    <div className="carousel-item active">
-                        <Image className="w-100 d-block" src="/kk.png" alt="Slide Image" width={100} height={300} />
-                    </div>
-                </div>
-                <div>
-                    <a
-                        className="carousel-control-prev"
-                        href="#carousel-2"
-                        role="button"
-                        data-bs-slide="prev"
-                    >
-                        <span className="carousel-control-prev-icon" />
-                        <span className="visually-hidden">Previous</span>
-                    </a>
-                    <a
-                        className="carousel-control-next"
-                        href="#carousel-2"
-                        role="button"
-                        data-bs-slide="next"
-                    >
-                        <span className="carousel-control-next-icon" />
-                        <span className="visually-hidden">Next</span>
-                    </a>
-                </div>
-                <div className="carousel-indicators">
-                    <button
-                        type="button"
-                        data-bs-target="#carousel-2"
-                        data-bs-slide-to={0}
-                        className="active"
-                    />{" "}
-                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={1} />{" "}
-                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={2} />{" "}
-                    <button type="button" data-bs-target="#carousel-2" data-bs-slide-to={3} />
-                </div>
-            </div>
+            {/* Banner Image Strart */}
+            <Carousel style={{ marginBottom: '2rem' }}>
+                {banner_images.map((image: string) => {
+                    return (
+                        <Carousel.Item>
+                            <Image key={image} className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
+                        </Carousel.Item>
+                    )
+                })}
+            </Carousel>
+            {/* Banner Image End */}
 
+            {/* Welcome Text Start */}
             <div style={{ marginTop: "1rem", marginLeft: "10rem" }}>
                 <span style={{ color: "var(--bs-gray-600)" }}>
                     Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
@@ -76,11 +56,14 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                     DSOJ
                 </p>
             </div>
+            {/* Welcome Text End */}
 
+            {/* Card Start */}
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
             >
+                {/* Favourites Section Start */}
                 <div
                     className="card"
                     style={{
@@ -115,6 +98,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Favourites Section End */}
+
+                {/* Recent Section Start */}
                 <div
                     className="card"
                     style={{
@@ -149,6 +135,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Recent Section End */}
+
+                {/* MySubmissions Section Start */}
                 <div
                     className="card"
                     style={{ boxShadow: "0px 0px 3px", borderRadius: 10 }}
@@ -177,217 +166,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* MySubmissions Section End */}
             </div>
-            <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
-                <div className="card">
-                    <div className="card-body">
-                        <span style={{ fontSize: "3rem" }}>
-                            <strong>Top Hits</strong>
-                        </span>
-                        <div className="table-responsive">
-                            <table className="table table-striped no-wrap user-table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            className="text-uppercase border-0 font-medium pl-4"
-                                            scope="col"
-                                            style={{ width: "5rem" }}
-                                        >
-                                            No.
-                                        </th>
-                                        <th className="text-uppercase border-0 font-medium" scope="col">
-                                            Name
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "7rem" }}
-                                        >
-                                            Acceptance
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "7rem" }}
-                                        >
-                                            Difficulty
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "10rem" }}
-                                        >
-                                            Tags
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                            1
-                                        </td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                style={{
-                                                    fontSize: "1.25rem",
-                                                    textDecoration: "none",
-                                                    color: "rgb(0,0,0)",
-                                                    fontWeight: "bold"
-                                                }}
-                                            >
-                                                <span style={{ fontWeight: "normal !important" }}>
-                                                    19. Country road
-                                                </span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">96%</span>
-                                        </td>
-                                        <td style={{ color: "#e5053a" }}>
-                                            <strong>Hard</strong>
-                                        </td>
-                                        <td />
-                                    </tr>
-                                    <tr>
-                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                            2
-                                        </td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                style={{
-                                                    fontSize: "1.25rem",
-                                                    textDecoration: "none",
-                                                    color: "rgb(0,0,0)",
-                                                    fontWeight: "bold"
-                                                }}
-                                            >
-                                                <span style={{ fontWeight: "normal !important" }}>
-                                                    3. DSCS in time!
-                                                </span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">37%</span>
-                                        </td>
-                                        <td style={{ color: "#008772" }}>
-                                            <strong>Easy</strong>
-                                        </td>
-                                        <td />
-                                    </tr>
-                                    <tr>
-                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                            3
-                                        </td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                style={{
-                                                    fontSize: "1.25rem",
-                                                    textDecoration: "none",
-                                                    color: "rgb(0,0,0)",
-                                                    fontWeight: "bold"
-                                                }}
-                                            >
-                                                <span style={{ fontWeight: "normal !important" }}>
-                                                    15. Is it good to drink?
-                                                </span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">88%</span>
-                                        </td>
-                                        <td style={{ color: "#e87511" }}>
-                                            <strong>Medium</strong>
-                                        </td>
-                                        <td />
-                                    </tr>
-                                    <tr>
-                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                            4
-                                        </td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                style={{
-                                                    fontSize: "1.25rem",
-                                                    textDecoration: "none",
-                                                    color: "rgb(0,0,0)",
-                                                    fontWeight: "bold"
-                                                }}
-                                            >
-                                                <span style={{ fontWeight: "normal !important" }}>
-                                                    15. Is it good to drink?
-                                                </span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">88%</span>
-                                        </td>
-                                        <td style={{ color: "#e87511" }}>
-                                            <strong>Medium</strong>
-                                        </td>
-                                        <td />
-                                    </tr>
-                                    <tr>
-                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                            5
-                                        </td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                style={{
-                                                    fontSize: "1.25rem",
-                                                    textDecoration: "none",
-                                                    color: "rgb(0,0,0)",
-                                                    fontWeight: "bold"
-                                                }}
-                                            >
-                                                <span style={{ fontWeight: "normal !important" }}>
-                                                    15. Is it good to drink?
-                                                </span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span className="text-muted">88%</span>
-                                        </td>
-                                        <td style={{ color: "#e87511" }}>
-                                            <strong>Medium</strong>
-                                        </td>
-                                        <td />
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <section className="py-4 py-xl-5">
-                <div className="container h-100">
-                    <div className="row h-100">
-                        <div className="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
-                            <div>
-                                <h2 className="text-uppercase fw-bold mb-3" style={{ fontFamily: "Copperplate", fontSize: "2.5rem" }}>
-                                    "Coders together strong."
-                                </h2>
-                                <button
-                                    className="btn btn-primary fs-5 me-2 py-2 px-4"
-                                    type="button"
-                                >
-                                    About us
-                                </button>
-                                <button
-                                    className="btn btn-outline-primary fs-5 py-2 px-4"
-                                    type="button"
-                                >
-                                    Github
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Card End */}
         </Layout>
     );
 }

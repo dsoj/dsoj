@@ -6,16 +6,18 @@ import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Carousel } from "react-bootstrap";
 
 export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
     const [username, setUsername] = useState<string | null>(null);
+    const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
 
-    useEffect(()=>{
+    useEffect(() => {
         const cookieUsername = getCookie('username');
         if (cookieUsername) {
             setUsername(cookieUsername);
-        }else{            
-            setUsername('notLogin');
+        } else {
+            setUsername('no tLogin');
             //TODO: not login
         }
     })
@@ -33,6 +35,19 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
 
     return (
         <Layout>
+            {/* Banner Image Strart */}
+            <Carousel style={{ marginBottom: '2rem' }}>
+                {banner_images.map((image: string) => {
+                    return (
+                        <Carousel.Item>
+                            <Image key={image} className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
+                        </Carousel.Item>
+                    )
+                })}
+            </Carousel>
+            {/* Banner Image End */}
+
+            {/* Welcome Text Start */}
             <div style={{ marginTop: "1rem", marginLeft: "10rem" }}>
                 <span style={{ color: "var(--bs-gray-600)" }}>
                     Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
@@ -41,11 +56,14 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                     DSOJ
                 </p>
             </div>
+            {/* Welcome Text End */}
 
+            {/* Card Start */}
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
             >
+                {/* Favourites Section Start */}
                 <div
                     className="card"
                     style={{
@@ -80,6 +98,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Favourites Section End */}
+
+                {/* Recent Section Start */}
                 <div
                     className="card"
                     style={{
@@ -114,6 +135,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Recent Section End */}
+
+                {/* MySubmissions Section Start */}
                 <div
                     className="card"
                     style={{ boxShadow: "0px 0px 3px", borderRadius: 10 }}
@@ -142,7 +166,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* MySubmissions Section End */}
             </div>
+            {/* Card End */}
         </Layout>
     );
 }

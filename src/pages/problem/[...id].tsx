@@ -59,7 +59,6 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         let renderElement: React.JSX.Element[] = [];
         for (let i = 1; i <= samples.length; i++) {
             const sample = samples[i - 1];
-            // TODO: add a copy appearance effect to the sample input and output
             renderElement.push(
                 <div className="row" style={{ margin: '0px' }} key={i}>
                     <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={(e) => copyToClipboard(sample.input)}>
@@ -94,7 +93,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         return renderElement;
     }
 
-    const [source_code, setSourceCode] = useState(''); // TODO: source_code 
+    const [source_code, setSourceCode] = useState('');
 
     return (
         // TODO: Elements have to be convert to react-bootstrap components
