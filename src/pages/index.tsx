@@ -1,16 +1,25 @@
 import Layout from "@/components/Layout";
 import EnvVars from "@/constants/EnvVars";
 import { IProblemListItem } from "@/interface/IProblem";
-import { SubmissionStatusElement } from "@/lib/problem_elements";
+import { DifficultyElement, SubmissionStatusElement } from "@/lib/problem_elements";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Carousel } from "react-bootstrap";
+import { Button, Carousel } from "react-bootstrap";
 
-export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
+export default function Home({ favourites, recent, my_submissions, top_hits }: any) { // TODO: change any to the correct type
     const [username, setUsername] = useState<string | null>(null);
     const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
+
+    function genTagElement(tag: string) {
+        return (
+            <Button className="btn btn-primary" type="button" href={`/tag/${tag}`} key={tag} style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", background: "rgb(190,190,190)", borderStyle: "none", borderTopStyle: "none" }}>
+                #{tag}
+            </Button>
+        )
+    }
 
     useEffect(() => {
         const cookieUsername = getCookie('username');
@@ -37,10 +46,10 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
         <Layout>
             {/* Banner Image Strart */}
             <Carousel style={{ marginBottom: '2rem' }}>
-                {banner_images.map((image: string) => {
+                {banner_images.map((image: string, index: number) => {
                     return (
                         <Carousel.Item>
-                            <Image key={image} className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
+                            <Image key={index} className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
                         </Carousel.Item>
                     )
                 })}
@@ -170,6 +179,110 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
             </div>
             {/* Card End */}
 
+
+            {/* Top Hits Start */}
+            <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
+                <div className="card">
+                    <div className="card-body">
+                        <span style={{ fontSize: "3rem" }}>
+                            <strong>Top Hits</strong>
+                        </span>
+                        <div className="table-responsive">
+                            <table className="table table-striped no-wrap user-table mb-0">
+                                <thead>
+                                    <tr>
+
+
+                                        <th
+                                            className="text-uppercase border-0 font-medium pl-4"
+                                            scope="col"
+                                            style={{ width: "5rem" }}
+                                        >
+                                            No.
+                                        </th>
+                                        <th className="text-uppercase border-0 font-medium" scope="col">
+                                            Name
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Acceptance
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Difficulty
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "10rem" }}
+                                        >
+                                            Tags
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {top_hits.map((item: any, index: number) => {
+                                        const { id, title, accepted, submissions, difficulty, tags } = item;
+                                        return (
+                                            <tr>
+                                                <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                                    {index + 1}
+                                                </td>
+                                                <td>
+                                                    <a
+                                                        href="#"
+                                                        style={{
+                                                            fontSize: "1.25rem",
+                                                            textDecoration: "none",
+                                                            color: "rgb(0,0,0)",
+                                                            fontWeight: "bold"
+                                                        }}
+                                                    >
+                                                        <span className='text-muted'>
+                                                            <Link
+                                                                href={`/problem/${id}`}
+                                                                style={{
+                                                                    fontSize: "1.25rem",
+                                                                    textDecoration: "none",
+                                                                    color: "rgb(0,0,0)",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                <span style={{ fontWeight: "normal !important" }}>
+                                                                    {id}. {title}
+                                                                </span>
+                                                            </Link>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span className="text-muted">
+                                                        {Math.round((100 * accepted) / submissions)}%
+                                                    </span>
+                                                </td>
+                                                <td style={{ color: "#e5053a" }}>
+                                                    <DifficultyElement difficulty={difficulty} />
+                                                </td>
+                                                <td>
+                                                    <span>{tags.map((item: any) => genTagElement(item))}</span>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Top Hits End */}
+
             {/* Coder Start */}
             <section className="py-4 py-xl-5">
                 <div className="container h-100">
@@ -216,11 +329,14 @@ export async function getServerSideProps() {
             console.error(err);
             return [];
         })) as IProblemListItem[];
+
+    console.log(favourites);
     return {
         props: {
             favourites: favourites,
             recent: favourites,
             my_submissions: favourites,
+            top_hits: favourites,
         },
     };
 }

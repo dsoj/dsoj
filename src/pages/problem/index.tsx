@@ -5,7 +5,6 @@ import Link from "next/link";
 import { MongoClient } from "mongodb";
 import EnvVars from "@/constants/EnvVars";
 import Layout from "@/components/Layout";
-// import { getSession } from "@/lib/session";
 import { difficulty_text, DifficultyElement } from "@/lib/problem_elements";
 
 export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
