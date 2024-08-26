@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout";
 import EnvVars from "@/constants/EnvVars";
+import Image from "next/image";
 import { IProblemListItem } from "@/interface/IProblem";
 import { SubmissionStatusElement } from "@/lib/problem_elements";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
 
