@@ -42,7 +42,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                     <DifficultyElement difficulty={difficulty} />
                 </td>
                 <td>
-                    <span>{tags.map((item)=>TagElement(item))}</span>
+                    <span>{tags.map((item) => TagElement(item))}</span>
                 </td>
             </tr>
         )
@@ -69,7 +69,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
 
     return (
         <Layout>
-            <Container style={{margin: "1em", minWidth: "calc(100vw - 2em)"}}>
+            <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>
                 <Card>
                     <Card.Header>
                         <Card.Title
@@ -97,7 +97,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                             placeholder='Search titles or tags'
                         />
                         <Table>
-                            <thead>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                            <thead>
                                 <tr>
                                     <th
                                         className='text-uppercase border-0 font-medium pl-4'
