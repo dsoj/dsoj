@@ -1,21 +1,30 @@
 import Image from 'next/image';
 import logo from '@/assets/logo_s.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import HeadComponent from '@/components/head';
 import apiUrl from '@/constants/apiUrl';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { authentication } from '@/lib/auth';
 
 export default function Login(req: any, res: any) {
+    const router = useRouter();
     const url = apiUrl.accounts.login;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [isFetching, setIsFetching] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
 
-    const router = useRouter();
+    (async () => {
+        if(await authentication()==1) {
+            setMessage("You are already logged in. Redirecting to home page...");
+            router.push('/');
+        }else{
+            setIsFetching(false);
+        }
+    })();
 
     async function Login() {
         setIsFetching(true);
@@ -44,7 +53,7 @@ export default function Login(req: any, res: any) {
             .catch((err: any) => {
                 console.error(err);
             });
-            
+
     }
 
     function onKeyDown(e: any) {
