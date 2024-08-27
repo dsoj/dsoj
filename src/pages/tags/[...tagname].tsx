@@ -100,7 +100,7 @@ export default function TagProblemList({ tag_name, problemList }: { tag_name: st
                                 width: "15rem",
                             }}
                             placeholder='Search titles or tags'
-                            hidden={EnvVars.CommingSoon}
+                            hidden={true} // TODO: Comming soon
                         />
                         <Table>
                             <thead>

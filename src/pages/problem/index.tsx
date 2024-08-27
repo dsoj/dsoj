@@ -98,7 +98,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                                 width: "15rem",
                             }}
                             placeholder='Search titles or tags'
-                            hidden={EnvVars.CommingSoon}
+                            hidden={true} // TODO: Comming soon
                         />
                         <Table>
                             <thead>

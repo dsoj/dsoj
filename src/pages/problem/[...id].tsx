@@ -14,8 +14,9 @@ import { useRouter } from "next/router";
 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { authentication } from "@/lib/auth";
 
-export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
+export default function ProblemDetail({ problemDetail, CommingSoon }: { problemDetail: IProblem, CommingSoon: boolean }) {  
     const router = useRouter();
 
     // submit block 
@@ -30,13 +31,9 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
     // session 
     const [sessionState, setSessionState] = useState(-1);
     useEffect(() => {
-        const getSessionState = async () => {
-            axios.get(`http://localhost:3000/api/auth/session`)
-                .then((res) => {
-                    setSessionState(res.data);
-                })
-        }
-        getSessionState();
+        (async () => {
+            setSessionState(await authentication());
+        })();
     })
 
     if (!problemDetail) {
@@ -174,7 +171,15 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                     />
                 </div>
 
-                <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                <div style={{
+                    background: '#ffffff',
+                    borderRadius: '29px',
+                    padding: '1.5rem',
+                    boxShadow: '0px 0px 3px 0px',
+                    marginBottom: '1rem'
+                    }}
+                    hidden={true} // TODO: Comming soon
+                >
                     <Tabs defaultActiveKey="c1" className="mb-3">
                         <Tab eventKey="c1" title="Case 1">
                             <div className="container" style={{ textAlign: 'center' }}>

@@ -1,14 +1,7 @@
-/**
- * Environments variables declared here.
- */
-
-/* eslint-disable node/no-process-env */
-
 import { getMongoURI } from '@/utils/MongoUtils';
 
 export default {
   NodeEnv: (process.env.NODE_ENV ?? ''),
-  CommingSoon: (process.env.COMMING_SOON != "0"),
   Port: (process.env.PORT ?? 0),
   host_url: (process.env.HOST_URL ?? ''),
   DB: {
