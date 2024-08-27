@@ -12,6 +12,9 @@ import apiUrl from "@/constants/apiUrl";
 import axios from "axios";
 import { useRouter } from "next/router";
 
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
     const router = useRouter();
     const [alertStatus, setAlertStatus] = useState<boolean>(false);
@@ -137,11 +140,14 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                     <h3>Submit</h3>
 
-
-                    <select style={{ marginBottom: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} >
-                        <option value="71" defaultChecked>C++</option>
-                        <option value="63">Python3</option>
-                    </select>
+                    <div style={{ marginBottom: '0.5rem' }}>
+                        <select style={{ marginRight: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} >
+                            <option value="71" defaultChecked>C++</option>
+                            <option value="63">Python3</option>
+                        </select>
+                        <button style={{ marginRight: '0.5rem', marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-success" onClick={submit}><i className="bi bi-file-earmark-arrow-up-fill"></i> Submit</button>
+                        <button style={{ marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-primary" onClick={submit}><i className="bi bi-play-fill"></i> Test</button> {/* TODO: Onclick test */}
+                    </div>
                     <CodeEditor
                         height="20rem"
                         language={language_id === 71 ? 'cpp' : 'python'}
@@ -153,7 +159,50 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                             fontSize: 18,
                         }}
                     />
-                    <button style={{ marginTop: '0.5rem', background: 'var(--bs-form-valid-color)', borderStyle: 'none' }} className="btn btn-primary" onClick={submit}>Submit</button>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                    <Tabs defaultActiveKey="c1" className="mb-3">
+                        <Tab eventKey="c1" title="Case 1">
+                            <div className="container" style={{ textAlign: 'center' }}>
+                                <div className="row">
+                                    <div className="col-md-6"><span>Test Input 1</span></div>
+                                    <div className="col-md-6"><span>Test Output 1</span></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6">
+                                        <textarea style={{
+                                            height: '6rem', resize: 'none',
+                                            width: '20rem'
+                                        }} defaultValue={""} /> {/* TODO: Add sample input */}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
+                                            defaultValue={""} /> {/* TODO: Add sample output */}
+                                    </div>
+                                </div>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="c2" title="Case 2">
+                            <div className="container" style={{ textAlign: 'center' }}>
+                                <div className="row">
+                                    <div className="col-md-6"><span>Test Input 2</span></div>
+                                    <div className="col-md-6"><span>Test Output 2</span></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6"><textarea style={{
+                                        height: '6rem', resize: 'none',
+                                        width: '20rem'
+                                    }} defaultValue={""} /></div>
+                                    <div className="col-md-6"><textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
+                                        defaultValue={""} /></div>
+                                </div>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="whatever" title="+"> {/* TODO: User add more test cases */}
+                            not done yet
+                        </Tab>
+                    </Tabs>
                 </div>
 
             </div>
