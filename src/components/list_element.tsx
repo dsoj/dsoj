@@ -1,18 +1,6 @@
 import { ReactElement } from "react";
 import { Button } from "react-bootstrap";
 
-export function difficulty_text(difficulty: number): string {
-    switch (difficulty) {
-        case 0:
-            return "Easy";
-        case 1:
-            return "Medium";
-        case 2:
-            return "Hard";
-    }
-    return "";
-}
-
 export function SubmissionStatusElement({ status }: { status: number }): ReactElement {
     switch (status) {
         case 0:
@@ -29,6 +17,18 @@ export function SubmissionStatusElement({ status }: { status: number }): ReactEl
             )
     }
     return <span></span>;
+}
+
+export function difficulty_text(difficulty: number): string {
+    switch (difficulty) {
+        case 0:
+            return "Easy";
+        case 1:
+            return "Medium";
+        case 2:
+            return "Hard";
+    }
+    return "";
 }
 
 export function DifficultyElement(props: { difficulty: number }) {

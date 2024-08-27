@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MongoClient } from "mongodb";
 import EnvVars from "@/constants/EnvVars";
 import Layout from "@/components/Layout";
-import { difficulty_text, DifficultyElement } from "@/lib/problem_elements";
+import { difficulty_text, DifficultyElement } from "@/components/list_element";
 
 export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
     function genTagElement(tag: string) {
