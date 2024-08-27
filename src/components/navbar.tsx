@@ -5,20 +5,16 @@ import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
 import axios from "axios";
 import { useEffect, useState } from "react";
-import EnvVars from "@/constants/EnvVars";
+import { authentication } from "@/lib/auth";
 
 export default function NavLayout() {
     const pathname = usePathname() ?? '';
     const [sessionState, setSessionState] = useState(-1);
 
     useEffect(() => {
-        const getSessionState = async () => {
-            axios.get(`http://localhost:${EnvVars.Port}/api/auth/session`)
-                .then((res) => {
-                    setSessionState(res.data);
-                })
-        }
-        getSessionState();
+        (async () => {
+            setSessionState(await authentication());
+        })();
     })
 
 
