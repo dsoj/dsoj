@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import ErrorPage from 'next/error';
 
 import EnvVars from "@/constants/EnvVars";
-import { DifficultyElement, TagElement } from "@/lib/problem_elements";
+import { DifficultyElement, TagElement } from "@/components/list_element";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
 import { useState } from "react";

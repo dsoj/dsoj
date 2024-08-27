@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout";
 import EnvVars from "@/constants/EnvVars";
+import Image from "next/image";
 import { IProblemListItem } from "@/interface/IProblem";
-import { SubmissionStatusElement } from "@/lib/problem_elements";
+import { SubmissionStatusElement } from "@/components/list_element";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
 
@@ -169,6 +169,195 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                 {/* MySubmissions Section End */}
             </div>
             {/* Card End */}
+
+            {/* Top Hits Start */}
+            <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
+                <div className="card">
+                    <div className="card-body">
+                        <span style={{ fontSize: "3rem" }}>
+                            <strong>Top Hits</strong>
+                        </span>
+                        <div className="table-responsive">
+                            <table className="table table-striped no-wrap user-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th
+                                            className="text-uppercase border-0 font-medium pl-4"
+                                            scope="col"
+                                            style={{ width: "5rem" }}
+                                        >
+                                            No.
+                                        </th>
+                                        <th className="text-uppercase border-0 font-medium" scope="col">
+                                            Name
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Acceptance
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Difficulty
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "10rem" }}
+                                        >
+                                            Tags
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                            1
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                style={{
+                                                    fontSize: "1.25rem",
+                                                    textDecoration: "none",
+                                                    color: "rgb(0,0,0)",
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                <span style={{ fontWeight: "normal !important" }}>
+                                                    19. Country road
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">96%</span>
+                                        </td>
+                                        <td style={{ color: "#e5053a" }}>
+                                            <strong>Hard</strong>
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    <tr>
+                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                            2
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                style={{
+                                                    fontSize: "1.25rem",
+                                                    textDecoration: "none",
+                                                    color: "rgb(0,0,0)",
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                <span style={{ fontWeight: "normal !important" }}>
+                                                    3. DSCS in time!
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">37%</span>
+                                        </td>
+                                        <td style={{ color: "#008772" }}>
+                                            <strong>Easy</strong>
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    <tr>
+                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                            3
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                style={{
+                                                    fontSize: "1.25rem",
+                                                    textDecoration: "none",
+                                                    color: "rgb(0,0,0)",
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                <span style={{ fontWeight: "normal !important" }}>
+                                                    15. Is it good to drink?
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">88%</span>
+                                        </td>
+                                        <td style={{ color: "#e87511" }}>
+                                            <strong>Medium</strong>
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    <tr>
+                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                            4
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                style={{
+                                                    fontSize: "1.25rem",
+                                                    textDecoration: "none",
+                                                    color: "rgb(0,0,0)",
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                <span style={{ fontWeight: "normal !important" }}>
+                                                    15. Is it good to drink?
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">88%</span>
+                                        </td>
+                                        <td style={{ color: "#e87511" }}>
+                                            <strong>Medium</strong>
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    <tr>
+                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                            5
+                                        </td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                style={{
+                                                    fontSize: "1.25rem",
+                                                    textDecoration: "none",
+                                                    color: "rgb(0,0,0)",
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                <span style={{ fontWeight: "normal !important" }}>
+                                                    15. Is it good to drink?
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">88%</span>
+                                        </td>
+                                        <td style={{ color: "#e87511" }}>
+                                            <strong>Medium</strong>
+                                        </td>
+                                        <td />
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Top Hits End */}
+
         </Layout>
     );
 }

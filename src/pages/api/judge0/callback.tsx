@@ -18,7 +18,7 @@ export default async function CallbackApiHandler(req: any, res: any) {
         }
     });
 
-    console.log(token)
+    console.log(token);
 
     return res.status(200);
 
