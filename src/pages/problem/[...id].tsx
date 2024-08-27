@@ -14,8 +14,13 @@ import { useRouter } from "next/router";
 
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
     const router = useRouter();
-    const [alertStatus, setAlertStatus] = useState<boolean>(false);
+    
+    // submit block 
+    const [source_code, setSourceCode] = useState('');
     const [language_id, setLanguage_id] = useState(71);
+
+    // alert popup
+    const [alertStatus, setAlertStatus] = useState<boolean>(false);
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
 
@@ -83,18 +88,6 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         )
     }
 
-    function GenTags() {
-        let renderElement: React.JSX.Element[] = [];
-        for (let i = 1; i <= tags.length; i++) {
-            const tag = tags[i - 1];
-            renderElement.push(TagElement(tag));
-        }
-
-        return renderElement;
-    }
-
-    const [source_code, setSourceCode] = useState('');
-
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <Layout>
@@ -103,7 +96,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                     <h2>{id}. {title}&nbsp;</h2>
                     <div style={{ marginBottom: "1rem" }}>
                         <DifficultyElement difficulty={difficulty} />
-                        <GenTags />
+                        {tags.map((item) => TagElement(item))}
                     </div>
                     <p style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}> {details} </p>
 

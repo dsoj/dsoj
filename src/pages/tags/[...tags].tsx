@@ -1,17 +1,36 @@
-import { Card, Table, Spinner, Button, Container } from "react-bootstrap";
-import { IProblemListItem } from "@/interface/IProblem";
+import { MongoClient } from "mongodb";
+import Layout from '@/components/Layout';
+import ErrorPage from 'next/error';
+
+import EnvVars from "@/constants/EnvVars";
+import { DifficultyElement, TagElement } from "@/components/list_element";
+import { IProblem, IProblemListItem } from "@/interface/IProblem";
+import AlertMessage from "@/components/alert";
+import { useState } from "react";
+import { Editor as CodeEditor } from "@monaco-editor/react";
+import apiUrl from "@/constants/apiUrl";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { Button } from "react-bootstrap";
 import Link from "next/link";
 
-import { MongoClient } from "mongodb";
-import EnvVars from "@/constants/EnvVars";
-import Layout from "@/components/Layout";
-import { DifficultyElement } from "@/components/list_element";
-import { TagElement } from "@/components/list_element";
+export default function TagProblemList({ problemList }: { problemList: IProblem }) {
+    if (!problemList) {
+        return (
+            <ErrorPage statusCode={404} />
+        )
+    }
+    function genTagElement(tag: string) {
+        return (
+            <Button className="btn btn-primary" type="button" href={`/tag/${tag}`} key={tag} style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", background: "rgb(190,190,190)", borderStyle: "none", borderTopStyle: "none" }}>
+                #{tag}
+            </Button>
+        )
+    }
 
 
-export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
     function genTableElement(index: number, args: IProblemListItem) {
-        const { id, title, accepted, submissions, difficulty, tags } = problems[index];
+        const { id, title, accepted, submissions, difficulty, tags } = problemList[index];
         return (
             <tr key={index}>
                 <td className='pl-4' style={{ color: "var(--bs-gray-dark)" }}>
@@ -42,7 +61,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                     <DifficultyElement difficulty={difficulty} />
                 </td>
                 <td>
-                    <span>{tags.map((item)=>TagElement(item))}</span>
+                    <span>{tags.map((item) => genTagElement(item))}</span>
                 </td>
             </tr>
         )
@@ -69,7 +88,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
 
     return (
         <Layout>
-            <Container style={{margin: "1em", minWidth: "calc(100vw - 2em)"}}>
+            <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>
                 <Card>
                     <Card.Header>
                         <Card.Title
@@ -97,7 +116,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                             placeholder='Search titles or tags'
                         />
                         <Table>
-                            <thead>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                            <thead>
                                 <tr>
                                     <th
                                         className='text-uppercase border-0 font-medium pl-4'
@@ -144,22 +163,23 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
     );
 }
 
-export async function getServerSideProps({ req, res }: any) {
+export async function getServerSideProps(context: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
 
-    let problemData = (await mongo
+    const tag = context.query.id[0];
+
+    let problemList = (await mongo
         .db("Judge")
         .collection("Problems")
-        .find({}, { projection: { _id: 0, details: 0 } })
+        .find({ tags: tag }, { projection: { _id: 0 } }))
         .toArray()
-        .catch((err) => {
+        .catch((err)=>{
             console.error(err);
-            return [];
-        })) as IProblemListItem[];
+        })
     return {
         props: {
-            problems: problemData,
+            problemList: problemList,
         },
     };
 }
