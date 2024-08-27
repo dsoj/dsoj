@@ -49,10 +49,8 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
     }
 
     function TableContent() {
-        let TableElements: React.JSX.Element[] = [];
-        for (let i = 0; i < problems.length; i++) {
-            TableElements.push(genTableElement(i, problems[i]));
-        }
+        let TableElements: React.JSX.Element[] = 
+            problems.map((problem, index) => genTableElement(index, problem));
 
         return (
             <tbody>
