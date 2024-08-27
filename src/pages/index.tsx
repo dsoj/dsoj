@@ -18,6 +18,7 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
         if (cookieUsername) {
             setUsername(cookieUsername);
         } else {
+            // TODO: check if cookie expired
             setUsername('no tLogin');
             //TODO: not login
         }
