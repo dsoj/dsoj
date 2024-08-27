@@ -7,24 +7,43 @@ import { MongoClient } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {  Carousel } from "react-bootstrap";
+import { Carousel } from "react-bootstrap";
 import { authentication } from "@/lib/auth";
+import { useRouter } from "next/router";
 
 export default function Home({ favourites, recent, my_submissions, top_hits }: any) { // TODO: change any to the correct type
-    const [username, setUsername] = useState<string | null>(null);
+    const router = useRouter();
     const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
+    const [username, setUsername] = useState<string | null>(null);
+    const [sessionState, setSessionState] = useState(-1);
 
+
+    // get session state
     useEffect(() => {
-        // get username
-        const cookieUsername = getCookie('username');
-        if (cookieUsername) {
-            setUsername(cookieUsername);
-        } else {
-            // TODO: check if cookie expired
-            setUsername('no tLogin');
-            //TODO: not login
+        (async () => {
+            setSessionState(await authentication());
+        })();
+    });
+
+    // get username
+    useEffect(() => {
+        if (sessionState == 0) {
+            // not login
+            // TODO: add a "redirect to login" page
+            router.push('/login');
+            return;
         }
-    })
+        (async () => {
+            const cookieUsername = await getCookie('username');
+            if (cookieUsername) {
+                setUsername(cookieUsername);
+            } else {
+                // TODO: check if cookie expired
+                setUsername('no tLogin');
+                //TODO: not login
+            }
+        })();
+    });
 
     function problemCardElement(id: number, title: string, status: number) {
         return (
@@ -38,7 +57,7 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
     }
 
     return (
-        <Layout>
+        <Layout hidden={!sessionState}>
             {/* Banner Image Strart */}
             <Carousel style={{ marginBottom: '2rem' }}>
                 {banner_images.map((image: string) => {

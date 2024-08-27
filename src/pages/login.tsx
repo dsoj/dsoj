@@ -19,9 +19,10 @@ export default function Login(req: any, res: any) {
 
     (async () => {
         if(await authentication()==1) {
-            setMessage("You are already logged in. Redirecting to home page...");
+            setMessage("Redirecting to home page...");
             router.push('/');
         }else{
+            setMessage("");
             setIsFetching(false);
         }
     })();
