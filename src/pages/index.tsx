@@ -8,12 +8,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button, Carousel } from "react-bootstrap";
+import axios from "axios";
 
 export default function Home({ favourites, recent, my_submissions, top_hits }: any) { // TODO: change any to the correct type
     const [username, setUsername] = useState<string | null>(null);
+    const [sessionState, setSessionState] = useState(-1);
     const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
 
     useEffect(() => {
+        // get username
         const cookieUsername = getCookie('username');
         if (cookieUsername) {
             setUsername(cookieUsername);
@@ -22,6 +25,15 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
             setUsername('no tLogin');
             //TODO: not login
         }
+
+        // get session state
+        const getSessionState = async () => {
+            axios.get(`http://localhost:${EnvVars.Port}/api/auth/session`)
+                .then((res) => {
+                    setSessionState(res.data);
+                })
+        }
+        getSessionState();
     })
 
     function problemCardElement(id: number, title: string, status: number) {

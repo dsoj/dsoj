@@ -6,7 +6,7 @@ import EnvVars from "@/constants/EnvVars";
 import { DifficultyElement, TagElement } from "@/components/list_element";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editor as CodeEditor } from "@monaco-editor/react";
 import apiUrl from "@/constants/apiUrl";
 import axios from "axios";
@@ -17,7 +17,7 @@ import Tabs from 'react-bootstrap/Tabs';
 
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
     const router = useRouter();
-    
+
     // submit block 
     const [source_code, setSourceCode] = useState('');
     const [language_id, setLanguage_id] = useState(71);
@@ -26,6 +26,18 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
     const [alertStatus, setAlertStatus] = useState<boolean>(false);
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
+
+    // session 
+    const [sessionState, setSessionState] = useState(-1);
+    useEffect(() => {
+        const getSessionState = async () => {
+            axios.get(`http://localhost:3000/api/auth/session`)
+                .then((res) => {
+                    setSessionState(res.data);
+                })
+        }
+        getSessionState();
+    })
 
     if (!problemDetail) {
         return (
@@ -130,7 +142,15 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
                 </div>
                 <GenExamples />
-                <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                <div
+                    style={{
+                        background: '#ffffff',
+                        borderRadius: '29px',
+                        padding: '1.5rem',
+                        boxShadow: '0px 0px 3px 0px',
+                        marginBottom: '1rem'
+                    }}
+                    hidden={sessionState == 0}>
                     <h3>Submit</h3>
 
                     <div style={{ marginBottom: '0.5rem' }}>
