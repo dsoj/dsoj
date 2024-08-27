@@ -49,18 +49,23 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
     }
 
     function TableContent() {
-        let TableElements: React.JSX.Element[] = 
+        let TableElements: React.JSX.Element[] =
             problems.map((problem, index) => genTableElement(index, problem));
 
+        if (TableElements.length == 0) {
+            return (
+                <tr>
+                    <td colSpan={5}>
+                        <Spinner animation='border' variant='primary' role='status'>
+                            <span className='visually-hidden'>Loading...</span>
+                        </Spinner>
+                    </td>
+                </tr>
+            );
+        }
         return (
             <tbody>
-                {TableElements.length != 0 ? (
-                    TableElements
-                ) : (
-                    <Spinner animation='border' variant='primary' role='status'>
-                        <span className='visually-hidden'>Loading...</span>
-                    </Spinner>
-                )}
+                {TableElements}
             </tbody>
         );
     }
@@ -93,6 +98,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                                 width: "15rem",
                             }}
                             placeholder='Search titles or tags'
+                            hidden={EnvVars.CommingSoon}
                         />
                         <Table>
                             <thead>
