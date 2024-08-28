@@ -36,11 +36,9 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
     // session 
     const [sessionState, setSessionState] = useState(-1);
-    useEffect(() => {
-        (async () => {
-            setSessionState(await authentication());
-        })();
-    })
+    (async () => {
+        setSessionState(await authentication());
+    })();
 
     if (!problemDetail) {
         return (

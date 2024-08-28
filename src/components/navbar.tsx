@@ -12,12 +12,9 @@ export default function NavLayout() {
     // const [sessionState, setSessionState] = useState(-1);
     const [sessionState, setSessionState] = useState(1);
 
-    useEffect(() => {
-        (async () => {
-            // setSessionState(await authentication());
-        })();
-    })
-
+    (async () => {
+        setSessionState(await authentication());
+    })();
 
     function AccountPart({ session }: { session: number }) {
         if (session == 1) {

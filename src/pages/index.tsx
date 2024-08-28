@@ -17,12 +17,18 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
     const [username, setUsername] = useState<string | null>(null);
     const [sessionState, setSessionState] = useState(-1);
 
-    // get session state
-    useEffect(() => {
-        (async () => {
-            setSessionState(await authentication());
-        })();
-    });
+    (async () => {
+        setSessionState(await authentication());
+
+        const cookieUsername = await getCookie('username');
+        if (cookieUsername) {
+            setUsername(cookieUsername);
+        } else {
+            // TODO: check if cookie expired
+            setUsername('no tLogin');
+            //TODO: not login
+        }
+    })();
 
     // get username
     useEffect(() => {
@@ -32,16 +38,6 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
             router.push('/login');
             return;
         }
-        (async () => {
-            const cookieUsername = await getCookie('username');
-            if (cookieUsername) {
-                setUsername(cookieUsername);
-            } else {
-                // TODO: check if cookie expired
-                setUsername('no tLogin');
-                //TODO: not login
-            }
-        })();
     });
 
     function problemCardElement(id: number, title: string, status: number) {
