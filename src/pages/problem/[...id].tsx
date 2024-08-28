@@ -6,7 +6,7 @@ import EnvVars from "@/constants/EnvVars";
 import { DifficultyElement, TagElement } from "@/components/list_element";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Editor as CodeEditor } from "@monaco-editor/react";
 import apiUrl from "@/constants/apiUrl";
 import axios from "axios";
@@ -21,6 +21,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { authentication } from "@/lib/auth";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
     const router = useRouter();
@@ -69,8 +70,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
             })
     }
 
-    function copyToClipboard(content: string) {
-        navigator.clipboard.writeText(content);
+    function doCopyEffect() {
         setAlertText('Copied!');
         setAlertVariant('success');
         setAlertStatus(true);
@@ -85,18 +85,23 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
             const sample = samples[i - 1];
             renderElement.push(
                 <div className="row" style={{ margin: '0px' }} key={i}>
-                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={(e) => copyToClipboard(sample.input)}>
-                        <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
-                            <h4>Sample Input {i}</h4>
-                            <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
+                    <CopyToClipboard text={sample.input} onCopy={doCopyEffect}>
+                        <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
+                            <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                                <h4>Sample Input {i}</h4>
+                                <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e) => copyToClipboard(sample.output)}>
+                    </CopyToClipboard>
+                    
+                    <CopyToClipboard text={sample.output} onCopy={doCopyEffect}>
+                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
                         <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                             <h4>Sample Output {i}</h4>
                             <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
                         </div>
                     </div>
+                    </CopyToClipboard>
                 </div>
             )
         }
@@ -256,19 +261,58 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                         <div> {/* if AC */}
                             <Image src={ac_res.src} width="100" height="100" alt="coder" />
                             <h5 style={{ color: "rgb(0, 135, 114)", fontFamily: "monospace" }}>Accepted</h5>
+
+                            <div>
+                                <span style={{ fontSize: 24 }}>
+                                    <strong>{accepted}</strong>
+                                </span>
+                                <span style={{ marginRight: "3rem" }}>
+                                    &nbsp;ms&nbsp;
+                                    &nbsp;
+                                </span>
+                                <span style={{ fontSize: 24 }}>
+                                    <strong>{submissions}</strong>
+                                </span>
+                                <span style={{ marginRight: "3rem" }}>
+                                    &nbsp;MB&nbsp;
+                                    &nbsp;
+                                </span>
+                                <span>
+                                    Acceptance Rate&nbsp;&nbsp;
+                                    <span style={{ fontSize: 24 }}>
+                                        <strong>{Math.round((100 * accepted) / submissions)}%</strong>
+                                    </span>
+                                    &nbsp;
+                                </span>
+                                <br />
+                                <CopyToClipboard text={"source_code"}>
+                                    <button>Copy</button>
+                                    {/* onClick={() => navigator.clipboard.writeText("hi")} */}
+                                </CopyToClipboard>
+                                <CodeEditor
+                                    height="20rem"
+                                    language={language_id === 71 ? 'cpp' : 'python'}
+                                    theme="vs-dark"
+                                    value={"source_code"}
+                                    onChange={(value) => { }}
+                                    options={{
+                                        selectOnLineNumbers: true,
+                                        fontSize: 18,
+                                        readOnly: true,
+                                    }}
+                                />
+                            </div>
                         </div>
                         <div> {/* if not AC */}
                             <Image src={bad_res.src} width="100" height="100" alt="coder" />
                             <h5 style={{ color: "rgb(229, 4, 59)", fontFamily: "monospace" }}>Wrong Answer</h5>
                         </div>
-
-
                     </div>
                 </div>
 
             </div>
             <AlertMessage show={alertStatus} text={alert_text} varient={alert_variant} />
-        </Layout>
+        </Layout >
     )
 }
 
