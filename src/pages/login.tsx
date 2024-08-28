@@ -19,16 +19,18 @@ export default function Login(req: any, res: any) {
     const [isFetching, setIsFetching] = useState(true);
     const [isRedirecting, setIsRedirecting] = useState(false);
 
-    (async () => {
-        if (await authentication() == 1) {
-            setIsRedirecting(true);
-            setMessage("Redirecting to home page...");
-            router.push('/');
-        } else {
-            setMessage("");
-            setIsFetching(false);
-        }
-    })();
+    useEffect(() => {
+        (async () => {
+            if (await authentication() == 1) {
+                setIsRedirecting(true);
+                setMessage("Redirecting to home page...");
+                router.push('/');
+            } else {
+                setMessage("");
+                setIsFetching(false);
+            }
+        })();
+    });
 
     async function Login() {
         setIsFetching(true);
@@ -88,7 +90,7 @@ export default function Login(req: any, res: any) {
 
                                     <div className="mb-3">
                                         <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
-                                            {(isRedirecting) ? 
+                                            {(isRedirecting) ?
                                                 <Spinner size="sm" animation="grow" role="status">
                                                     <span className="visually-hidden">Submitting...</span>
                                                 </Spinner> :

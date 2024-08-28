@@ -17,18 +17,20 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
     const [username, setUsername] = useState<string | null>(null);
     const [sessionState, setSessionState] = useState(-1);
 
-    (async () => {
-        setSessionState(await authentication());
+    useEffect(() => {
+        (async () => {
+            setSessionState(await authentication());
 
-        const cookieUsername = await getCookie('username');
-        if (cookieUsername) {
-            setUsername(cookieUsername);
-        } else {
-            // TODO: check if cookie expired
-            setUsername('no tLogin');
-            //TODO: not login
-        }
-    })();
+            const cookieUsername = await getCookie('username');
+            if (cookieUsername) {
+                setUsername(cookieUsername);
+            } else {
+                // TODO: check if cookie expired
+                setUsername('no tLogin');
+                //TODO: not login
+            }
+        })();
+    });
 
     // get username
     useEffect(() => {
