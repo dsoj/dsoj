@@ -79,9 +79,11 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
             {/* Welcome Text End */}
 
             {/* Card Start */}
+            {/* TODO: Hide Comming Soon */}
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
+                hidden={true}
             >
                 {/* Favourites Section Start */}
                 <div
