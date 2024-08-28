@@ -6,7 +6,7 @@ import EnvVars from "@/constants/EnvVars";
 import { DifficultyElement, TagElement } from "@/components/list_element";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editor as CodeEditor } from "@monaco-editor/react";
 import apiUrl from "@/constants/apiUrl";
 import axios from "axios";
@@ -22,8 +22,9 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { authentication } from "@/lib/auth";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Button } from "react-bootstrap";
 
-export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
+export default function ProblemDetail({ problemDetail, result }: { problemDetail: IProblem, result: any }) {
     const router = useRouter();
     const [submit_status, setSubmitStatus] = useState<boolean>(false);
 
@@ -38,9 +39,12 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
     // session 
     const [sessionState, setSessionState] = useState(-1);
-    (async () => {
-        setSessionState(await authentication());
-    })();
+
+    useEffect(() => {
+        (async () => {
+            setSessionState(await authentication());
+        })();
+    });
 
     if (!problemDetail) {
         return (
@@ -70,6 +74,111 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
             })
     }
 
+    function ResultBlock() {
+        // TODO: CE RE TLE MLE
+        let ele = <></>
+        if (result.ac.length == 0 && result.wa.length == 0) {
+            ele = (
+                <div> {/* if not submitted yet */}
+                    <Image src={coder.src} width="100" height="100" alt="coder" />
+                    <p style={{ color: "gray", fontFamily: "monospace" }}><i><a href="#submit-block">Submit</a> to see the result!</i></p>
+                </div>
+            )
+        } else if (result.ac.length > 0) {
+            // const time = result.ac[0].submissions[0].time;
+            // const memory = result.ac[0].submissions[0].memory;
+            ele = (
+                <div> {/* if AC */}
+                    <Image src={ac_res.src} width="100" height="100" alt="coder" />
+                    <h5 style={{ color: "rgb(0, 135, 114)", fontFamily: "monospace" }}>Accepted</h5>
+
+                    <div>
+                        {/* <span style={{ fontSize: 24 }}>
+                            <strong>{result.ac[0].time}</strong>
+                        </span>
+                        <span style={{ marginRight: "3rem" }}>
+                            &nbsp;ms&nbsp;
+                            &nbsp;
+                        </span>
+                        <span style={{ fontSize: 24 }}>
+                            <strong>{result.ac[0].time}</strong>
+                        </span>
+                        <span style={{ marginRight: "3rem" }}>
+                            &nbsp;MB&nbsp;
+                            &nbsp;
+                        </span>
+                        <span>
+                            Acceptance Rate&nbsp;&nbsp;
+                            <span style={{ fontSize: 24 }}>
+                                <strong>{Math.round((100 * accepted) / submissions)}%</strong>
+                            </span>
+                            &nbsp;
+                        </span> */}
+                        <p>{(result.ac[result.ac.length-1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.ac[result.ac.length-1].code}>
+                            <Button variant="secondary">Copy</Button>
+                        </CopyToClipboard>
+                        <div style={{ marginTop: '1rem' }}>
+                            <CodeEditor
+                                height="20rem"
+                                language={result.ac[0].language_id === 71 ? 'python' : 'cpp'}
+                                theme="vs-dark"
+                                value={result.ac[0].code}
+                                options={{
+                                    selectOnLineNumbers: true,
+                                    fontSize: 18,
+                                    readOnly: true,
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        } else if (result.wa.length > 0) {
+            ele = (
+                <div> {/* if not AC */}
+                    <Image src={bad_res.src} width="100" height="100" alt="coder" />
+                    <h5 style={{ color: "rgb(229, 4, 59)", fontFamily: "monospace" }}>Failed</h5>
+
+                    <div>
+                        <p>{(result.wa[result.wa.length-1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.wa[result.wa.length-1].code}>
+                            <Button variant="secondary">Copy</Button>
+                        </CopyToClipboard>
+                        <div style={{ marginTop: '1rem' }}>
+                            <CodeEditor
+                                height="20rem"
+                                language={result.wa[0].language_id === 71 ? 'cpp' : 'python'}
+                                theme="vs-dark"
+                                value={result.wa[0].code}
+                                options={{
+                                    selectOnLineNumbers: true,
+                                    fontSize: 18,
+                                    readOnly: true,
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div
+                style={{
+                    background: '#ffffff',
+                    borderRadius: '29px',
+                    padding: '1.5rem',
+                    boxShadow: '0px 0px 3px 0px',
+                    marginBottom: '1rem'
+                }}
+                hidden={sessionState == 0}>
+                <h3>Result</h3>
+                {ele}
+
+            </div>
+        )
+    }
+
     function doCopyEffect() {
         setAlertText('Copied!');
         setAlertVariant('success');
@@ -93,14 +202,14 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                             </div>
                         </div>
                     </CopyToClipboard>
-                    
+
                     <CopyToClipboard text={sample.output} onCopy={doCopyEffect}>
-                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
-                        <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
-                            <h4>Sample Output {i}</h4>
-                            <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
+                        <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
+                            <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
+                                <h4>Sample Output {i}</h4>
+                                <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
+                            </div>
                         </div>
-                    </div>
                     </CopyToClipboard>
                 </div>
             )
@@ -242,74 +351,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                         </Tab>
                     </Tabs>
                 </div>
-
-                <div
-                    style={{
-                        background: '#ffffff',
-                        borderRadius: '29px',
-                        padding: '1.5rem',
-                        boxShadow: '0px 0px 3px 0px',
-                        marginBottom: '1rem'
-                    }}
-                    hidden={sessionState == 0}>
-                    <h3>Result</h3>
-                    <div> {/* if not submitted yet */}
-                        <Image src={coder.src} width="100" height="100" alt="coder" />
-                        <p style={{ color: "gray", fontFamily: "monospace" }}><i><a href="#submit-block">Submit</a> to see the result!</i></p>
-                    </div>
-                    <div> {/* if submitted */}
-                        <div> {/* if AC */}
-                            <Image src={ac_res.src} width="100" height="100" alt="coder" />
-                            <h5 style={{ color: "rgb(0, 135, 114)", fontFamily: "monospace" }}>Accepted</h5>
-
-                            <div>
-                                <span style={{ fontSize: 24 }}>
-                                    <strong>{accepted}</strong>
-                                </span>
-                                <span style={{ marginRight: "3rem" }}>
-                                    &nbsp;ms&nbsp;
-                                    &nbsp;
-                                </span>
-                                <span style={{ fontSize: 24 }}>
-                                    <strong>{submissions}</strong>
-                                </span>
-                                <span style={{ marginRight: "3rem" }}>
-                                    &nbsp;MB&nbsp;
-                                    &nbsp;
-                                </span>
-                                <span>
-                                    Acceptance Rate&nbsp;&nbsp;
-                                    <span style={{ fontSize: 24 }}>
-                                        <strong>{Math.round((100 * accepted) / submissions)}%</strong>
-                                    </span>
-                                    &nbsp;
-                                </span>
-                                <br />
-                                <CopyToClipboard text={"source_code"}>
-                                    <button>Copy</button>
-                                    {/* onClick={() => navigator.clipboard.writeText("hi")} */}
-                                </CopyToClipboard>
-                                <CodeEditor
-                                    height="20rem"
-                                    language={language_id === 71 ? 'cpp' : 'python'}
-                                    theme="vs-dark"
-                                    value={"source_code"}
-                                    onChange={(value) => { }}
-                                    options={{
-                                        selectOnLineNumbers: true,
-                                        fontSize: 18,
-                                        readOnly: true,
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div> {/* if not AC */}
-                            <Image src={bad_res.src} width="100" height="100" alt="coder" />
-                            <h5 style={{ color: "rgb(229, 4, 59)", fontFamily: "monospace" }}>Wrong Answer</h5>
-                        </div>
-                    </div>
-                </div>
-
+                <ResultBlock />
             </div>
             <AlertMessage show={alertStatus} text={alert_text} varient={alert_variant} />
         </Layout >
@@ -322,17 +364,36 @@ export async function getServerSideProps(context: any) {
 
     const id = context.query.id[0];
 
-    let problemDetail = (await mongo
+    const problemDetail = (await mongo
         .db("Judge")
         .collection("Problems")
         .findOne({ id: id }, { projection: { _id: 0 } })
         .catch((err) => {
             console.error(err);
             return [];
-        }))
+        }));
+
+    const ac_result = (await mongo
+        .db("Judge")
+        .collection("Submissions")
+        .find({ problem_id: id, username: context.req.cookies.username, status: { $not: { $eq: "Failed" } } }, { projection: { _id: 0 } })
+        .toArray()
+    )
+
+    const wa_result = (await mongo
+        .db("Judge")
+        .collection("Submissions")
+        .find({ problem_id: id, username: context.req.cookies.username, status: "Failed" }, { projection: { _id: 0 } })
+        .toArray()
+    )
+
     return {
         props: {
             problemDetail,
+            result: {
+                ac: ac_result,
+                wa: wa_result,
+            }
         },
     };
 }

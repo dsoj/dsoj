@@ -32,7 +32,7 @@ export default async function SubmitApiHandler(req: any, res: any) {
             "source_code": Base64.encode(code),
             "stdin": Base64.encode(stdin),
             "expected_output": Base64.encode(stdout),
-            "cpu_time_limit": cpu_time_limit,   
+            "cpu_time_limit": cpu_time_limit,
             "callback_url": EnvVars.judge0.callback_url,
         });
     };
@@ -43,15 +43,18 @@ export default async function SubmitApiHandler(req: any, res: any) {
     const username = getCookie("username", { req });
 
     client.db('Judge').collection('Submissions').insertOne({
+        submission_id: `${username}-${id}-${new Date().getTime()}`,
         username: username,
         problem_id: id,
         submissions: data,
         code: code,
-        send_time: new Date(),
+        send_time: new Date().toString(),
         language_id: language_id,
     })
 
-
+    client.db('Judge').collection('Problems').updateOne({ id: id }, {
+        $inc: { "submissions": 1 }
+    });
 
     return res.status(200).send({ message: "Submit successful" });
 }
