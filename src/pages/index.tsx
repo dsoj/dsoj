@@ -330,22 +330,35 @@ export async function getServerSideProps() {
     const mongo = new MongoClient(mongoURI);
 
     // TODO: set filter 
-    let favourites = (await mongo
-        .db("Judge")
-        .collection("Problems")
-        .find({}, { projection: { _id: 0, details: 0 } })
-        .toArray()
-        .catch((err) => {
-            console.error(err);
-            return [];
-        })) as IProblemListItem[];
+    try {
+        let favourites = (await mongo
+            .db("Judge")
+            .collection("Problems")
+            .find({}, { projection: { _id: 0, details: 0 } })
+            .toArray()
+            .catch((err) => {
+                console.error(err);
+                return [];
+            })) as IProblemListItem[];
 
-    return {
-        props: {
-            favourites: favourites,
-            recent: favourites,
-            my_submissions: favourites,
-            top_hits: favourites,
-        },
-    };
+
+        return {
+            props: {
+                favourites: favourites,
+                recent: favourites,
+                my_submissions: favourites,
+                top_hits: favourites,
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                favourites: [],
+                recent: [],
+                my_submissions: [],
+                top_hits: [],
+            },
+        };
+    }
 }

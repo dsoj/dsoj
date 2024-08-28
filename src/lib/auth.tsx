@@ -2,6 +2,11 @@
 import axios from "axios"
 
 export async function authentication() {
-    const response = await axios.get(`/api/auth/session`);
-    return response.data;
+    try {
+        const response = await axios.get(`/api/auth/session`);
+        return response.data;
+    } catch (err) {
+        console.error(err);
+        return { session: false };
+    }
 }

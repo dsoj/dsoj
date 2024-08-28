@@ -34,31 +34,36 @@ export default function Login(req: any, res: any) {
 
     async function Login() {
         setIsFetching(true);
-        await axios.post(
-            url,
-            JSON.stringify({
-                name: name,
-                password: password,
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/json',
+        try {
+            await axios.post(
+                url,
+                JSON.stringify({
+                    name: name,
+                    password: password,
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 }
-            }
-        )
-            .then((res: any) => {
-                setMessage((res.data) ? res.data.message : '');
-                if (res.data.session) {
-                    router.push('/');
+            )
+                .then((res: any) => {
+                    setMessage((res.data) ? res.data.message : '');
+                    if (res.data.session) {
+                        router.push('/');
 
-                } else {
-                    setPassword('');
-                    setIsFetching(false);
-                }
-            })
-            .catch((err: any) => {
-                console.error(err);
-            });
+                    } else {
+                        setPassword('');
+                        setIsFetching(false);
+                    }
+                })
+                .catch((err: any) => {
+                    console.error(err);
+                });
+        } catch (err) {
+            console.error(err);
+            setIsFetching(false);
+        }
 
     }
 

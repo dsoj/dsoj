@@ -33,9 +33,13 @@ export default async function CallbackApiHandler(req: any, res: any) {
 
 
     // TODO: update the submission status
-    client.db("Judge").collection("Submissions").updateOne({ "submissions.token": token }, {
-        $set: update_data
-    });
-
-    return res.status(200).send("OK");
+    try {
+        client.db("Judge").collection("Submissions").updateOne({ "submissions.token": token }, {
+            $set: update_data
+        });
+        return res.status(200).send("OK");
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send("Internal Server Error");
+    }
 }

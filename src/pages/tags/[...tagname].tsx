@@ -158,18 +158,28 @@ export async function getServerSideProps(context: any) {
 
     const tag_name = context.query.tagname[0];
 
-    let problemList = await mongo
-        .db("Judge")
-        .collection("Problems")
-        .find({ tags: tag_name }, { projection: { _id: 0 } })
-        .toArray()
-        .catch((err) => {
-            console.error(err);
-        })
-    return {
-        props: {
-            tag_name: tag_name,
-            problemList: problemList,
-        },
-    };
+    try {
+        let problemList = await mongo
+            .db("Judge")
+            .collection("Problems")
+            .find({ tags: tag_name }, { projection: { _id: 0 } })
+            .toArray()
+            .catch((err) => {
+                console.error(err);
+            })
+        return {
+            props: {
+                tag_name: tag_name,
+                problemList: problemList,
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                tag_name: tag_name,
+                problemList: null,
+            },
+        };
+    }
 }

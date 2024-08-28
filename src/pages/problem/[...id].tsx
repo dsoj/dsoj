@@ -62,16 +62,25 @@ export default function ProblemDetail({ problemDetail, result }: { problemDetail
             setSubmitStatus(false);
             return
         }
-
-        const submit_api_url = apiUrl.judge0.submit;
-        axios.post(submit_api_url, {
-            id: id,
-            code: source_code,
-            language_id: language_id,
-        })
-            .then(() => {
-                router.push('/problem');
+        try {
+            const submit_api_url = apiUrl.judge0.submit;
+            axios.post(submit_api_url, {
+                id: id,
+                code: source_code,
+                language_id: language_id,
             })
+                .then(() => {
+                    router.push('/problem');
+                })
+        } catch (err) {
+            console.error(err);
+            setAlertText('Submit failed!');
+            setAlertVariant('danger');
+            setAlertStatus(true);
+            setTimeout(() => {
+                setAlertStatus(false);
+            }, 1000);
+        }
     }
 
     function ResultBlock() {
@@ -114,8 +123,8 @@ export default function ProblemDetail({ problemDetail, result }: { problemDetail
                             </span>
                             &nbsp;
                         </span> */}
-                        <p>{(result.ac[result.ac.length-1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
-                        <CopyToClipboard text={result.ac[result.ac.length-1].code}>
+                        <p>{(result.ac[result.ac.length - 1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.ac[result.ac.length - 1].code}>
                             <Button variant="secondary">Copy</Button>
                         </CopyToClipboard>
                         <div style={{ marginTop: '1rem' }}>
@@ -141,8 +150,8 @@ export default function ProblemDetail({ problemDetail, result }: { problemDetail
                     <h5 style={{ color: "rgb(229, 4, 59)", fontFamily: "monospace" }}>Failed</h5>
 
                     <div>
-                        <p>{(result.wa[result.wa.length-1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
-                        <CopyToClipboard text={result.wa[result.wa.length-1].code}>
+                        <p>{(result.wa[result.wa.length - 1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.wa[result.wa.length - 1].code}>
                             <Button variant="secondary">Copy</Button>
                         </CopyToClipboard>
                         <div style={{ marginTop: '1rem' }}>
@@ -363,37 +372,49 @@ export async function getServerSideProps(context: any) {
     const mongo = new MongoClient(mongoURI);
 
     const id = context.query.id[0];
+    try {
+        const problemDetail = (await mongo
+            .db("Judge")
+            .collection("Problems")
+            .findOne({ id: id }, { projection: { _id: 0 } })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            }));
 
-    const problemDetail = (await mongo
-        .db("Judge")
-        .collection("Problems")
-        .findOne({ id: id }, { projection: { _id: 0 } })
-        .catch((err) => {
-            console.error(err);
-            return [];
-        }));
+        const ac_result = (await mongo
+            .db("Judge")
+            .collection("Submissions")
+            .find({ problem_id: id, username: context.req.cookies.username, status: { $not: { $eq: "Failed" } } }, { projection: { _id: 0 } })
+            .toArray()
+        )
 
-    const ac_result = (await mongo
-        .db("Judge")
-        .collection("Submissions")
-        .find({ problem_id: id, username: context.req.cookies.username, status: { $not: { $eq: "Failed" } } }, { projection: { _id: 0 } })
-        .toArray()
-    )
+        const wa_result = (await mongo
+            .db("Judge")
+            .collection("Submissions")
+            .find({ problem_id: id, username: context.req.cookies.username, status: "Failed" }, { projection: { _id: 0 } })
+            .toArray()
+        )
 
-    const wa_result = (await mongo
-        .db("Judge")
-        .collection("Submissions")
-        .find({ problem_id: id, username: context.req.cookies.username, status: "Failed" }, { projection: { _id: 0 } })
-        .toArray()
-    )
-
-    return {
-        props: {
-            problemDetail,
-            result: {
-                ac: ac_result,
-                wa: wa_result,
-            }
-        },
-    };
+        return {
+            props: {
+                problemDetail,
+                result: {
+                    ac: ac_result,
+                    wa: wa_result,
+                }
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                problemDetail: null,
+                result: {
+                    ac: [],
+                    wa: [],
+                }
+            },
+        };
+    }
 }

@@ -152,18 +152,27 @@ export async function getServerSideProps({ req, res }: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
 
-    let problemData = (await mongo
-        .db("Judge")
-        .collection("Problems")
-        .find({}, { projection: { _id: 0, details: 0 } })
-        .toArray()
-        .catch((err) => {
-            console.error(err);
-            return [];
-        })) as IProblemListItem[];
-    return {
-        props: {
-            problems: problemData,
-        },
-    };
+    try {
+        let problemData = (await mongo
+            .db("Judge")
+            .collection("Problems")
+            .find({}, { projection: { _id: 0, details: 0 } })
+            .toArray()
+            .catch((err) => {
+                console.error(err);
+                return [];
+            })) as IProblemListItem[];
+        return {
+            props: {
+                problems: problemData,
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                problems: [],
+            },
+        };
+    }
 }
