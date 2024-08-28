@@ -7,5 +7,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     deleteCookie('session', { req, res });    
     deleteCookie('username', { req, res });
-    return res.status(200).redirect('/');
+    return res.status(200).redirect('/login');
 }
