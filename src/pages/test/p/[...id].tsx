@@ -17,7 +17,6 @@ import coder from '@/assets/coder.png';
 import ac_res from '@/assets/ac_res.png';
 import bad_res from '@/assets/bad_res.png'
 
-import Spinner from 'react-bootstrap/Spinner';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { authentication } from "@/lib/auth";
@@ -28,7 +27,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
     // submit block 
     const [source_code, setSourceCode] = useState('');
-    const [language_id, setLanguage_id] = useState(54);
+    const [language_id, setLanguage_id] = useState(71);
 
     // alert popup
     const [alertStatus, setAlertStatus] = useState<boolean>(false);
@@ -162,17 +161,10 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
                     <div style={{ marginBottom: '0.5rem' }}>
                         <select style={{ marginRight: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} disabled={submit_status}>
-                            <option value="54" defaultChecked>C++ (GCC 9.2.0)</option>
-                            <option value="71">Python (3.8.1)</option>
+                            <option value="71" defaultChecked>C++</option>
+                            <option value="63">Python3</option>
                         </select>
-                        <button style={{ marginRight: '0.5rem', marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-success" onClick={submit} disabled={submit_status}>
-                            {(!submit_status) ?
-                                <span><i className="bi bi-file-earmark-arrow-up-fill"></i> Submit </span> :
-                                <Spinner size="sm" animation="grow" role="status">
-                                    <span className="visually-hidden">Submitting...</span>
-                                </Spinner>
-                            }
-                        </button>
+                        <button style={{ marginRight: '0.5rem', marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-success" onClick={submit} disabled={submit_status}><i className="bi bi-file-earmark-arrow-up-fill"></i> Submit</button>
                         <button style={{ marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-primary" onClick={submit} hidden={true}><i className="bi bi-play-fill"></i> Test</button> {/* TODO: Onclick test */}
                     </div>
                     <CodeEditor

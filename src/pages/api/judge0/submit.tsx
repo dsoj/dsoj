@@ -2,8 +2,9 @@ import EnvVars from "@/constants/EnvVars";
 import client from "@/lib/db";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { Base64 } from "js-base64";
 
-const url = EnvVars.judge0.host + "/submissions/batch";
+const url = EnvVars.judge0.host + "/submissions/batch?base64_encoded=true";
 export default async function SubmitApiHandler(req: any, res: any) {
 
     if (req.method !== "POST") return res.status(404);
@@ -28,12 +29,13 @@ export default async function SubmitApiHandler(req: any, res: any) {
         const { stdin, stdout, cpu_time_limit } = task;
         submissions.push({
             "language_id": language_id,
-            "source_code": code,
-            "stdin": stdin,
-            "expected_output": stdout,
-            "cpu_time_limit": cpu_time_limit,
+            "source_code": Base64.encode(code),
+            "stdin": Base64.encode(stdin),
+            "expected_output": Base64.encode(stdout),
+            "cpu_time_limit": cpu_time_limit,   
+            "callback_url": EnvVars.judge0.callback_url,
         });
-    };    
+    };
     const { data } = await axios.post(url, {
         submissions,
         callback_url: EnvVars.judge0.callback_url,

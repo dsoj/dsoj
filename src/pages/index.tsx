@@ -17,7 +17,6 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
     const [username, setUsername] = useState<string | null>(null);
     const [sessionState, setSessionState] = useState(-1);
 
-
     // get session state
     useEffect(() => {
         (async () => {
@@ -196,7 +195,7 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
 
             {/* Top Hits Start */}
             <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
-                <div className="card">
+                <div className="card" style={{ border: "none", backgroundColor: "transparent" }}>
                     <div className="card-body">
                         <span style={{ fontSize: "3rem" }}>
                             <strong>Top Hits</strong>

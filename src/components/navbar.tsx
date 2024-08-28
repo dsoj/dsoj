@@ -9,11 +9,12 @@ import { authentication } from "@/lib/auth";
 
 export default function NavLayout() {
     const pathname = usePathname() ?? '';
-    const [sessionState, setSessionState] = useState(-1);
+    // const [sessionState, setSessionState] = useState(-1);
+    const [sessionState, setSessionState] = useState(1);
 
     useEffect(() => {
         (async () => {
-            setSessionState(await authentication());
+            // setSessionState(await authentication());
         })();
     })
 

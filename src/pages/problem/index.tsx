@@ -73,8 +73,8 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
     return (
         <Layout>
             <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>
-                <Card>
-                    <Card.Header>
+                <Card style={{ border: "none" }}>
+                    <Card.Header style={{ backgroundColor: "white", border: "none" }}>
                         <Card.Title
                             className='text-uppercase card-title mb-0'
                             style={{
@@ -100,7 +100,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                             placeholder='Search titles or tags'
                             hidden={true} // TODO: Comming soon
                         />
-                        <Table>
+                        <Table className="table-striped">
                             <thead>
                                 <tr>
                                     <th
