@@ -3,21 +3,48 @@ import Layout from '@/components/Layout';
 import ErrorPage from 'next/error';
 
 import EnvVars from "@/constants/EnvVars";
-import { DifficultyElement, TagElement } from "@/lib/problem_elements";
+import { DifficultyElement, TagElement } from "@/components/list_element";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editor as CodeEditor } from "@monaco-editor/react";
 import apiUrl from "@/constants/apiUrl";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-export default function ProblemDetail({ problemDetail }: { problemDetail: IProblem }) {
+import Image from 'next/image';
+import coder from '@/assets/coder.png';
+import ac_res from '@/assets/ac_res.png';
+import bad_res from '@/assets/bad_res.png'
+
+import Spinner from 'react-bootstrap/Spinner';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import { authentication } from "@/lib/auth";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Button } from "react-bootstrap";
+
+export default function ProblemDetail({ problemDetail, result }: { problemDetail: IProblem, result: any }) {
     const router = useRouter();
+    const [submit_status, setSubmitStatus] = useState<boolean>(false);
+
+    // submit block 
+    const [source_code, setSourceCode] = useState('');
+    const [language_id, setLanguage_id] = useState(54);
+
+    // alert popup
     const [alertStatus, setAlertStatus] = useState<boolean>(false);
-    const [language_id, setLanguage_id] = useState(71);
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
+
+    // session 
+    const [sessionState, setSessionState] = useState(-1);
+
+    useEffect(() => {
+        (async () => {
+            setSessionState(await authentication());
+        })();
+    });
 
     if (!problemDetail) {
         return (
@@ -27,26 +54,141 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
     const { id, title, details, samples, tags, difficulty, accepted, submissions } = problemDetail;
 
     async function submit() {
+        setSubmitStatus(true);
         if (source_code === "") {
             setAlertText('Please enter your code!');
             setAlertVariant('danger');
             setAlertStatus(true);
+            setSubmitStatus(false);
             return
         }
-
-        const submit_api_url = apiUrl.judge0.submit;
-        axios.post(submit_api_url, {
-            id: id,
-            code: source_code,
-            language_id: language_id,
-        })
-            .then(() => {
-                router.push('/problem');
+        try {
+            const submit_api_url = apiUrl.judge0.submit;
+            axios.post(submit_api_url, {
+                id: id,
+                code: source_code,
+                language_id: language_id,
             })
+                .then(() => {
+                    router.push('/problem');
+                })
+        } catch (err) {
+            console.error(err);
+            setAlertText('Submit failed!');
+            setAlertVariant('danger');
+            setAlertStatus(true);
+            setTimeout(() => {
+                setAlertStatus(false);
+            }, 1000);
+        }
     }
 
-    function copyToClipboard(content: string) {
-        navigator.clipboard.writeText(content);
+    function ResultBlock() {
+        // TODO: CE RE TLE MLE
+        let ele = <></>
+        if (result.ac.length == 0 && result.wa.length == 0) {
+            ele = (
+                <div> {/* if not submitted yet */}
+                    <Image src={coder.src} width="100" height="100" alt="coder" />
+                    <p style={{ color: "gray", fontFamily: "monospace" }}><i><a href="#submit-block">Submit</a> to see the result!</i></p>
+                </div>
+            )
+        } else if (result.ac.length > 0) {
+            // const time = result.ac[0].submissions[0].time;
+            // const memory = result.ac[0].submissions[0].memory;
+            ele = (
+                <div> {/* if AC */}
+                    <Image src={ac_res.src} width="100" height="100" alt="coder" />
+                    <h5 style={{ color: "rgb(0, 135, 114)", fontFamily: "monospace" }}>Accepted</h5>
+
+                    <div>
+                        {/* <span style={{ fontSize: 24 }}>
+                            <strong>{result.ac[0].time}</strong>
+                        </span>
+                        <span style={{ marginRight: "3rem" }}>
+                            &nbsp;ms&nbsp;
+                            &nbsp;
+                        </span>
+                        <span style={{ fontSize: 24 }}>
+                            <strong>{result.ac[0].time}</strong>
+                        </span>
+                        <span style={{ marginRight: "3rem" }}>
+                            &nbsp;MB&nbsp;
+                            &nbsp;
+                        </span>
+                        <span>
+                            Acceptance Rate&nbsp;&nbsp;
+                            <span style={{ fontSize: 24 }}>
+                                <strong>{Math.round((100 * accepted) / submissions)}%</strong>
+                            </span>
+                            &nbsp;
+                        </span> */}
+                        <p>{(result.ac[result.ac.length - 1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.ac[result.ac.length - 1].code}>
+                            <Button variant="secondary">Copy</Button>
+                        </CopyToClipboard>
+                        <div style={{ marginTop: '1rem' }}>
+                            <CodeEditor
+                                height="20rem"
+                                language={result.ac[0].language_id === 71 ? 'python' : 'cpp'}
+                                theme="vs-dark"
+                                value={result.ac[0].code}
+                                options={{
+                                    selectOnLineNumbers: true,
+                                    fontSize: 18,
+                                    readOnly: true,
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        } else if (result.wa.length > 0) {
+            ele = (
+                <div> {/* if not AC */}
+                    <Image src={bad_res.src} width="100" height="100" alt="coder" />
+                    <h5 style={{ color: "rgb(229, 4, 59)", fontFamily: "monospace" }}>Failed</h5>
+
+                    <div>
+                        <p>{(result.wa[result.wa.length - 1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
+                        <CopyToClipboard text={result.wa[result.wa.length - 1].code}>
+                            <Button variant="secondary">Copy</Button>
+                        </CopyToClipboard>
+                        <div style={{ marginTop: '1rem' }}>
+                            <CodeEditor
+                                height="20rem"
+                                language={result.wa[0].language_id === 71 ? 'cpp' : 'python'}
+                                theme="vs-dark"
+                                value={result.wa[0].code}
+                                options={{
+                                    selectOnLineNumbers: true,
+                                    fontSize: 18,
+                                    readOnly: true,
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div
+                style={{
+                    background: '#ffffff',
+                    borderRadius: '29px',
+                    padding: '1.5rem',
+                    boxShadow: '0px 0px 3px 0px',
+                    marginBottom: '1rem'
+                }}
+                hidden={sessionState == 0}>
+                <h3>Result</h3>
+                {ele}
+
+            </div>
+        )
+    }
+
+    function doCopyEffect() {
         setAlertText('Copied!');
         setAlertVariant('success');
         setAlertStatus(true);
@@ -59,21 +201,25 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         let renderElement: React.JSX.Element[] = [];
         for (let i = 1; i <= samples.length; i++) {
             const sample = samples[i - 1];
-            // TODO: add a copy appearance effect to the sample input and output
             renderElement.push(
                 <div className="row" style={{ margin: '0px' }} key={i}>
-                    <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }} onClick={(e) => copyToClipboard(sample.input)}>
-                        <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
-                            <h4>Sample Input {i}</h4>
-                            <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
+                    <CopyToClipboard text={sample.input} onCopy={doCopyEffect}>
+                        <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
+                            <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                                <h4>Sample Input {i}</h4>
+                                <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }} onClick={(e) => copyToClipboard(sample.output)}>
-                        <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
-                            <h4>Sample Output {i}</h4>
-                            <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
+                    </CopyToClipboard>
+
+                    <CopyToClipboard text={sample.output} onCopy={doCopyEffect}>
+                        <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
+                            <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
+                                <h4>Sample Output {i}</h4>
+                                <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
+                            </div>
                         </div>
-                    </div>
+                    </CopyToClipboard>
                 </div>
             )
         }
@@ -84,18 +230,6 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
         )
     }
 
-    function GenTags() {
-        let renderElement: React.JSX.Element[] = [];
-        for (let i = 1; i <= tags.length; i++) {
-            const tag = tags[i - 1];
-            renderElement.push(TagElement(tag));
-        }
-
-        return renderElement;
-    }
-
-    const [source_code, setSourceCode] = useState(''); // TODO: source_code 
-
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <Layout>
@@ -104,7 +238,7 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                     <h2>{id}. {title}&nbsp;</h2>
                     <div style={{ marginBottom: "1rem" }}>
                         <DifficultyElement difficulty={difficulty} />
-                        <GenTags />
+                        {tags.map((item) => TagElement(item))}
                     </div>
                     <p style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}> {details} </p>
 
@@ -135,14 +269,33 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
 
                 </div>
                 <GenExamples />
-                <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                <div
+                    id="submit-block"
+                    style={{
+                        background: '#ffffff',
+                        borderRadius: '29px',
+                        padding: '1.5rem',
+                        boxShadow: '0px 0px 3px 0px',
+                        marginBottom: '1rem'
+                    }}
+                    hidden={sessionState == 0}>
                     <h3>Submit</h3>
 
-
-                    <select style={{ marginBottom: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} >
-                        <option value="71" defaultChecked>C++</option>
-                        <option value="63">Python3</option>
-                    </select>
+                    <div style={{ marginBottom: '0.5rem' }}>
+                        <select style={{ marginRight: '0.5rem' }} value={language_id} onChange={(e) => setLanguage_id(parseInt(e.target.value))} disabled={submit_status}>
+                            <option value="54" defaultChecked>C++ (GCC 9.2.0)</option>
+                            <option value="71">Python (3.8.1)</option>
+                        </select>
+                        <button style={{ marginRight: '0.5rem', marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-success" onClick={submit} disabled={submit_status}>
+                            {(!submit_status) ?
+                                <span><i className="bi bi-file-earmark-arrow-up-fill"></i> Submit </span> :
+                                <Spinner size="sm" animation="grow" role="status">
+                                    <span className="visually-hidden">Submitting...</span>
+                                </Spinner>
+                            }
+                        </button>
+                        <button style={{ marginTop: '0.5rem', borderStyle: 'none' }} className="btn btn-primary bg-primary" onClick={submit} hidden={true}><i className="bi bi-play-fill"></i> Test</button> {/* TODO: Onclick test */}
+                    </div>
                     <CodeEditor
                         height="20rem"
                         language={language_id === 71 ? 'cpp' : 'python'}
@@ -154,12 +307,63 @@ export default function ProblemDetail({ problemDetail }: { problemDetail: IProbl
                             fontSize: 18,
                         }}
                     />
-                    <button style={{ marginTop: '0.5rem', background: 'var(--bs-form-valid-color)', borderStyle: 'none' }} className="btn btn-primary" onClick={submit}>Submit</button>
                 </div>
 
+                <div style={{
+                    background: '#ffffff',
+                    borderRadius: '29px',
+                    padding: '1.5rem',
+                    boxShadow: '0px 0px 3px 0px',
+                    marginBottom: '1rem'
+                }}
+                    hidden={true} // TODO: Comming soon
+                >
+                    <Tabs defaultActiveKey="c1" className="mb-3">
+                        <Tab eventKey="c1" title="Case 1">
+                            <div className="container" style={{ textAlign: 'center' }}>
+                                <div className="row">
+                                    <div className="col-md-6"><span>Test Input 1</span></div>
+                                    <div className="col-md-6"><span>Test Output 1</span></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6">
+                                        <textarea style={{
+                                            height: '6rem', resize: 'none',
+                                            width: '20rem'
+                                        }} defaultValue={""} /> {/* TODO: Add sample input */}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
+                                            defaultValue={""} /> {/* TODO: Add sample output */}
+                                    </div>
+                                </div>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="c2" title="Case 2">
+                            <div className="container" style={{ textAlign: 'center' }}>
+                                <div className="row">
+                                    <div className="col-md-6"><span>Test Input 2</span></div>
+                                    <div className="col-md-6"><span>Test Output 2</span></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6"><textarea style={{
+                                        height: '6rem', resize: 'none',
+                                        width: '20rem'
+                                    }} defaultValue={""} /></div>
+                                    <div className="col-md-6"><textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
+                                        defaultValue={""} /></div>
+                                </div>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="whatever" title="+"> {/* TODO: User add more test cases */}
+                            not done yet
+                        </Tab>
+                    </Tabs>
+                </div>
+                <ResultBlock />
             </div>
             <AlertMessage show={alertStatus} text={alert_text} varient={alert_variant} />
-        </Layout>
+        </Layout >
     )
 }
 
@@ -168,18 +372,49 @@ export async function getServerSideProps(context: any) {
     const mongo = new MongoClient(mongoURI);
 
     const id = context.query.id[0];
+    try {
+        const problemDetail = (await mongo
+            .db("Judge")
+            .collection("Problems")
+            .findOne({ id: id }, { projection: { _id: 0 } })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            }));
 
-    let problemDetail = (await mongo
-        .db("Judge")
-        .collection("Problems")
-        .findOne({ id: id }, { projection: { _id: 0 } })
-        .catch((err) => {
-            console.error(err);
-            return [];
-        }))
-    return {
-        props: {
-            problemDetail,
-        },
-    };
+        const ac_result = (await mongo
+            .db("Judge")
+            .collection("Submissions")
+            .find({ problem_id: id, username: context.req.cookies.username, status: { $not: { $eq: "Failed" } } }, { projection: { _id: 0 } })
+            .toArray()
+        )
+
+        const wa_result = (await mongo
+            .db("Judge")
+            .collection("Submissions")
+            .find({ problem_id: id, username: context.req.cookies.username, status: "Failed" }, { projection: { _id: 0 } })
+            .toArray()
+        )
+
+        return {
+            props: {
+                problemDetail,
+                result: {
+                    ac: ac_result,
+                    wa: wa_result,
+                }
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                problemDetail: null,
+                result: {
+                    ac: [],
+                    wa: [],
+                }
+            },
+        };
+    }
 }

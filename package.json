@@ -1,6 +1,6 @@
 {
   "name": "dsoj",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,6 +15,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/prismjs": "^1.26.4",
+    "@types/react-copy-to-clipboard": "^5.0.7",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
@@ -22,12 +23,14 @@
     "child_process": "^1.0.2",
     "connect-mongodb-session": "^2.2.0",
     "cookies-next": "^4.2.1",
+    "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.9.2",
     "next": "14.2.4",
     "next-cookies": "^2.0.3",
     "react": "^18",
     "react-bootstrap": "^2.10.4",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18"
   },
   "devDependencies": {

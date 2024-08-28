@@ -1,14 +1,46 @@
 import Layout from "@/components/Layout";
 import EnvVars from "@/constants/EnvVars";
 import { IProblemListItem } from "@/interface/IProblem";
-import { SubmissionStatusElement } from "@/lib/problem_elements";
+import { DifficultyElement, SubmissionStatusElement, TagElement } from "@/components/list_element";
 import { getCookie } from "cookies-next";
 import { MongoClient } from "mongodb";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Carousel } from "react-bootstrap";
+import { authentication } from "@/lib/auth";
+import { useRouter } from "next/router";
 
-export default function Home({ favourites, recent, my_submissions }: any) { // TODO: change any to the correct type
-    const username = getCookie("username");
+export default function Home({ favourites, recent, my_submissions, top_hits }: any) { // TODO: change any to the correct type
+    const router = useRouter();
+    const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
+    const [username, setUsername] = useState<string | null>(null);
+    const [sessionState, setSessionState] = useState(-1);
 
+    useEffect(() => {
+        (async () => {
+            setSessionState(await authentication());
+
+            const cookieUsername = await getCookie('username');
+            if (cookieUsername) {
+                setUsername(cookieUsername);
+            } else {
+                // TODO: check if cookie expired
+                setUsername('no tLogin');
+                //TODO: not login
+            }
+        })();
+    });
+
+    // get username
+    useEffect(() => {
+        if (sessionState == 0) {
+            // not login
+            // TODO: add a "redirect to login" page
+            router.push('/login');
+            return;
+        }
+    });
 
     function problemCardElement(id: number, title: string, status: number) {
         return (
@@ -22,7 +54,20 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
     }
 
     return (
-        <Layout>
+        <Layout hidden={!sessionState}>
+            {/* Banner Image Strart */}
+            <Carousel style={{ marginBottom: '2rem' }}>
+                {banner_images.map((image: string) => {
+                    return (
+                        <Carousel.Item key={`img_${image}`}>
+                            <Image className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
+                        </Carousel.Item>
+                    )
+                })}
+            </Carousel>
+            {/* Banner Image End */}
+
+            {/* Welcome Text Start */}
             <div style={{ marginTop: "1rem", marginLeft: "10rem" }}>
                 <span style={{ color: "var(--bs-gray-600)" }}>
                     Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
@@ -31,11 +76,16 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                     DSOJ
                 </p>
             </div>
+            {/* Welcome Text End */}
 
+            {/* Card Start */}
+            {/* TODO: Hide Comming Soon */}
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
+                hidden={true}
             >
+                {/* Favourites Section Start */}
                 <div
                     className="card"
                     style={{
@@ -70,6 +120,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Favourites Section End */}
+
+                {/* Recent Section Start */}
                 <div
                     className="card"
                     style={{
@@ -104,6 +157,9 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* Recent Section End */}
+
+                {/* MySubmissions Section Start */}
                 <div
                     className="card"
                     style={{ boxShadow: "0px 0px 3px", borderRadius: 10 }}
@@ -132,7 +188,138 @@ export default function Home({ favourites, recent, my_submissions }: any) { // T
                         </div>
                     </div>
                 </div>
+                {/* MySubmissions Section End */}
             </div>
+            {/* Card End */}
+
+
+            {/* Top Hits Start */}
+            <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
+                <div className="card" style={{ border: "none", backgroundColor: "transparent" }}>
+                    <div className="card-body">
+                        <span style={{ fontSize: "3rem" }}>
+                            <strong>Top Hits</strong>
+                        </span>
+                        <div className="table-responsive">
+                            <table className="table table-striped no-wrap user-table mb-0">
+                                <thead>
+                                    <tr>
+
+
+                                        <th
+                                            className="text-uppercase border-0 font-medium pl-4"
+                                            scope="col"
+                                            style={{ width: "5rem" }}
+                                        >
+                                            No.
+                                        </th>
+                                        <th className="text-uppercase border-0 font-medium" scope="col">
+                                            Name
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Acceptance
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "7rem" }}
+                                        >
+                                            Difficulty
+                                        </th>
+                                        <th
+                                            className="text-uppercase border-0 font-medium"
+                                            scope="col"
+                                            style={{ width: "10rem" }}
+                                        >
+                                            Tags
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {top_hits.map((item: any, index: number) => {
+                                        const { id, title, accepted, submissions, difficulty, tags } = item;
+                                        return (
+                                            <tr key={id}>
+                                                <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                                    {index + 1}
+                                                </td>
+                                                <td>
+                                                    <div
+                                                        style={{
+                                                            fontSize: "1.25rem",
+                                                            textDecoration: "none",
+                                                            color: "rgb(0,0,0)",
+                                                            fontWeight: "bold"
+                                                        }}
+                                                    >
+                                                        <Link
+                                                            href={`/problem/${id}`}
+                                                            style={{
+                                                                fontSize: "1.25rem",
+                                                                textDecoration: "none",
+                                                                color: "rgb(0,0,0)",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            <span style={{ fontWeight: "normal !important" }}>
+                                                                {id}. {title}
+                                                            </span>
+                                                        </Link>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="text-muted">
+                                                        {Math.round((100 * accepted) / submissions)}%
+                                                    </span>
+                                                </td>
+                                                <td style={{ color: "#e5053a" }}>
+                                                    <DifficultyElement difficulty={difficulty} />
+                                                </td>
+                                                <td>
+                                                    <span>{tags.map((item: any) => TagElement(item))}</span>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Top Hits End */}
+
+            {/* Coder Start */}
+            <section className="py-4 py-xl-5">
+                <div className="container h-100">
+                    <div className="row h-100">
+                        <div className="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
+                            <div>
+                                <h2 className="text-uppercase fw-bold mb-3" style={{ fontFamily: "Copperplate", fontSize: "2.5rem" }}>
+                                    "Coders together strong."
+                                </h2>
+                                <button
+                                    className="btn btn-primary fs-5 me-2 py-2 px-4"
+                                    type="button"
+                                >
+                                    About us
+                                </button>
+                                <button
+                                    className="btn btn-outline-primary fs-5 py-2 px-4"
+                                    type="button"
+                                >
+                                    Github
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {/* Coder End */}
         </Layout>
     );
 }
@@ -143,20 +330,35 @@ export async function getServerSideProps() {
     const mongo = new MongoClient(mongoURI);
 
     // TODO: set filter 
-    let favourites = (await mongo
-        .db("Judge")
-        .collection("Problems")
-        .find({}, { projection: { _id: 0, details: 0 } })
-        .toArray()
-        .catch((err) => {
-            console.error(err);
-            return [];
-        })) as IProblemListItem[];
-    return {
-        props: {
-            favourites: favourites,
-            recent: favourites,
-            my_submissions: favourites,
-        },
-    };
+    try {
+        let favourites = (await mongo
+            .db("Judge")
+            .collection("Problems")
+            .find({}, { projection: { _id: 0, details: 0 } })
+            .toArray()
+            .catch((err) => {
+                console.error(err);
+                return [];
+            })) as IProblemListItem[];
+
+
+        return {
+            props: {
+                favourites: favourites,
+                recent: favourites,
+                my_submissions: favourites,
+                top_hits: favourites,
+            },
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            props: {
+                favourites: [],
+                recent: [],
+                my_submissions: [],
+                top_hits: [],
+            },
+        };
+    }
 }

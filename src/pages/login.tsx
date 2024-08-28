@@ -1,50 +1,70 @@
 import Image from 'next/image';
 import logo from '@/assets/logo_s.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import HeadComponent from '@/components/head';
 import apiUrl from '@/constants/apiUrl';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { authentication } from '@/lib/auth';
+import { Spinner } from 'react-bootstrap';
 
 export default function Login(req: any, res: any) {
+    const router = useRouter();
     const url = apiUrl.accounts.login;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [isFetching, setIsFetching] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
+    const [isRedirecting, setIsRedirecting] = useState(false);
 
-    const router = useRouter();
+    useEffect(() => {
+        (async () => {
+            if (await authentication() == 1) {
+                setIsRedirecting(true);
+                setMessage("Redirecting to home page...");
+                router.push('/');
+            } else {
+                setMessage("");
+                setIsFetching(false);
+            }
+        })();
+    });
 
     async function Login() {
         setIsFetching(true);
-        await axios.post(
-            url,
-            JSON.stringify({
-                name: name,
-                password: password,
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/json',
+        try {
+            await axios.post(
+                url,
+                JSON.stringify({
+                    name: name,
+                    password: password,
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 }
-            }
-        )
-            .then((res: any) => {
-                setMessage((res.data) ? res.data.message : '');
-                if (res.data.session) {
-                    router.push('/');
+            )
+                .then((res: any) => {
+                    setMessage((res.data) ? res.data.message : '');
+                    if (res.data.session) {
+                        router.push('/');
 
-                } else {
-                    setPassword('');
-                    setIsFetching(false);
-                }
-            })
-            .catch((err: any) => {
-                console.error(err);
-            });
-            
+                    } else {
+                        setPassword('');
+                        setIsFetching(false);
+                    }
+                })
+                .catch((err: any) => {
+                    console.error(err);
+                });
+        } catch (err) {
+            console.error(err);
+            setIsFetching(false);
+        }
+
     }
 
     function onKeyDown(e: any) {
@@ -74,7 +94,13 @@ export default function Login(req: any, res: any) {
                                     </div>
 
                                     <div className="mb-3">
-                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>Login</button>
+                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
+                                            {(isRedirecting) ?
+                                                <Spinner size="sm" animation="grow" role="status">
+                                                    <span className="visually-hidden">Submitting...</span>
+                                                </Spinner> :
+                                                <span>Login</span>
+                                            }</button>
                                     </div>
 
                                     <p className="text-muted">Forgot password?</p>

@@ -15,18 +15,23 @@ export default async function LoginApiHandler(req: NextApiRequest, res: NextApiR
     if (!name || !password) {
         return res.status(200).json({ message: "Invalid request", session: false });
     }
+    try {
+        const user = await client.db('Main').collection('Accounts')
+            .findOne({ name: name }, { projection: { _id: 0 } });
 
-    const user = await client.db('Main').collection('Accounts')
-        .findOne({ name: name }, { projection: { _id: 0 } });
-
-    if (user && (await bcrypt.compare(password, user.passwordHash))) {
-        const session = jwt.sign({ user_id: user.id }, EnvVars.session.secret, {
-            expiresIn: EnvVars.session.maxAge,
-        });
-        setCookie("session", session, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
-        setCookie("username", name, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
-        return res.status(200).json({ message: "Login successful", session: session });
+        if (user && (await bcrypt.compare(password, user.passwordHash))) {
+            const session = jwt.sign({ user_id: user.id }, EnvVars.session.secret, {
+                expiresIn: EnvVars.session.maxAge,
+            });
+            setCookie("session", session, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
+            setCookie("username", name, { req, res, maxAge: parseInt(EnvVars.session.maxAge) });
+            return res.status(200).json({ message: "Redirecting to home page...", session: session });
+        }
+        return res.status(200).json({ message: "Login failed", session: false });
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({ message: "Login failed", session: false });
     }
-    return res.status(200).json({ message: "Login failed", session: false });
+
 
 }

@@ -5,23 +5,18 @@ import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import { authentication } from "@/lib/auth";
 
 export default function NavLayout() {
     const pathname = usePathname() ?? '';
-    const [sessionState, setSessionState] = useState(-1);
-
+    // const [sessionState, setSessionState] = useState(-1);
+    const [sessionState, setSessionState] = useState(1);
 
     useEffect(() => {
-        const getSessionState = async () => {
-            axios.get(`http://localhost:3000/api/auth/session`)
-                .then((res) => {
-                    setSessionState(res.data);
-                })
-        }
-        getSessionState();
-    })
-
+        (async () => {
+            setSessionState(await authentication());
+        })();
+    });
 
     function AccountPart({ session }: { session: number }) {
         if (session == 1) {
@@ -49,19 +44,13 @@ export default function NavLayout() {
                 <Navbar.Toggle />
 
                 <Navbar.Collapse>
-                    <Nav className="mx-auto" activeKey={pathname}>
+                    <Nav className="mx-auto" activeKey={`/${pathname.split('/')[0]}`}>
                         {/* TODO: Add NavItem color by checking path */}
                         <NavItem>
                             <NavLink href="/">Home</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/problem">Problems</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#">My Submissions</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="http://localhost:3000/submit/001">Support</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/about">About</NavLink>
@@ -72,6 +61,6 @@ export default function NavLayout() {
 
             </Container>
         </Navbar>
-
     )
 }
+

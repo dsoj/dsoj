@@ -1,9 +1,3 @@
-/**
- * Environments variables declared here.
- */
-
-/* eslint-disable node/no-process-env */
-
 import { getMongoURI } from '@/utils/MongoUtils';
 
 export default {
