@@ -8,6 +8,7 @@ import apiUrl from '@/constants/apiUrl';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { authentication } from '@/lib/auth';
+import { Spinner } from 'react-bootstrap';
 
 export default function Login(req: any, res: any) {
     const router = useRouter();
@@ -16,12 +17,14 @@ export default function Login(req: any, res: any) {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [isFetching, setIsFetching] = useState(true);
+    const [isRedirecting, setIsRedirecting] = useState(false);
 
     (async () => {
-        if(await authentication()==1) {
+        if (await authentication() == 1) {
+            setIsRedirecting(true);
             setMessage("Redirecting to home page...");
             router.push('/');
-        }else{
+        } else {
             setMessage("");
             setIsFetching(false);
         }
@@ -84,7 +87,13 @@ export default function Login(req: any, res: any) {
                                     </div>
 
                                     <div className="mb-3">
-                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>Login</button>
+                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
+                                            {(isRedirecting) ? 
+                                                <Spinner size="sm" animation="grow" role="status">
+                                                    <span className="visually-hidden">Submitting...</span>
+                                                </Spinner> :
+                                                <span>Login</span>
+                                            }</button>
                                     </div>
 
                                     <p className="text-muted">Forgot password?</p>
