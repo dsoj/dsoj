@@ -124,10 +124,11 @@ export default function ProblemDetail({ problemDetail, result }: { problemDetail
                             &nbsp;
                         </span> */}
                         <p>{(result.ac[result.ac.length - 1].language_id == 71) ? 'Python (3.8.1)' : 'C++ (GCC 9.2.0)'}</p>
-                        <CopyToClipboard text={result.ac[result.ac.length - 1].code}>
-                            <Button variant="secondary">Copy</Button>
+                        {/* <CopyToClipboard text={result.ac[result.ac.length - 1].code} onCopy={doCopyEffect}> */}
+                        <CopyToClipboard text={result.ac.at(-1).code} onCopy={doCopyEffect}>
+                            <Button variant="secondary"><i className="bi bi-copy"></i></Button>
                         </CopyToClipboard>
-                        <div style={{ marginTop: '1rem' }}>
+                        <div style={{ marginTop: '0rem' }}>
                             <CodeEditor
                                 height="20rem"
                                 language={result.ac[0].language_id === 71 ? 'python' : 'cpp'}
