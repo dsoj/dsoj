@@ -60,11 +60,6 @@ export default function About({ about_data }: any) {
                         </Link>
                     </Col>
                 </Row>
-                <Row className="mt-5">
-                    <Col className="text-center">
-                        <p className="text-muted">Copyright © 2024 DSCS. All rights reserved.</p>
-                    </Col>
-                </Row>
             </Container>
         </Layout>
     );
