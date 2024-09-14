@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 
 export default function Home({ favourites, recent, my_submissions, top_hits }: any) { // TODO: change any to the correct type
     const router = useRouter();
-    const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
+    const banner_images = ['1','1']; // TODO: get path from db
     const [username, setUsername] = useState<string | null>(null);
     const [sessionState, setSessionState] = useState(-1);
 
@@ -60,7 +60,7 @@ export default function Home({ favourites, recent, my_submissions, top_hits }: a
                 {banner_images.map((image: string) => {
                     return (
                         <Carousel.Item key={`img_${image}`}>
-                            <Image className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={100} height={300} />
+                            <Image className="w-100 d-block" src={`/banner_images/${image}.png`} alt="Slide Image" width={1000} height={300} />
                         </Carousel.Item>
                     )
                 })}
