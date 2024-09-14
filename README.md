@@ -55,10 +55,33 @@ This project is powered by the frameworks [Next.js](https://nextjs.org/) and [Re
  ### 3. Set Up Environment Variables
  Edit the `.env` file according to the format in `.env.example` and fill in the required environment variables such like `judge0`, `session`, `mongodb` settings.
  Edit the `.env` file according to the format in `.env.example` and fill in the required environment variables, such as settings for `judge0`, `session`, and `mongodb`.
- 
 
  ### 4. Run the evelopment server
  After installing the dependencies and setting the environment variables, you can start the server by running:
  ```bash
  npm run dev
  ```
+
+ # Screenshots
+
+ ### Home Page
+ <div align="center">
+  <img src="/screenshots/sc_homepage.png" alt="dsoj" width="70%"/>
+ </div> 
+
+ ### Problem List
+ <div align="center">
+  <img src="/screenshots/sc_problem_list.png" alt="dsoj" width="70%"/>
+ </div>
+ 
+ ### Problem Details
+ <div align="center">
+  <img src="/screenshots/sc_problem_details.png" alt="dsoj" width="70%"/>
+ </div>
+ 
+ ### Login Page
+ <div align="center">
+  <img src="/screenshots/sc_login.png" alt="dsoj" width="70%"/>
+ </div>
+ 
+ 
