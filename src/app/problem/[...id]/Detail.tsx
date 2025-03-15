@@ -1,27 +1,10 @@
 "use client";
 import ErrorPage from 'next/error';
-
-import EnvVars from "@/constants/EnvVars";
 import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
 import { useCallback, useEffect, useState } from "react";
-import { Editor as CodeEditor } from "@monaco-editor/react";
-import apiUrl from "@/constants/apiUrl";
-import axios from "axios";
-
-import Image from 'next/image';
-import coder from '@/assets/coder.png';
-import ac_res from '@/assets/ac_res.png';
-import bad_res from '@/assets/bad_res.png';
-
-import Spinner from 'react-bootstrap/Spinner';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button } from "react-bootstrap";
-import { notFound, redirect } from 'next/navigation';
-import { tree } from 'next/dist/build/templates/app-page';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [submit_status, setSubmitStatus] = useState<boolean>(false);
@@ -52,15 +35,12 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
         fetch(`/api/problem/${problem_id}`)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data.problemDetail);
+                if (!data.problemDetail) {
+                    setIsNotFound(true);
+                    return;
+                }
                 setProblemDetail(data.problemDetail);
                 setIsNotFound(false);
-            })
-            .catch((err) => {
-                if (err.response.status === 404) {
-                    setIsNotFound(true);
-                }
-                console.error(err);
             });
     }, []);
 

@@ -3,21 +3,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string[]; }; }) {
     const id = (await params)?.id[0];
-    const client = await connectMongoClient();
 
     if (!id) {
         return NextResponse.json({ error: 'Invalid problem id' }, { status: 400 });
     }
 
+    const client = await connectMongoClient();
     try {
         const problemDetail = await client
             .db("Judge")
             .collection("Problems")
             .findOne({ id: id }, { projection: { _id: 0 } })
-            .catch((err) => {
-                console.error(err);
-                return [];
-            });
         // TODO: fix result fetching
         // const ac_result = (await connectMongoClient())
         //     .db("Judge")
