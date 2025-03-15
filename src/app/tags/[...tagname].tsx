@@ -1,17 +1,23 @@
-import { Card, Table, Spinner, Button, Container } from "react-bootstrap";
+import { MongoClient } from "mongodb";
+import Layout from '@/components/Layout';
+import ErrorPage from 'next/error';
+
+import EnvVars from "@/constants/EnvVars";
+import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
 import { IProblemListItem } from "@/interface/IProblem";
+import { Card, Container, Spinner, Table } from "react-bootstrap";
 import Link from "next/link";
 
-import { MongoClient } from "mongodb";
-import EnvVars from "@/constants/EnvVars";
-import Layout from "@/components/Layout";
-import { DifficultyElement } from "@/components/list_element";
-import { TagElement } from "@/components/list_element";
+export default function TagProblemList({ tag_name, problemList }: { tag_name: string, problemList: IProblemListItem[]; }) {
+    if (!problemList) {
+        return (
+            <ErrorPage statusCode={404} />
+        );
+    }
 
 
-export default function ProblemList({ problems }: { problems: IProblemListItem[] }) {
     function genTableElement(index: number, args: IProblemListItem) {
-        const { id, title, accepted, submissions, difficulty, tags } = problems[index];
+        const { id, title, accepted, submissions, difficulty, tags } = problemList[index];
         return (
             <tr key={index}>
                 <td className='pl-4' style={{ color: "var(--bs-gray-dark)" }}>
@@ -42,15 +48,15 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                     <DifficultyElement difficulty={difficulty} />
                 </td>
                 <td>
-                    <span>{tags.map((item) => TagElement(item))}</span>
+                    <span>{tags.map((item: string) => TagElement(item))}</span>
                 </td>
             </tr>
-        )
+        );
     }
 
     function TableContent() {
         let TableElements: React.JSX.Element[] =
-            problems.map((problem, index) => genTableElement(index, problem));
+            problemList.map((problem, index) => genTableElement(index, problem));
 
         if (TableElements.length == 0) {
             return (
@@ -63,18 +69,14 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                 </tr>
             );
         }
-        return (
-            <tbody>
-                {TableElements}
-            </tbody>
-        );
+        return TableElements;
     }
 
     return (
         <Layout>
             <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>
-                <Card style={{ border: "none" }}>
-                    <Card.Header style={{ backgroundColor: "white", border: "none" }}>
+                <Card>
+                    <Card.Header>
                         <Card.Title
                             className='text-uppercase card-title mb-0'
                             style={{
@@ -82,7 +84,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                                 marginBottom: "1rem!important",
                             }}
                         >
-                            problems
+                            Tag: {tag_name}
                         </Card.Title>
                     </Card.Header>
 
@@ -100,7 +102,7 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                             placeholder='Search titles or tags'
                             hidden={true} // TODO: Comming soon
                         />
-                        <Table className="table-striped">
+                        <Table>
                             <thead>
                                 <tr>
                                     <th
@@ -139,39 +141,44 @@ export default function ProblemList({ problems }: { problems: IProblemListItem[]
                                     </th>
                                 </tr>
                             </thead>
-                            <TableContent />
+                            <tbody>
+                                <TableContent />
+                            </tbody>
                         </Table>
                     </Card.Body>
                 </Card>
             </Container>
-        </Layout>
+        </Layout >
     );
 }
 
-export async function getServerSideProps({ req, res }: any) {
+export async function getServerSideProps(context: any) {
     const mongoURI = EnvVars.DB.URI;
     const mongo = new MongoClient(mongoURI);
 
+    const tag_name = context.query.tagname[0];
+
     try {
-        let problemData = (await mongo
+        let problemList = await mongo
             .db("Judge")
             .collection("Problems")
-            .find({}, { projection: { _id: 0, details: 0 } })
+            .find({ tags: tag_name }, { projection: { _id: 0 } })
             .toArray()
             .catch((err) => {
                 console.error(err);
-                return [];
-            })) as IProblemListItem[];
+            });
         return {
             props: {
-                problems: problemData,
+                tag_name: tag_name,
+                problemList: problemList,
             },
         };
     } catch (err) {
         console.error(err);
         return {
             props: {
-                problems: [],
+                tag_name: tag_name,
+                problemList: null,
             },
         };
     }

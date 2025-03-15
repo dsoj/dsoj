@@ -1,34 +1,32 @@
+"use client";
 import { Navbar, Container, Nav, NavItem, NavLink, Spinner } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { authentication } from "@/lib/auth";
 
-export default function NavLayout() {
+export default function NavComponent() {
     const pathname = usePathname() ?? '';
-    // const [sessionState, setSessionState] = useState(-1);
     const [sessionState, setSessionState] = useState(1);
 
     useEffect(() => {
         (async () => {
-            setSessionState(await authentication());
+            // setSessionState(await authentication());
         })();
     });
 
-    function AccountPart({ session }: { session: number }) {
+    function AccountPart({ session }: { session: number; }) {
         if (session == 1) {
-            return <Button variant="primary" href="/api/auth/logout">Log out</Button>
+            return <Button variant="primary" href="/api/auth/logout">Log out</Button>;
         } else if (session == 0) {
-            return <Button variant="primary" href="/login">Log in</Button>
+            return <Button variant="primary" href="/login">Log in</Button>;
         } else {
             return (
                 <Button variant="primary" disabled>
                     <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                 </Button>
-            )
+            );
         }
     }
 
@@ -61,6 +59,6 @@ export default function NavLayout() {
 
             </Container>
         </Navbar>
-    )
+    );
 }
 
