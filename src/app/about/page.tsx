@@ -1,6 +1,7 @@
 import about_info from "@/constants/about_information";
 import Link from "next/link";
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Github } from 'react-bootstrap-icons';
 
 
 export default function About() {
@@ -25,7 +26,7 @@ export default function About() {
                         target="_blank"
                         variant="dark"
                     >
-                        <i className="bi bi-github"></i>
+                        <Github />
                         &nbsp;
                         {github_data.repo_name}
                     </Button>
