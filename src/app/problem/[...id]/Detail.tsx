@@ -56,8 +56,6 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
         );
     }
 
-    console.log(problemDetail);
-
     const { id, title, difficulty, tags, details, accepted, submissions, samples } = problemDetail;
 
 
