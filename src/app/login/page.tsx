@@ -1,70 +1,50 @@
+"use client";
 import Image from 'next/image';
 import logo from '@/assets/logo_s.png';
+
 import { useEffect, useState } from 'react';
-
-import "bootstrap/dist/css/bootstrap.min.css";
-import HeadComponent from '@/components/head';
-import apiUrl from '@/constants/apiUrl';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { authentication } from '@/lib/auth';
-import { Spinner } from 'react-bootstrap';
 
-export default function Login(req: any, res: any) {
+export default function Login() {
     const router = useRouter();
-    const url = apiUrl.accounts.login;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [isFetching, setIsFetching] = useState(true);
-    const [isRedirecting, setIsRedirecting] = useState(false);
-
-    useEffect(() => {
-        (async () => {
-            if (await authentication() == 1) {
-                setIsRedirecting(true);
-                setMessage("Redirecting to home page...");
-                router.push('/');
-            } else {
-                setMessage("");
-                setIsFetching(false);
-            }
-        })();
-    });
+    const [isFetching, setIsFetching] = useState(false);
 
     async function Login() {
         setIsFetching(true);
-        try {
-            await axios.post(
-                url,
-                JSON.stringify({
-                    name: name,
-                    password: password,
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                }
-            )
-                .then((res: any) => {
-                    setMessage((res.data) ? res.data.message : '');
-                    if (res.data.session) {
-                        router.push('/');
-
-                    } else {
-                        setPassword('');
-                        setIsFetching(false);
-                    }
-                })
-                .catch((err: any) => {
-                    console.error(err);
-                });
-        } catch (err) {
-            console.error(err);
+        // vaildate input
+        if (name === "" || password === "") {
+            setMessage("Please enter username and password.");
             setIsFetching(false);
+            return;
         }
 
+        fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: name,
+                password: password,
+            }),
+        })
+            .then((res) => res.json())
+            .then(json => {
+                if (json.success) {
+                    router.push('/');
+                } else {
+                    setMessage(json.message);
+                    setIsFetching(false);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                setMessage("Server error.");
+                setIsFetching(false);
+            });
     }
 
     function onKeyDown(e: any) {
@@ -76,7 +56,6 @@ export default function Login(req: any, res: any) {
     return (
         // TODO: Elements have to be convert to react-bootstrap components
         <div className="position-relative py-4 py-xl-5">
-            <HeadComponent />
             <div className="container">
                 <div className="row d-flex justify-content-center">
                     <div className="col-md-6 col-xl-4">
@@ -95,12 +74,8 @@ export default function Login(req: any, res: any) {
 
                                     <div className="mb-3">
                                         <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
-                                            {(isRedirecting) ?
-                                                <Spinner size="sm" animation="grow" role="status">
-                                                    <span className="visually-hidden">Submitting...</span>
-                                                </Spinner> :
-                                                <span>Login</span>
-                                            }</button>
+                                            <span>Login</span>
+                                        </button>
                                     </div>
 
                                     <p className="text-muted">Forgot password?</p>

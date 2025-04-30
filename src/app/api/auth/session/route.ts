@@ -1,13 +1,9 @@
-import { getCookie } from 'cookies-next';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "GET") {
-        return res.status(404).end();
-    }
-    const session = getCookie("session", { req });
+export async function GET(req: NextRequest) {
+    const session = req.cookies.get("session");
     if (!session) {
-        return res.status(200).send(0);
+        return NextResponse.json({ session: false });
     }
-    res.status(200).send(1);
+    return NextResponse.json({ session: true });
 }

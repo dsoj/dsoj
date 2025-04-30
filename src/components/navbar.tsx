@@ -4,24 +4,73 @@ import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function NavComponent() {
     const pathname = usePathname() ?? '';
-    const [sessionState, setSessionState] = useState(1);
+    const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined);
+
+    const LoginRequired = [
+        "/problem",
+        "/about",
+    ];
+
+    const LogoutRequired = [
+        "/login",
+    ];
+
 
     useEffect(() => {
-        (async () => {
-            // setSessionState(await authentication());
-        })();
-    });
+        // check if user is already logged in
+        fetch('/api/auth/session', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then(json => {
+                if (json.session) {
+                    setIsLogin(true);
+                } else {
+                    setIsLogin(false);
+                }
 
-    function AccountPart({ session }: { session: number; }) {
-        if (session == 1) {
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }, []);
+
+    useEffect(() => {
+        // check page privileges
+        if (isLogin == undefined) {
+            return;
+        } else if (isLogin == true) {
+            // check other page with logged out session
+            for (const path of LogoutRequired) {
+                if (pathname == path) {
+                    window.location.href = '/';
+                    return;
+                }
+            }
+        } else if (isLogin == false) {
+            // check login page with logged session
+            for (const path of LoginRequired) {
+                if (pathname == path) {
+                    window.location.href = '/';
+                    return;
+                }
+            }
+        }
+    }, [isLogin]);
+
+    function AccountPart({ isLogin }: { isLogin: boolean | undefined; }) {
+        if (isLogin == true) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>;
-        } else if (session == 0) {
+        } else if (isLogin == false) {
             return <Button variant="primary" href="/login">Log in</Button>;
-        } else {
+        } else if (isLogin == undefined) {
             return (
                 <Button variant="primary" disabled>
                     <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
@@ -54,7 +103,7 @@ export default function NavComponent() {
                             <NavLink href="/about">About</NavLink>
                         </NavItem>
                     </Nav>
-                    <AccountPart session={sessionState} />
+                    <AccountPart isLogin={isLogin} />
                 </Navbar.Collapse>
 
             </Container>

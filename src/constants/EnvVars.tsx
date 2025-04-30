@@ -15,7 +15,7 @@ export default {
     callback_url: (process.env.JUDGE0_CALLBACK_URL ?? ''),
   },
   session: {
-    secret: (process.env.AUTH_SECRET ?? ''),
+    secret: (process.env.JWT_KEY ?? ''),
     maxAge: (process.env.SESSION_MAX_AGE ?? ''),
     updateAge: (process.env.SESSION_UPDATE_AGE ?? ''),
   }

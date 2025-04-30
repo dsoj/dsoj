@@ -14,7 +14,7 @@ export interface ISessionData {
 }
 
 export interface ILoginForm {
-    name: string;
+    username: string;
     password: string;
 }
 

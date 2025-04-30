@@ -1,11 +1,9 @@
 import { deleteCookie } from 'cookies-next';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'GET') {
-        return res.status(404).end();
-    }
-    deleteCookie('session', { req, res });    
-    deleteCookie('username', { req, res });
-    return res.status(200).redirect('/login');
+export async function GET(req: Request) {
+    const res = NextResponse.redirect(new URL('/login', req.url));
+    res.cookies.delete("session");
+    res.cookies.delete("username");
+    return res;
 }

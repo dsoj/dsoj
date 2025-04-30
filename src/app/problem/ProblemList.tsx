@@ -80,7 +80,7 @@ export default function ProblemList() {
                 </tbody>
             );
         }
-        console.log(TableElements);
+        // console.log(TableElements);
         return (
             <tbody>
                 {TableElements}
