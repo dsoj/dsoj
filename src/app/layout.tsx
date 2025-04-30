@@ -1,5 +1,5 @@
 
-import NavBar from "@/components/navbar";
+import NavBar from "@/components/Navbar";
 
 import { Metadata } from 'next';
 import Script from 'next/script';
