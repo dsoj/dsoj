@@ -4,20 +4,21 @@ import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/assets/logo_s.png';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
+const LoginRequired = [
+    "/problem",
+    "/about",
+];
+
+const LogoutRequired = [
+    "/login",
+];
+
 
 export default function NavComponent() {
     const pathname = usePathname() ?? '';
     const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined);
-
-    const LoginRequired = [
-        "/problem",
-        "/about",
-    ];
-
-    const LogoutRequired = [
-        "/login",
-    ];
 
 
     useEffect(() => {
@@ -63,7 +64,7 @@ export default function NavComponent() {
                 }
             }
         }
-    }, [isLogin]);
+    }, [isLogin, pathname]);
 
     function AccountPart({ isLogin }: { isLogin: boolean | undefined; }) {
         if (isLogin == true) {

@@ -1,6 +1,6 @@
 import { getMongoURI } from '@/utils/MongoUtils';
 
-export default {
+const envVars = {
   NodeEnv: (process.env.NODE_ENV ?? ''),
   Port: (process.env.PORT ?? 0),
   host_url: (process.env.HOST_URL ?? ''),
@@ -20,3 +20,5 @@ export default {
     updateAge: (process.env.SESSION_UPDATE_AGE ?? ''),
   }
 } as const;
+
+export default envVars; 

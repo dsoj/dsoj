@@ -42,7 +42,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 setProblemDetail(data.problemDetail);
                 setIsNotFound(false);
             });
-    }, []);
+    }, [problem_id]);
 
     if (isNotFound === true) {
         return (

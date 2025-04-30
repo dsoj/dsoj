@@ -1,4 +1,4 @@
-export default {
+const apiUrl = {
     accounts: {
         login: "/api/auth/login",
     },
@@ -6,3 +6,5 @@ export default {
         submit: "/api/judge0/submit",
     },
 }
+
+export default apiUrl;

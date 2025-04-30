@@ -1,4 +1,3 @@
-import EnvVars from '@src/constants/EnvVars';
 import { Collection } from 'mongodb';
 
 export function genUniqueId(collection: Collection) {
@@ -11,7 +10,7 @@ export function genUniqueId(collection: Collection) {
                     return;
                 }
                 resolve(genUniqueId(collection));
-            })
-    })
+            });
+    });
 
 }

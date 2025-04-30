@@ -5,7 +5,7 @@ import { Github } from 'react-bootstrap-icons';
 
 
 export default function About() {
-    const { card_data, github_data } = about_info;
+    const { github_data } = about_info;
     return (
         <Container className="mt-5">
             <Row>

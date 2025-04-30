@@ -24,7 +24,7 @@ export default function ProblemList({ tag }: { tag: string; }) {
                 setProblems(data.problemList);
                 setIsNotFound(false);
             });
-    }, []);
+    }, [tag]);
     // HOOK END
 
 

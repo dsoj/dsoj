@@ -32,7 +32,8 @@
     "react-bootstrap": "^2.10.4",
     "react-bootstrap-icons": "^1.11.5",
     "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sharp": "^0.34.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.6.0",
