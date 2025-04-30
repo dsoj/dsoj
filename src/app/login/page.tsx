@@ -5,7 +5,7 @@ import logo from '@/assets/logo_s.png';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default async function Login() {
+export default function Login() {
     const router = useRouter();
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
