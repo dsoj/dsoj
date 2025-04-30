@@ -48,7 +48,7 @@ export default function NavComponent() {
         if (isLogin == undefined) {
             return;
         } else if (isLogin == true) {
-            // check other page with logged out session
+            // check LogoutRequired with logged in session
             for (const path of LogoutRequired) {
                 if (pathname == path) {
                     window.location.href = '/';
@@ -56,10 +56,10 @@ export default function NavComponent() {
                 }
             }
         } else if (isLogin == false) {
-            // check login page with logged session
+            // check LoginRequired with logged out session
             for (const path of LoginRequired) {
                 if (pathname == path) {
-                    window.location.href = '/';
+                    window.location.href = '/login';
                     return;
                 }
             }
