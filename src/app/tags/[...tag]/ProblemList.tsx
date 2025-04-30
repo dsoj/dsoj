@@ -98,7 +98,7 @@ export default function ProblemList({ tag }: { tag: string; }) {
                 </tbody>
             );
         }
-        console.log(TableElements);
+        // console.log(TableElements);
         return (
             <tbody>
                 {TableElements}
@@ -118,7 +118,7 @@ export default function ProblemList({ tag }: { tag: string; }) {
                             marginBottom: "1rem!important",
                         }}
                     >
-                        problems
+                        TAGS: <strong>{tag}</strong>
                     </Card.Title>
                 </Card.Header>
 
