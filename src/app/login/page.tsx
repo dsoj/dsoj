@@ -2,10 +2,10 @@
 import Image from 'next/image';
 import logo from '@/assets/logo_s.png';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Login() {
+export default async function Login() {
     const router = useRouter();
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");

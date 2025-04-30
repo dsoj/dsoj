@@ -1,9 +1,10 @@
+"use client";
 import { useRef } from 'react';
 import { Overlay, Alert } from 'react-bootstrap';
 import { Variant } from 'react-bootstrap/esm/types';
 
 
-export default function AlertMessage({ show, text, varient }: { text: string, show: boolean, varient?: Variant }) {
+export default function AlertMessage({ show, text, varient }: { text: string, show: boolean, varient?: Variant; }) {
     const target = useRef(null);
 
     return (
@@ -14,6 +15,6 @@ export default function AlertMessage({ show, text, varient }: { text: string, sh
                 </Alert>
             )}
         </Overlay>
-    )
+    );
 
 }

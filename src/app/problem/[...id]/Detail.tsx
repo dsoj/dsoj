@@ -3,7 +3,7 @@ import ErrorPage from 'next/error';
 import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/components/alert";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
