@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { redirect } from 'next/navigation';
 import envVars from '@/constants/EnvVars';
+import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
-    const res = NextResponse.redirect(new URL('/login', req.url));
+    // console.log(new URL('/login', envVars.host_url));
+    const res = NextResponse.redirect(new URL('/login', envVars.host_url));
     res.cookies.delete("session");
     res.cookies.delete("username");
     return res;
