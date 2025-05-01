@@ -34,7 +34,7 @@ export default function Login() {
             .then((res) => res.json())
             .then(json => {
                 if (json.success) {
-                    router.push('/');
+                    window.location.href = '/';
                 } else {
                     setMessage(json.message);
                     setIsFetching(false);
