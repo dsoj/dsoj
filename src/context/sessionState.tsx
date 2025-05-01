@@ -2,14 +2,14 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 type TsessionState = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: boolean | undefined;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 };
 
 const SessionContext = createContext<TsessionState | null>(null);
 
 export const SessionProvider = ({ children }: { children: ReactNode; }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined);
   return (
     <SessionContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       {children}

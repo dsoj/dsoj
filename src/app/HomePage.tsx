@@ -4,11 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
-import { useRouter } from "next/navigation";
 import { getCookie } from 'cookies-next';
+import { useSession } from '@/context/sessionState';
 
 export default function HomePage() {
-    const router = useRouter();
     const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
     const [username, setUsername] = useState<string | undefined>(undefined);
     // TODO: change any to the correct type
@@ -17,21 +16,23 @@ export default function HomePage() {
     const [my_submissions, setMySubmissions] = useState<any[]>([]);
     const [top_hits, setTopHits] = useState<any[]>([]);
 
+    const { isLoggedIn } = useSession();
+
     useEffect(() => {
         setUsername(getCookie('username'));
         fetch('/api/info')
             .then((res) => res.json())
             .then((result) => {
                 const data = result.data;
-                setFavourites(data.favourites);
-                setRecent(data.recent);
-                setMySubmissions(data.my_submissions);
+                setFavourites(data.favourites ?? []);
+                setRecent(data.recent ?? []);
+                setMySubmissions(data.my_submissions ?? []);
                 setTopHits(data.top_hits);
             })
             .catch((err) => {
                 console.error(err);
             });
-    }, []);
+    }, [isLoggedIn]);
 
     function problemCardElement(id: number, title: string, status: number) {
         return (
@@ -60,9 +61,16 @@ export default function HomePage() {
 
             {/* Welcome Text Start */}
             <div style={{ marginTop: "1rem", marginLeft: "10rem" }}>
-                <span style={{ color: "var(--bs-gray-600)" }}>
-                    Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
-                </span>
+                {
+                    (isLoggedIn) ?
+                        <span style={{ color: "var(--bs-gray-600)" }}>
+                            Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
+                        </span>
+                        :
+                        <span style={{ color: "var(--bs-gray-600)" }}>
+                            Welcome to
+                        </span>
+                }
                 <p style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem" }}>
                     DSOJ
                 </p>
@@ -70,7 +78,6 @@ export default function HomePage() {
             {/* Welcome Text End */}
 
             {/* Card Start */}
-            {/* TODO: Hide Comming Soon */}
             <div
                 className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
@@ -195,8 +202,6 @@ export default function HomePage() {
                             <table className="table table-striped no-wrap user-table mb-0">
                                 <thead>
                                     <tr>
-
-
                                         <th
                                             className="text-uppercase border-0 font-medium pl-4"
                                             scope="col"
