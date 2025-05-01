@@ -1,6 +1,6 @@
 import { IProblemListItem } from '@/interface/IProblem';
 import { connectMongoClient } from '@/lib/db';
-import { ApiResponse, ApiServerError } from '@/utils/ApiUtils';
+import { ApiResponse, ApiServerError } from '@/lib/ApiUtils';
 
 
 export async function GET() {
