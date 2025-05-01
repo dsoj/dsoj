@@ -1,4 +1,4 @@
-import envVars from '@/constants/EnvVars';
+import envVars from '@/constant/EnvVars';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {

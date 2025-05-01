@@ -1,4 +1,4 @@
-import EnvVars from "@/constants/EnvVars";
+import EnvVars from "@/constant/EnvVars";
 import { MongoClient } from "mongodb";
 
 const uri = EnvVars.DB.URI;

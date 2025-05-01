@@ -2,7 +2,7 @@
 import ErrorPage from 'next/error';
 import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
 import { IProblem } from "@/interface/IProblem";
-import AlertMessage from "@/components/Alert";
+import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 

@@ -1,6 +1,6 @@
 "use client";
 import Image from 'next/image';
-import logo from '@/assets/logo_s.png';
+import logo from '@/asset/logo_s.png';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

@@ -1,8 +1,7 @@
 import { ILoginForm } from "@/interface/IUser";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { setCookie } from "cookies-next";
-import EnvVars from "@/constants/EnvVars";
+import EnvVars from "@/constant/EnvVars";
 import { connectMongoClient } from '@/lib/db';
 import { NextResponse } from 'next/server';
 

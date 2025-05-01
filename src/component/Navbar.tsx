@@ -2,7 +2,7 @@
 import { Navbar, Container, Nav, NavItem, NavLink, Spinner } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
-import logo from '@/assets/logo_s.png';
+import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
 import { useEffect, useState } from "react";
 
