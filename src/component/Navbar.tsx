@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
 import { useEffect, useState } from "react";
+import { useSession } from '@/context/sessionState';
 
 const LoginRequired = [
     "/problem",
@@ -18,7 +19,8 @@ const LogoutRequired = [
 
 export default function NavComponent() {
     const pathname = usePathname() ?? '';
-    const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined);
+
+    const { isLoggedIn, setIsLoggedIn } = useSession();
 
 
     useEffect(() => {
@@ -32,9 +34,9 @@ export default function NavComponent() {
             .then((res) => res.json())
             .then(json => {
                 if (json.session) {
-                    setIsLogin(true);
+                    setIsLoggedIn(true);
                 } else {
-                    setIsLogin(false);
+                    setIsLoggedIn(false);
                 }
 
             })
@@ -45,9 +47,9 @@ export default function NavComponent() {
 
     useEffect(() => {
         // check page privileges
-        if (isLogin == undefined) {
+        if (isLoggedIn == undefined) {
             return;
-        } else if (isLogin == true) {
+        } else if (isLoggedIn == true) {
             // check LogoutRequired with logged in session
             for (const path of LogoutRequired) {
                 if (pathname == path) {
@@ -55,7 +57,7 @@ export default function NavComponent() {
                     return;
                 }
             }
-        } else if (isLogin == false) {
+        } else if (isLoggedIn == false) {
             // check LoginRequired with logged out session
             for (const path of LoginRequired) {
                 if (pathname == path) {
@@ -64,14 +66,14 @@ export default function NavComponent() {
                 }
             }
         }
-    }, [isLogin, pathname]);
+    }, [isLoggedIn, pathname]);
 
-    function AccountPart({ isLogin }: { isLogin: boolean | undefined; }) {
-        if (isLogin == true) {
+    function AccountPart({ isLoggedIn }: { isLoggedIn: boolean | undefined; }) {
+        if (isLoggedIn == true) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>;
-        } else if (isLogin == false) {
+        } else if (isLoggedIn == false) {
             return <Button variant="primary" href="/login">Log in</Button>;
-        } else if (isLogin == undefined) {
+        } else if (isLoggedIn == undefined) {
             return (
                 <Button variant="primary" disabled>
                     <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
@@ -104,7 +106,7 @@ export default function NavComponent() {
                             <NavLink href="/about">About</NavLink>
                         </NavItem>
                     </Nav>
-                    <AccountPart isLogin={isLogin} />
+                    <AccountPart isLoggedIn={isLoggedIn} />
                 </Navbar.Collapse>
 
             </Container>
