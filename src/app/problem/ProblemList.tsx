@@ -1,7 +1,7 @@
 "use client";
 import { IProblemListItem } from '@/interface/IProblem';
 import { Card, Table, Spinner, Container } from "react-bootstrap";
-import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
+import { DifficultyElement, TagElement } from "@/component/ListElement";
 import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
