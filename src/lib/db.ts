@@ -1,11 +1,11 @@
 import EnvVars from "@/constant/EnvVars";
 import { MongoClient } from "mongodb";
 
-const uri = EnvVars.DB.URI;
 
 let cacheClient: MongoClient | null = null;
 
 export async function connectMongoClient() {
+  const uri = EnvVars.DB.URI;
   if (cacheClient) {
     return cacheClient;
   }
