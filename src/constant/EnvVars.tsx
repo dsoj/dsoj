@@ -1,4 +1,4 @@
-import { getMongoURI } from '@/utils/MongoUtils';
+import { getMongoURI } from '@/lib/db';
 
 const envVars = {
   NodeEnv: (process.env.NODE_ENV ?? ''),
