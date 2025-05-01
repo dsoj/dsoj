@@ -9,7 +9,6 @@ import { useSession } from '@/context/sessionState';
 
 const LoginRequired = [
     "/problem",
-    "/about",
 ];
 
 const LogoutRequired = [
