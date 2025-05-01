@@ -1,6 +1,6 @@
 "use client";
 import ErrorPage from 'next/error';
-import { DifficultyElement, TagElement } from "@/app/problem/ListElement";
+import { DifficultyElement, TagElement } from "@/component/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
