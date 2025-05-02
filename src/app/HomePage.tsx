@@ -3,7 +3,7 @@ import { DifficultyElement, SubmissionStatusElement, TagElement } from "@/compon
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Spinner } from "react-bootstrap";
 import { getCookie } from 'cookies-next';
 import { useSession } from '@/context/sessionState';
 
@@ -207,7 +207,7 @@ export default function HomePage() {
                                             scope="col"
                                             style={{ width: "5rem" }}
                                         >
-                                            No.
+                                            ID
                                         </th>
                                         <th className="text-uppercase border-0 font-medium" scope="col">
                                             Name
@@ -236,51 +236,56 @@ export default function HomePage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {top_hits.map((item: any, index: number) => {
-                                        const { id, title, accepted, submissions, difficulty, tags } = item;
-                                        return (
-                                            <tr key={id}>
-                                                <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                                    {index + 1}
-                                                </td>
-                                                <td>
-                                                    <div
-                                                        style={{
-                                                            fontSize: "1.25rem",
-                                                            textDecoration: "none",
-                                                            color: "rgb(0,0,0)",
-                                                            fontWeight: "bold"
-                                                        }}
-                                                    >
-                                                        <Link
-                                                            href={`/problem/${id}`}
-                                                            style={{
-                                                                fontSize: "1.25rem",
-                                                                textDecoration: "none",
-                                                                color: "rgb(0,0,0)",
-                                                                fontWeight: "bold",
-                                                            }}
-                                                        >
-                                                            <span style={{ fontWeight: "normal !important" }}>
-                                                                {id}. {title}
+                                    {
+                                        (top_hits.length === 0) ?
+                                            <Spinner animation="grow" />
+                                            :
+
+                                            top_hits.map((item: any, index: number) => {
+                                                const { id, title, accepted, submissions, difficulty, tags } = item;
+                                                return (
+                                                    <tr key={id}>
+                                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                                            {id}
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                style={{
+                                                                    fontSize: "1.25rem",
+                                                                    textDecoration: "none",
+                                                                    color: "rgb(0,0,0)",
+                                                                    fontWeight: "bold"
+                                                                }}
+                                                            >
+                                                                <Link
+                                                                    href={`/problem/${id}`}
+                                                                    style={{
+                                                                        fontSize: "1.25rem",
+                                                                        textDecoration: "none",
+                                                                        color: "rgb(0,0,0)",
+                                                                        fontWeight: "bold",
+                                                                    }}
+                                                                >
+                                                                    <span style={{ fontWeight: "normal !important" }}>
+                                                                        {title}
+                                                                    </span>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span className="text-muted">
+                                                                {Math.round((100 * accepted) / submissions)}%
                                                             </span>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span className="text-muted">
-                                                        {Math.round((100 * accepted) / submissions)}%
-                                                    </span>
-                                                </td>
-                                                <td style={{ color: "#e5053a" }}>
-                                                    <DifficultyElement difficulty={difficulty} />
-                                                </td>
-                                                <td>
-                                                    <span>{tags.map((item: any) => TagElement(item))}</span>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                                        </td>
+                                                        <td style={{ color: "#e5053a" }}>
+                                                            <DifficultyElement difficulty={difficulty} />
+                                                        </td>
+                                                        <td>
+                                                            <span>{tags.map((item: any) => TagElement(item))}</span>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
                                 </tbody>
                             </table>
                         </div>
