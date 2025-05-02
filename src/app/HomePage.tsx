@@ -8,7 +8,7 @@ import { getCookie } from 'cookies-next';
 import { useSession } from '@/context/sessionState';
 
 export default function HomePage() {
-    const banner_images = ['1', '2', '3', '4']; // TODO: get path from db
+    const banner_images = ['1']; // TODO: get path from db
     const [username, setUsername] = useState<string | undefined>(undefined);
     // TODO: change any to the correct type
     const [favourites, setFavourites] = useState<any[]>([]);
