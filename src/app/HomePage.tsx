@@ -199,95 +199,96 @@ export default function HomePage() {
                             <strong>Top Hits</strong>
                         </span>
                         <div className="table-responsive">
-                            <table className="table table-striped no-wrap user-table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            className="text-uppercase border-0 font-medium pl-4"
-                                            scope="col"
-                                            style={{ width: "5rem" }}
-                                        >
-                                            ID
-                                        </th>
-                                        <th className="text-uppercase border-0 font-medium" scope="col">
-                                            Name
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "7rem" }}
-                                        >
-                                            Acceptance
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "7rem" }}
-                                        >
-                                            Difficulty
-                                        </th>
-                                        <th
-                                            className="text-uppercase border-0 font-medium"
-                                            scope="col"
-                                            style={{ width: "10rem" }}
-                                        >
-                                            Tags
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        (top_hits.length === 0) ?
-                                            <Spinner animation="grow" />
-                                            :
-
-                                            top_hits.map((item: any, index: number) => {
-                                                const { id, title, accepted, submissions, difficulty, tags } = item;
-                                                return (
-                                                    <tr key={id}>
-                                                        <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
-                                                            {id}
-                                                        </td>
-                                                        <td>
-                                                            <div
-                                                                style={{
-                                                                    fontSize: "1.25rem",
-                                                                    textDecoration: "none",
-                                                                    color: "rgb(0,0,0)",
-                                                                    fontWeight: "bold"
-                                                                }}
-                                                            >
-                                                                <Link
-                                                                    href={`/problem/${id}`}
+                            {
+                                (top_hits.length === 0) ?
+                                    <Spinner animation="grow" />
+                                    :
+                                    <table className="table table-striped no-wrap user-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th
+                                                    className="text-uppercase border-0 font-medium pl-4"
+                                                    scope="col"
+                                                    style={{ width: "5rem" }}
+                                                >
+                                                    ID
+                                                </th>
+                                                <th className="text-uppercase border-0 font-medium" scope="col">
+                                                    Name
+                                                </th>
+                                                <th
+                                                    className="text-uppercase border-0 font-medium"
+                                                    scope="col"
+                                                    style={{ width: "7rem" }}
+                                                >
+                                                    Acceptance
+                                                </th>
+                                                <th
+                                                    className="text-uppercase border-0 font-medium"
+                                                    scope="col"
+                                                    style={{ width: "7rem" }}
+                                                >
+                                                    Difficulty
+                                                </th>
+                                                <th
+                                                    className="text-uppercase border-0 font-medium"
+                                                    scope="col"
+                                                    style={{ width: "10rem" }}
+                                                >
+                                                    Tags
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                top_hits.map((item: any, index: number) => {
+                                                    const { id, title, accepted, submissions, difficulty, tags } = item;
+                                                    return (
+                                                        <tr key={id}>
+                                                            <td className="pl-4" style={{ color: "var(--bs-gray-600)" }}>
+                                                                {id}
+                                                            </td>
+                                                            <td>
+                                                                <div
                                                                     style={{
                                                                         fontSize: "1.25rem",
                                                                         textDecoration: "none",
                                                                         color: "rgb(0,0,0)",
-                                                                        fontWeight: "bold",
+                                                                        fontWeight: "bold"
                                                                     }}
                                                                 >
-                                                                    <span style={{ fontWeight: "normal !important" }}>
-                                                                        {title}
-                                                                    </span>
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <span className="text-muted">
-                                                                {Math.round((100 * accepted) / submissions)}%
-                                                            </span>
-                                                        </td>
-                                                        <td style={{ color: "#e5053a" }}>
-                                                            <DifficultyElement difficulty={difficulty} />
-                                                        </td>
-                                                        <td>
-                                                            <span>{tags.map((item: any) => TagElement(item))}</span>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                </tbody>
-                            </table>
+                                                                    <Link
+                                                                        href={`/problem/${id}`}
+                                                                        style={{
+                                                                            fontSize: "1.25rem",
+                                                                            textDecoration: "none",
+                                                                            color: "rgb(0,0,0)",
+                                                                            fontWeight: "bold",
+                                                                        }}
+                                                                    >
+                                                                        <span style={{ fontWeight: "normal !important" }}>
+                                                                            {title}
+                                                                        </span>
+                                                                    </Link>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span className="text-muted">
+                                                                    {Math.round((100 * accepted) / submissions)}%
+                                                                </span>
+                                                            </td>
+                                                            <td style={{ color: "#e5053a" }}>
+                                                                <DifficultyElement difficulty={difficulty} />
+                                                            </td>
+                                                            <td>
+                                                                <span>{tags.map((item: any) => TagElement(item))}</span>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                        </tbody>
+                                    </table>
+                            }
                         </div>
                     </div>
                 </div>
