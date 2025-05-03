@@ -1,0 +1,10 @@
+span {
+    white-space: 'pre-line';
+}
+
+.sample:hover {
+    background-color: #ededed!important;
+}
+.sample:active {
+    background-color: #dcdcdc!important;
+}
