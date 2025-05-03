@@ -80,15 +80,15 @@ export default function ProblemList() {
                 </tbody>
             );
         }
-        // console.log(TableElements);
+
         return (
             <tbody>
                 {TableElements}
             </tbody>
         );
     }
+    
     // COMPONENT END
-
     return (
         <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>
             <Card style={{ border: "none" }}>
