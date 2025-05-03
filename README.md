@@ -37,7 +37,7 @@ This project is powered by the frameworks [Next.js](https://nextjs.org/) and [Re
 
  *Note: This project is currently in development.*
 
-# Installation
+# Get Started
  **Node.js environment required**
 
  ### 1. Clone the repository
