@@ -5,6 +5,7 @@ import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Link from 'next/link';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
@@ -126,6 +127,26 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
 
                 </div>
                 <Examples />
+                <div
+                    style={{
+                        background: "#ffffff",
+                        borderRadius: 29,
+                        padding: "1.5rem",
+                        boxShadow: "0px 0px 3px 0px",
+                        marginBottom: "1rem"
+                    }}
+                >
+                    <Link href={`/submit/${problem_id}/`}>
+                        <button
+                            className="btn btn-primary"
+                            type="button"
+                            style={{ background: "var(--bs-form-valid-color)", borderStyle: "none" }}
+                        >
+                            Submit
+                        </button>
+                    </Link>
+                </div>
+
             </div>
             <AlertMessage show={alertStatus} text={alert_text} varient={alert_variant} />
         </>
