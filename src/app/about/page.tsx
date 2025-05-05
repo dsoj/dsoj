@@ -1,4 +1,4 @@
-import about_info from "@/constant/about_information";
+import about_info from "@/constant/About";
 import Link from "next/link";
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Github } from 'react-bootstrap-icons';

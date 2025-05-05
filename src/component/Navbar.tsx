@@ -4,16 +4,9 @@ import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSession } from '@/context/sessionState';
-
-const LoginRequired = [
-    "/problem",
-];
-
-const LogoutRequired = [
-    "/login",
-];
+import { LoginRequiredPages, LogoutRequiredPages } from '@/constant/Session';
 
 
 export default function NavComponent() {
@@ -23,6 +16,9 @@ export default function NavComponent() {
 
 
     useEffect(() => {
+        // import bootstrap
+        import('bootstrap');
+
         // check if user is already logged in
         fetch('/api/auth/session', {
             method: 'GET',
@@ -50,22 +46,22 @@ export default function NavComponent() {
             return;
         } else if (isLoggedIn == true) {
             // check LogoutRequired with logged in session
-            for (const path of LogoutRequired) {
-                if (pathname == path) {
+            for (const path of LogoutRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
                     window.location.href = '/';
                     return;
                 }
             }
         } else if (isLoggedIn == false) {
             // check LoginRequired with logged out session
-            for (const path of LoginRequired) {
-                if (pathname == path) {
+            for (const path of LoginRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
                     window.location.href = '/login';
                     return;
                 }
             }
         }
-    }, [isLoggedIn, pathname]);
+    }, [isLoggedIn, pathname, setIsLoggedIn]);
 
     function AccountPart({ isLoggedIn }: { isLoggedIn: boolean | undefined; }) {
         if (isLoggedIn == true) {
@@ -107,7 +103,6 @@ export default function NavComponent() {
                     </Nav>
                     <AccountPart isLoggedIn={isLoggedIn} />
                 </Navbar.Collapse>
-
             </Container>
         </Navbar>
     );
