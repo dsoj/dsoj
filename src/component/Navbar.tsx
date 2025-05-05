@@ -6,14 +6,7 @@ import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
 import { useEffect } from "react";
 import { useSession } from '@/context/sessionState';
-
-const LoginRequired = [
-    ""
-];
-
-const LogoutRequired = [
-    "/login",
-];
+import { LoginRequiredPages, LogoutRequiredPages } from '@/constant/Session';
 
 
 export default function NavComponent() {
@@ -53,16 +46,16 @@ export default function NavComponent() {
             return;
         } else if (isLoggedIn == true) {
             // check LogoutRequired with logged in session
-            for (const path of LogoutRequired) {
-                if (pathname == path) {
+            for (const path of LogoutRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
                     window.location.href = '/';
                     return;
                 }
             }
         } else if (isLoggedIn == false) {
             // check LoginRequired with logged out session
-            for (const path of LoginRequired) {
-                if (pathname == path) {
+            for (const path of LoginRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
                     window.location.href = '/login';
                     return;
                 }
