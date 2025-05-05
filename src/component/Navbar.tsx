@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useSession } from '@/context/sessionState';
 
 const LoginRequired = [
-    "/problem",
 ];
 
 const LogoutRequired = [
