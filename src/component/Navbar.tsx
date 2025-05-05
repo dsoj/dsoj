@@ -4,10 +4,11 @@ import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSession } from '@/context/sessionState';
 
 const LoginRequired = [
+    ""
 ];
 
 const LogoutRequired = [
@@ -22,6 +23,9 @@ export default function NavComponent() {
 
 
     useEffect(() => {
+        // import bootstrap
+        import('bootstrap/dist/js/bootstrap.bundle.min.js');
+
         // check if user is already logged in
         fetch('/api/auth/session', {
             method: 'GET',
@@ -106,7 +110,6 @@ export default function NavComponent() {
                     </Nav>
                     <AccountPart isLoggedIn={isLoggedIn} />
                 </Navbar.Collapse>
-
             </Container>
         </Navbar>
     );
