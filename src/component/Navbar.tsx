@@ -17,7 +17,7 @@ export default function NavComponent() {
 
     useEffect(() => {
         // import bootstrap
-        import('bootstrap/dist/js/bootstrap.bundle.min.js');
+        import('bootstrap');
 
         // check if user is already logged in
         fetch('/api/auth/session', {
@@ -61,7 +61,7 @@ export default function NavComponent() {
                 }
             }
         }
-    }, [isLoggedIn, pathname]);
+    }, [isLoggedIn, pathname, setIsLoggedIn]);
 
     function AccountPart({ isLoggedIn }: { isLoggedIn: boolean | undefined; }) {
         if (isLoggedIn == true) {
