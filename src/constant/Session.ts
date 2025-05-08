@@ -4,4 +4,5 @@ export const LoginRequiredPages = [
 
 export const LogoutRequiredPages = [
     "/login",
+    "/signup",
 ];
