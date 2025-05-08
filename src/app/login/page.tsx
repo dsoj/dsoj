@@ -4,6 +4,7 @@ import logo from '@/asset/logo_s.png';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Login() {
     const router = useRouter();
@@ -77,8 +78,11 @@ export default function Login() {
                                         </button>
                                     </div>
 
-                                    <p className="text-muted">Forgot password?</p>
-                                    <p style={{ borderTop: "1px solid var(--bs-body-color)", marginBottom: "0.5rem", paddingTop: "1rem" }}>Wanna start a new journey with <strong>DSOJ</strong>?</p><button className="btn btn-primary d-block w-100" type="submit" style={{ background: "#4CAF50", border: 0 }}>Sign up</button>
+                                    {/* <p className="text-muted">Forgot password?</p> */}
+                                    <p style={{ borderTop: "1px solid var(--bs-body-color)", marginBottom: "0.5rem", paddingTop: "1rem" }}>Wanna start a new journey with <strong>DSOJ</strong>?</p>
+                                    <Link href="/signup" className="btn btn-primary d-block w-100" style={{ background: "#4CAF50", border: 0 }}>
+                                        <span>Sign up</span>
+                                    </Link>
                                     <br />
                                 </div>
                             </div>
