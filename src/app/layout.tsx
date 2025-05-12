@@ -9,27 +9,25 @@ import NavBar from "@/component/Navbar";
 import { SessionProvider } from '@/context/sessionState';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
 
-export const defaultMetadata: OpenGraph = {
-  title: "DSOJ",
-  description: "DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.",
-  // url: "https://dsoj.tw",
-  siteName: "DSOJ - DongShan High School Online Judge",
-  images: [
-    {
-      url: "/logo_s.png",
-      width: 128,
-      height: 128,
-      alt: "dsoj",
-    },
-  ],
-  type: "website",
-};
+// export const defaultMetadata: OpenGraph = {
+//   title: "DSOJ",
+//   description: "DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.",
+//   // url: "https://dsoj.tw",
+//   siteName: "DSOJ - DongShan High School Online Judge",
+//   images: [
+//     {
+//       url: "/logo_s.png",
+//       width: 128,
+//       height: 128,
+//       alt: "dsoj",
+//     },
+//   ],
+//   type: "website",
+// };
 
 export const metadata: Metadata = {
   title: "DSOJ",
   description: "DongShan High School Online Judge",
-  // metadataBase: new URL('https://dsoj.tw'),
-  openGraph: defaultMetadata,
   keywords: ['DSOJ', 'Online Judge', 'Coding', 'Programming'],
   authors: [{ name: 'DSCS-Club' }],
 };
