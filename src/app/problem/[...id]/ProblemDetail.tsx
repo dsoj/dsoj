@@ -5,12 +5,16 @@ import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Editor as CodeEditor } from "@monaco-editor/react";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
+import { Language } from '@/constant/Judge';
+import { getCookie } from 'cookies-next';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
+    const [submissionResult, setSubmissionResult] = useState<any[]>([]);
     // const [submissions, setSubmissions] = useState<any[]>([]);
     const [isNotFound, setIsNotFound] = useState<boolean | null>(null);
 
@@ -21,6 +25,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
 
     // Fetch Detail data
     useEffect(() => {
+        const username = getCookie('username');
         fetch(`/api/problem/${problem_id}`)
             .then((res) => res.json())
             .then((data) => {
@@ -30,6 +35,13 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 }
                 setProblemDetail(data.problemDetail);
                 setIsNotFound(false);
+            });
+        fetch(`/api/submission?problem_id=${problem_id}&username=${username}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setSubmissionResult(data.data);
+                }
             });
     }, [problem_id]);
 
@@ -45,9 +57,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
         );
     }
 
-
     const { id, title, difficulty, tags, details, accepted, submissions, samples } = problemDetail;
-
 
     function doCopyEffect() {
         setAlertText('Copied!');
@@ -130,47 +140,60 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                     );
                 })}
 
-                <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
-                    <h4>Submissions</h4>
-                    <Tabs defaultActiveKey="c1" className="mb-3">
-                        <Tab eventKey="c1" title="Case 1">
-                            <div className="container" style={{ textAlign: 'center' }}>
-                                <div className="row">
-                                    <div className="col-md-6"><span>Test Input 1</span></div>
-                                    <div className="col-md-6"><span>Test Output 1</span></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6 col-lg-6">
-                                        <textarea style={{
-                                            height: '6rem', resize: 'none',
-                                            width: '20rem'
-                                        }} defaultValue={""} /> {/* TODO: Add sample input */}
-                                    </div>
-                                    <div className="col-md-6">
-                                        <textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
-                                            defaultValue={""} /> {/* TODO: Add sample output */}
-                                    </div>
-                                </div>
-                            </div>
-                        </Tab>
-                        <Tab eventKey="c2" title="Case 2">
-                            <div className="container" style={{ textAlign: 'center' }}>
-                                <div className="row">
-                                    <div className="col-md-6"><span>Test Input 2</span></div>
-                                    <div className="col-md-6"><span>Test Output 2</span></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6 col-lg-6"><textarea style={{
-                                        height: '6rem', resize: 'none',
-                                        width: '20rem'
-                                    }} defaultValue={""} /></div>
-                                    <div className="col-md-6"><textarea style={{ height: '6rem', resize: 'none', width: '20rem' }}
-                                        defaultValue={""} /></div>
-                                </div>
-                            </div>
-                        </Tab>
-                    </Tabs>
-                </div>
+
+                {submissionResult &&
+                    <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
+                        <h4>Submissions</h4>
+                        <Tabs defaultActiveKey="0" className="mb-3">
+                            {submissionResult.map((item: any, index: number) => {
+                                const title = `${item.status} ${new Date(item.send_time).toLocaleDateString()}-${Language[item.language_id][0]}`;
+                                return (
+                                    <Tab eventKey={index} title={title}>
+                                        <div className="container" style={{ textAlign: 'center' }}>
+                                            <div className="row mb-1">
+                                                <div className="col-md-6">
+                                                    <span>Time: &nbsp; {new Date(item.send_time).toLocaleString()}</span>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <span>Language: &nbsp; {Language[item.language_id][0]}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="row mb-1">
+                                                <div className="col-md-6">
+                                                    <span>Status: &nbsp;
+                                                        {(item.status === "Accepted") ?
+                                                            <span className="badge text-bg-success">{item.status}</span> :
+                                                            <span className="badge text-bg-danger">{item.status}</span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <button className="btn btn-primary btn-sm">SubTasks</button>
+                                                </div>
+                                            </div>
+                                            <div className="row mb-1">
+                                                <div style={{ marginBottom: "1rem" }}>
+                                                    <CodeEditor
+                                                        height="20rem"
+                                                        language={Language[item.language_id][1]}
+                                                        theme="vs-dark"
+                                                        value={item.code}
+                                                        options={{
+                                                            selectOnLineNumbers: true,
+                                                            fontSize: 18,
+                                                            readOnly: true,
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Tab>
+                                );
+                            })}
+                        </Tabs>
+                    </div>
+                }
 
             </div>
 

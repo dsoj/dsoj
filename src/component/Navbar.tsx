@@ -7,13 +7,13 @@ import Image from 'next/image';
 import { useEffect } from "react";
 import { useSession } from '@/context/sessionState';
 import { LoginRequiredPages, LogoutRequiredPages } from '@/constant/Session';
+import { getCookie } from 'cookies-next';
 
 
 export default function NavComponent() {
     const pathname = usePathname() ?? '';
 
     const { isLoggedIn, setIsLoggedIn } = useSession();
-
 
     useEffect(() => {
         // import bootstrap
@@ -33,7 +33,6 @@ export default function NavComponent() {
                 } else {
                     setIsLoggedIn(false);
                 }
-
             })
             .catch((err) => {
                 console.error(err);
@@ -45,6 +44,14 @@ export default function NavComponent() {
         if (isLoggedIn == undefined) {
             return;
         } else if (isLoggedIn == true) {
+            // check if username is missing
+            const username = getCookie('username');
+            if (username == undefined) {
+                window.location.href = '/api/auth/logout';
+                setIsLoggedIn(false);
+                return;
+            }
+
             // check LogoutRequired with logged in session
             for (const path of LogoutRequiredPages) {
                 if (pathname == path || pathname.startsWith(path)) {
