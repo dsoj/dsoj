@@ -11,7 +11,6 @@ import Link from 'next/link';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
-    // const [submissions, setSubmissions] = useState<any[]>([]);
     const [isNotFound, setIsNotFound] = useState<boolean | null>(null);
 
     // alert popup
