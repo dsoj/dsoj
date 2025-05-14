@@ -15,7 +15,6 @@ import { getCookie } from 'cookies-next';
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
     const [submissionResult, setSubmissionResult] = useState<any[]>([]);
-    // const [submissions, setSubmissions] = useState<any[]>([]);
     const [isNotFound, setIsNotFound] = useState<boolean | null>(null);
 
     // alert popup
