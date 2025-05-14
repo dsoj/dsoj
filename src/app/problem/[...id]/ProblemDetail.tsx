@@ -147,7 +147,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                             {submissionResult.map((item: any, index: number) => {
                                 const title = `${item.status} ${new Date(item.send_time).toLocaleDateString()}-${Language[item.language_id][0]}`;
                                 return (
-                                    <Tab eventKey={index} title={title}>
+                                    <Tab eventKey={index} title={title} key={index}>
                                         <div className="container" style={{ textAlign: 'center' }}>
                                             <div className="row mb-1">
                                                 <div className="col-md-6">
