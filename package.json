@@ -21,7 +21,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "child_process": "^1.0.2",
-    "connect-mongodb-session": "^2.2.0",
+    "connect-mongodb-session": "^5.0.0",
     "cookies-next": "^4.2.1",
     "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
