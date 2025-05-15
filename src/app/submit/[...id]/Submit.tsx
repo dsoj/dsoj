@@ -111,6 +111,7 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
                                     className="dropdown-item"
                                     href="#"
                                     onClick={() => {
+                                        console.log('set' + Number(item[0]));
                                         setCompilerID(Number(item[0]));
                                     }}
                                 >
@@ -205,6 +206,7 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
                         if (file) {
                             const reader = new FileReader();
                             reader.onload = (event) => {
+                                console.log(event.target?.result);
                                 setCode(event.target?.result as string);
                                 setMethod(SubmitMethodID.TEXT); // Switch back to text editor after file upload
                             };
