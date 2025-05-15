@@ -44,15 +44,6 @@ export default function NavComponent() {
         if (isLoggedIn == undefined) {
             return;
         } else if (isLoggedIn == true) {
-            // check if username is missing
-            const username = getCookie('username');
-            if (username == undefined) {
-                const callbackUrl = encodeURIComponent('/');
-                window.location.href = `/api/auth/logout?callbackUrl=/login?callbackUrl=${callbackUrl}`;
-                setIsLoggedIn(false);
-                return;
-            }
-
             // check LogoutRequired with logged in session
             for (const path of LogoutRequiredPages) {
                 if (pathname == path || pathname.startsWith(path)) {
