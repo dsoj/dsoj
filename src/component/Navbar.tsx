@@ -47,7 +47,8 @@ export default function NavComponent() {
             // check if username is missing
             const username = getCookie('username');
             if (username == undefined) {
-                window.location.href = '/api/auth/logout';
+                const callbackUrl = encodeURIComponent('/');
+                window.location.href = `/api/auth/logout?callbackUrl=/login?callbackUrl=${callbackUrl}`;
                 setIsLoggedIn(false);
                 return;
             }
@@ -63,7 +64,8 @@ export default function NavComponent() {
             // check LoginRequired with logged out session
             for (const path of LoginRequiredPages) {
                 if (pathname == path || pathname.startsWith(path)) {
-                    window.location.href = '/login';
+                    const callbackUrl = encodeURIComponent('/');
+                    window.location.href = `/login?callbackUrl=${callbackUrl}`;
                     return;
                 }
             }
@@ -74,7 +76,11 @@ export default function NavComponent() {
         if (isLoggedIn == true) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>;
         } else if (isLoggedIn == false) {
-            return <Button variant="primary" href="/login">Log in</Button>;
+            if (pathname == '/login') {
+                return <Button variant="primary" href={`/login`}>Log in</Button>;
+            } else {
+                return <Button variant="primary" href={`/login?callbackUrl=${window.location.href}`}>Log in</Button>;
+            }
         } else if (isLoggedIn == undefined) {
             return (
                 <Button variant="primary" disabled>
