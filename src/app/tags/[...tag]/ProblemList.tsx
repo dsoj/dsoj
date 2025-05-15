@@ -98,7 +98,6 @@ export default function ProblemList({ tag }: { tag: string; }) {
                 </tbody>
             );
         }
-        // console.log(TableElements);
         return (
             <tbody>
                 {TableElements}
