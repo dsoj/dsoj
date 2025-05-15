@@ -11,6 +11,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
 import { Language } from '@/constant/Judge';
 import { getCookie } from 'cookies-next';
+import { useSession } from '@/context/sessionState';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
@@ -22,9 +23,10 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
 
+    const { isLoggedIn, setIsLoggedIn } = useSession();
+
     // Fetch Detail data
     useEffect(() => {
-        const username = getCookie('username');
         fetch(`/api/problem/${problem_id}`)
             .then((res) => res.json())
             .then((data) => {
@@ -35,6 +37,14 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 setProblemDetail(data.problemDetail);
                 setIsNotFound(false);
             });
+    }, [problem_id]);
+
+    // Fetch Submission result
+    useEffect(() => {
+        if(!isLoggedIn) {
+            return;
+        }
+        const username = getCookie('username');
         fetch(`/api/submission?problem_id=${problem_id}&username=${username}`)
             .then((res) => res.json())
             .then((data) => {
@@ -42,7 +52,9 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                     setSubmissionResult(data.data);
                 }
             });
-    }, [problem_id]);
+    }, [problem_id, isLoggedIn]);
+
+
 
     if (isNotFound === true) {
         return (
@@ -140,7 +152,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 })}
 
 
-                {submissionResult &&
+                {(submissionResult.length > 0) &&
                     <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                         <h4>Submissions</h4>
                         <Tabs defaultActiveKey="0" className="mb-3">
