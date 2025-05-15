@@ -7,6 +7,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const res = await fetch(`${envVars.host_url}/api/problem/${id}?simple=1`)
         .then((res) => res.json());
 
+    console.log(res);
+
     const problemDetail: IProblem = res.problemDetail;
     return {
         title: `${id}. ${problemDetail.title}`,

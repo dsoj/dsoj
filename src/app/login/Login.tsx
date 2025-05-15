@@ -3,13 +3,12 @@ import Image from 'next/image';
 import logo from '@/asset/logo_s.png';
 
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 
 export default function Login() {
-    const callbackUrl = useSearchParams().get('callbackUrl');
+    const router = useRouter();
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -37,7 +36,7 @@ export default function Login() {
             .then((res) => res.json())
             .then(json => {
                 if (json.success) {
-                    window.location.href = callbackUrl || '/';
+                    window.location.href = '/';
                 } else {
                     setMessage(json.message);
                     setIsFetching(false);

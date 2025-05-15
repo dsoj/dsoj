@@ -1,13 +1,9 @@
 import envVars from '@/constant/EnvVars';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
-    const callbackUrl = req.nextUrl.searchParams.get('callbackUrl');
-    const res = NextResponse.redirect(new URL(
-        (callbackUrl) ?
-            `/login?callbackUrl=${callbackUrl}` :
-            `/login`,
-        envVars.host_url));
+export async function GET(req: Request) {
+    // console.log(new URL('/login', envVars.host_url));
+    const res = NextResponse.redirect(new URL('/login', envVars.host_url));
     res.cookies.delete("session");
     res.cookies.delete("username");
     return res;
