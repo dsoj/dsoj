@@ -41,13 +41,14 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
 
     // Fetch Submission result
     useEffect(() => {
-        if(!isLoggedIn) {
+        if (!isLoggedIn) {
             return;
         }
         const username = getCookie('username');
         fetch(`/api/submission?problem_id=${problem_id}&username=${username}`)
             .then((res) => res.json())
             .then((data) => {
+                console.log(data.data);
                 if (data.success) {
                     setSubmissionResult(data.data);
                 }
@@ -179,10 +180,163 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                                                         }
                                                     </span>
                                                 </div>
+
+                                                {/* Modal Trigger */}
                                                 <div className="col-md-6">
-                                                    <button className="btn btn-primary btn-sm">SubTasks</button>
+                                                    <button
+                                                        className="btn btn-primary btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target={`#subTaskModal-${index}`}
+                                                    >
+                                                        SubTasks
+                                                    </button>
                                                 </div>
                                             </div>
+
+                                            {/* Modal */}
+                                            <div
+                                                className="modal fade"
+                                                id={`subTaskModal-${index}`}
+                                                tabIndex={-1}
+                                                aria-labelledby={`subTaskModalLabel-${index}`}
+                                                aria-hidden="true"
+                                            >
+                                                <div className="modal-dialog">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h1 className="modal-title fs-5" id={`subTaskModalLabel-${index}`}>
+                                                                {title}
+                                                            </h1>
+                                                            <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"
+                                                            />
+                                                        </div>
+                                                        <div className="modal-body">
+                                                            {/* Modal Body */}
+                                                            <div className="container">
+                                                                <div className="pb-1 pt-0">Submission ID: {item.submission_id}</div>
+                                                                <div className="accordion py-2" id="accordionSubtask">
+                                                                    {item.submissions.map((subTask: any, subIndex: number) => {
+                                                                        return (
+                                                                            <div className="accordion-item" key={subIndex}>
+                                                                                <h2 className="accordion-header">
+                                                                                    <button
+                                                                                        className="accordion-button collapsed"
+                                                                                        type="button"
+                                                                                        data-bs-toggle="collapse"
+                                                                                        data-bs-target={`#collapse-${subIndex}`}
+                                                                                        aria-expanded="false"
+                                                                                        aria-controls={`collapse-${subIndex}`}
+                                                                                    >
+                                                                                        #{subIndex} {subTask.status}
+                                                                                    </button>
+                                                                                </h2>
+                                                                                <div
+                                                                                    id={`collapse-${subIndex}`}
+                                                                                    className="accordion-collapse collapse"
+                                                                                    data-bs-parent="#accordionSubtask"
+                                                                                >
+                                                                                    <div className="accordion-body">
+                                                                                        {/* Compile Output */}
+                                                                                        {subTask.compile_output &&
+                                                                                            <div className="card mb-3">
+                                                                                                <div className="card-header">Compile Output</div>
+                                                                                                <div className="card-body bg-light">
+                                                                                                    <pre className="mb-0">
+                                                                                                        <code>
+                                                                                                            {subTask.compile_output}
+                                                                                                        </code>
+                                                                                                    </pre>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+
+                                                                                        {/* stdout */}
+                                                                                        {subTask.stdout &&
+                                                                                            <div className="card mb-3">
+                                                                                                <div className="card-header">stdout</div>
+                                                                                                <div className="card-body bg-light">
+                                                                                                    <pre className="mb-0">
+                                                                                                        <code>
+                                                                                                            {subTask.stdout}
+                                                                                                        </code>
+                                                                                                    </pre>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+
+                                                                                        {/* stderr */}
+                                                                                        {subTask.stderr &&
+                                                                                            <div className="card mb-3">
+                                                                                                <div className="card-header">stderr</div>
+                                                                                                <div className="card-body bg-light">
+                                                                                                    <pre className="mb-0">
+                                                                                                        <code>
+                                                                                                            {subTask.stderr}
+                                                                                                        </code>
+                                                                                                    </pre>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+
+                                                                                        {/* Message */}
+                                                                                        {subTask.message &&
+                                                                                            <div className="card mb-3">
+                                                                                                <div className="card-header">Message</div>
+                                                                                                <div className="card-body bg-light">
+                                                                                                    <pre className="mb-0">
+                                                                                                        <code>
+                                                                                                            {subTask.message}
+                                                                                                        </code>
+                                                                                                    </pre>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+
+                                                                                        {/* Statistics */}
+                                                                                        <div className="row">
+                                                                                            {subTask.time &&
+                                                                                                <div className="col-md-6">
+                                                                                                    <p>Time: {subTask.time}</p>
+                                                                                                </div>
+                                                                                            }
+                                                                                            {subTask.memory &&
+                                                                                                <div className="col-md-6">
+                                                                                                    <p>Memory: {subTask.memory}</p>
+                                                                                                </div>
+                                                                                            }
+                                                                                        </div>
+
+                                                                                        {/* Token */}
+                                                                                        <div className="row mb-0">
+                                                                                            <div className="col-md-12">
+                                                                                                <p>Token: {subTask.token}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="modal-footer">
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-secondary"
+                                                                data-bs-dismiss="modal"
+                                                            >
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div className="row mb-1">
                                                 <div style={{ marginBottom: "1rem" }}>
                                                     <CodeEditor
