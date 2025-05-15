@@ -41,7 +41,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
 
     // Fetch Submission result
     useEffect(() => {
-        if(!isLoggedIn) {
+        if (!isLoggedIn) {
             return;
         }
         const username = getCookie('username');
@@ -179,10 +179,54 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                                                         }
                                                     </span>
                                                 </div>
+
+                                                {/* Modal Trigger */}
                                                 <div className="col-md-6">
-                                                    <button className="btn btn-primary btn-sm">SubTasks</button>
+                                                    <button
+                                                        className="btn btn-primary btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target={`#subTaskModal-${index}`}
+                                                    >
+                                                        SubTasks
+                                                    </button>
                                                 </div>
                                             </div>
+
+                                            {/* Modal */}
+                                            <div
+                                                className="modal fade"
+                                                id={`subTaskModal-${index}`}
+                                                tabIndex={-1}
+                                                aria-labelledby={`subTaskModalLabel-${index}`}
+                                                aria-hidden="true"
+                                            >
+                                                <div className="modal-dialog">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h1 className="modal-title fs-5" id={`subTaskModalLabel-${index}`}>
+                                                                {title}
+                                                            </h1>
+                                                            <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"
+                                                            />
+                                                        </div>
+                                                        <div className="modal-body">...</div>
+                                                        <div className="modal-footer">
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-secondary"
+                                                                data-bs-dismiss="modal"
+                                                            >
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div className="row mb-1">
                                                 <div style={{ marginBottom: "1rem" }}>
                                                     <CodeEditor
