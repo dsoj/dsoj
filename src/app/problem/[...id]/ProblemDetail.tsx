@@ -4,7 +4,6 @@ import { DifficultyElement, TagElement } from "@/component/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Editor as CodeEditor } from "@monaco-editor/react";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
