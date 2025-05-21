@@ -70,13 +70,25 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
 
     const { id, title, difficulty, tags, details, accepted, submissions, samples } = problemDetail;
 
-    function doCopyEffect() {
-        setAlertText('Copied!');
-        setAlertVariant('success');
-        setAlertStatus(true);
-        setTimeout(() => {
-            setAlertStatus(false);
-        }, 1000);
+    function doCopy(text: string) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                setAlertText('Copied!');
+                setAlertVariant('success');
+                setAlertStatus(true);
+                setTimeout(() => {
+                    setAlertStatus(false);
+                }, 1000);
+            })
+            .catch((err) => {
+                console.error('Error copying text: ', err);
+                setAlertText('Error coping text.');
+                setAlertVariant('alert');
+                setAlertStatus(true);
+                setTimeout(() => {
+                    setAlertStatus(false);
+                }, 1000);
+            });
     }
 
     return (
@@ -130,23 +142,23 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 {samples.map((sample, index) => {
                     return (
                         <div className="row" style={{ margin: '0px' }} key={index}>
-                            <CopyToClipboard text={sample.input} onCopy={doCopyEffect}>
+                            <div onClick={() => doCopy(sample.input)}>
                                 <div className="col-md-6" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
                                     <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                                         <h4>Sample Input {index}</h4>
                                         <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
                                     </div>
                                 </div>
-                            </CopyToClipboard>
+                            </div>
 
-                            <CopyToClipboard text={sample.output} onCopy={doCopyEffect}>
+                            <div onClick={()=>doCopy(sample.output)}>
                                 <div className="col-md-6" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
                                     <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                                         <h4>Sample Output {index}</h4>
                                         <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
                                     </div>
                                 </div>
-                            </CopyToClipboard>
+                            </div>
                         </div>
                     );
                 })}
