@@ -97,16 +97,16 @@ export default function NavComponent() {
                 <Navbar.Toggle />
 
                 <Navbar.Collapse>
-                    <Nav className="mx-auto" activeKey={`/${pathname.split('/')[0]}`}>
+                    <Nav className="mx-auto">
                         {/* TODO: Add NavItem color by checking path */}
                         <NavItem>
-                            <NavLink href="/">Home</NavLink>
+                            <NavLink href="/" active={pathname === '/'}>Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/problem">Problems</NavLink>
+                            <NavLink href="/problem" active={pathname.startsWith('/problem')}>Problems</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/about">About</NavLink>
+                            <NavLink href="/about" active={pathname === '/about'}>About</NavLink>
                         </NavItem>
                     </Nav>
                     <AccountPart isLoggedIn={isLoggedIn} />
