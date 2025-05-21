@@ -59,7 +59,8 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
     useEffect(() => {
         fetch(`/api/problem/${problem_id}`)
             .then((res) => res.json())
-            .then((data) => {
+            .then((res) => {
+                const data = res.data;
                 if (!data.problemDetail) {
                     setIsNotFound(true);
                     return;

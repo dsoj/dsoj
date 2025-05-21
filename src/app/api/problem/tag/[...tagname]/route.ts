@@ -2,7 +2,7 @@ import { connectMongoClient } from '@/lib/db';
 import { NextRequest } from 'next/server';
 import Api from '@/lib/ApiUtils';
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ tagname: string[]; }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ tagname: string[]; }>; }) {
     const tag = (await params)?.tagname[0];
 
     if (!tag) {
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ tagn
             return Api.NotFound('Problem not found');
         }
 
-        return Api.Response(true, "Problems fetched", problemList);
+        return Api.Response(true, "Problems fetched", { problemList });
     } catch (err) {
         return Api.ServerError(err);
     }

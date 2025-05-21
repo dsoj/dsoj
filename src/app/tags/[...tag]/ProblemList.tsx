@@ -17,12 +17,12 @@ export default function ProblemList({ tag }: { tag: string; }) {
         fetch(`/api/problem/tag/${tag}`)
             .then((res) => res.json())
             .then((res) => {
-                const data = res.data;
-                if (!data) {
+                const problemList = res.data.problemList;
+                if (!problemList) {
                     setIsNotFound(true);
                     return;
                 }
-                setProblems(data);
+                setProblems(problemList);
                 setIsNotFound(false);
             });
     }, [tag]);
