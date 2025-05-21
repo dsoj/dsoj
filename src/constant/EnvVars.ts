@@ -2,6 +2,7 @@ import { getMongoURI } from '@/lib/db';
 
 const envVars = {
   NodeEnv: (process.env.NODE_ENV ?? ''),
+  isDev: () => (process.env.NODE_ENV === 'development'),
   Port: (process.env.PORT ?? 0),
   host_url: (process.env.HOST_URL ?? ''),
   DB: {

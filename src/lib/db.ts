@@ -1,8 +1,13 @@
 import EnvVars from "@/constant/EnvVars";
 import { MongoClient } from "mongodb";
+import Logger from './Logger';
 
 
 let cacheClient: MongoClient | null = null;
+
+export function dbError(err: any) {
+  Logger(err, "ERR", "DB");
+}
 
 export async function connectMongoClient() {
   const uri = EnvVars.DB.URI;
@@ -16,10 +21,10 @@ export async function connectMongoClient() {
   });
 
   try {
+    Logger("Connecting", "INFO", "DB");
     await client.connect();
   } catch (e) {
-    console.error(e);
-    throw e;
+    dbError(e);
   }
   cacheClient = client;
   return cacheClient;

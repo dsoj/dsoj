@@ -1,5 +1,6 @@
 import { connectMongoClient } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import Api from '@/lib/ApiUtils';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string[]; }; }) {
     const id = (await params)?.id[0];
@@ -7,7 +8,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
     const isSimple = searchParams.get('simple') === '1' ? true : false;
 
     if (!id) {
-        return NextResponse.json({ error: 'Invalid problem id' }, { status: 400 });
+        return Api.Response(false, 'Invalid problem id');
     }
 
     const client = await connectMongoClient();
@@ -19,29 +20,18 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
                 .findOne({ id: id }, { projection: { _id: 0, title: 1, details: 1 } });
 
             if (!problemDetail) {
-                return NextResponse.json({ error: 'Problem not found' }, { status: 404 });
+                return Api.NotFound('Problem not found');
             }
 
-            return NextResponse.json({
-                problemDetail,
-            });
-        } else {
-            const problemDetail = await client
-                .db("Judge")
-                .collection("Problems")
-                .findOne({ id: id }, { projection: { _id: 0 } });
-
-            if (!problemDetail) {
-                return NextResponse.json({ error: 'Problem not found' }, { status: 404 });
+        return Api.Response(true, "Problem fetched", {
+            problemDetail,
+            result: {
+                // ac: ac_result,
+                // wa: wa_result,
             }
-
-            return NextResponse.json({
-                problemDetail,
-            });
-        }
+        });
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        return Api.ServerError(err);
     }
 
 

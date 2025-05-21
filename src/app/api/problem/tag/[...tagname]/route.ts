@@ -1,11 +1,13 @@
 import { connectMongoClient } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import Api from '@/lib/ApiUtils';
 
 export async function GET(req: NextRequest, { params }: { params: { tagname: string[]; }; }) {
     const tag = (await params)?.tagname[0];
 
     if (!tag) {
-        return NextResponse.json({ error: 'Invalid tag name' }, { status: 400 });
+
+        return Api.Response(false, 'Invalid tag name');
     }
 
     const client = await connectMongoClient();
@@ -17,12 +19,11 @@ export async function GET(req: NextRequest, { params }: { params: { tagname: str
             .toArray();
 
         if (!problemList) {
-            return NextResponse.json({ error: 'Problem not found' }, { status: 404 });
+            return Api.NotFound('Problem not found');
         }
 
-        return NextResponse.json({ problemList });
+        return Api.Response(true, "Problems fetched", problemList);
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        return Api.ServerError(err);
     }
 }

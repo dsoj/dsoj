@@ -1,5 +1,5 @@
-import { connectMongoClient } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { connectMongoClient, dbError } from '@/lib/db';
+import Api from '@/lib/ApiUtils';
 
 export async function GET() {
     const client = await connectMongoClient();
@@ -9,8 +9,8 @@ export async function GET() {
         .find({}, { projection: { _id: 0, details: 0 } })
         .toArray()
         .catch((err) => {
-            console.error(err);
+            dbError(err);
             return [];
         });
-    return NextResponse.json(problems);
+    return Api.Response(true, "Problems fetched", problems);
 }

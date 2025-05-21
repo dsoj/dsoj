@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/lib/ApiUtils';
+import Api from '@/lib/ApiUtils';
 import { connectMongoClient } from "@/lib/db";
 import { Base64 } from "js-base64";
 import { NextRequest } from 'next/server';
@@ -40,9 +40,8 @@ export async function PUT(req: NextRequest) {
             $set: update_data
         });
 
-        return ApiResponse("OK", true);
+        return Api.Response(true);
     } catch (err) {
-        console.error(err);
-        return ApiResponse("Error", false);
+        return Api.ServerError(err);
     }
 }

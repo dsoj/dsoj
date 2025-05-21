@@ -1,6 +1,6 @@
 import { IProblemListItem } from '@/interface/IProblem';
-import { connectMongoClient } from '@/lib/db';
-import { ApiResponse, ApiServerError } from '@/lib/ApiUtils';
+import Api from '@/lib/ApiUtils';
+import { connectMongoClient, dbError } from '@/lib/db';
 import { NextRequest } from 'next/server';
 
 
@@ -15,19 +15,18 @@ export async function GET(req: NextRequest) {
                 .find({}, { projection: { _id: 0, details: 0 } })
                 .toArray()
                 .catch((err) => {
-                    console.error(err);
+                    dbError(err);
                     return [];
                 })) as IProblemListItem[];
 
-            return ApiResponse('OK', true, {
+            return Api.Response(true, "Info fetched", {
                 favourites: favourites,
                 recent: favourites,
                 my_submissions: favourites,
                 top_hits: favourites,
             });
         } catch (err) {
-            console.error(err);
-            return ApiServerError();
+            return Api.ServerError(err);
         }
     } else {
         try {
@@ -38,16 +37,15 @@ export async function GET(req: NextRequest) {
                 .find({}, { projection: { _id: 0, details: 0 } })
                 .toArray()
                 .catch((err) => {
-                    console.error(err);
+                    dbError(err);
                     return [];
                 })) as IProblemListItem[];
 
-            return ApiResponse('OK', true, {
+            return Api.Response(true, "Info fetched", {
                 top_hits: favourites,
             });
         } catch (err) {
-            console.error(err);
-            return ApiServerError();
+            return Api.ServerError(err);
         }
     }
 }

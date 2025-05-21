@@ -1,22 +1,49 @@
 import { NextResponse } from 'next/server';
+import Logger from './Logger';
 
-export function ApiResponse(message: string, success: boolean, data?: any) {
+function Response(success: boolean, message?: string, data?: any) {
     let j;
-    if (data) {
+    if (data && message) {
         j = {
-            message,
             success,
-            data,
+            message: message,
+            data: data,
+        };
+    } else if (data && !message) {
+        j = {
+            success,
+            data: data,
+        };
+    } else if (!data && message) {
+        j = {
+            success,
+            message: message,
         };
     } else {
         j = {
-            message,
-            success
+            success,
         };
     }
+
     return NextResponse.json(j);
 }
 
-export function ApiServerError() {
-    return ApiResponse('ServerError', false);
+function ServerError(err: any) {
+    Logger(err, 'ERR', 'SERVER');
+    return Response(false, 'ServerError');
 }
+
+function NotFound(message: string) {
+    return NextResponse.json({
+        success: false,
+        message: message,
+    }, { status: 404 });
+}
+
+
+const ApiUtils = {
+    Response,
+    ServerError,
+    NotFound,
+};
+export default ApiUtils;

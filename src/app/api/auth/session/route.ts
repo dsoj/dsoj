@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import Api from '@/lib/ApiUtils';
+import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
     const username = req.cookies.get("username");
     const session = req.cookies.get("session");
     if (!session || !username) {
-        return NextResponse.json({ session: false });
+        return Api.Response(false);
     }
-    return NextResponse.json({ session: true });
+    return Api.Response(true);
 }
