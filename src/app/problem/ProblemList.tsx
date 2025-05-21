@@ -14,8 +14,8 @@ export default function ProblemList() {
     useEffect(() => {
         fetch('/api/problem')
             .then((res) => res.json())
-            .then((data) => {
-                setProblems(data);
+            .then((res) => {
+                setProblems(res.data);
             })
             .catch((err) => {
                 console.error(err);
@@ -87,7 +87,7 @@ export default function ProblemList() {
             </tbody>
         );
     }
-    
+
     // COMPONENT END
     return (
         <Container style={{ margin: "1em", minWidth: "calc(100vw - 2em)" }}>

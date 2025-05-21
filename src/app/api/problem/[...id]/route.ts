@@ -13,24 +13,29 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
 
     const client = await connectMongoClient();
     try {
+        let projection = {};
         if (isSimple) {
-            const problemDetail = await client
-                .db("Judge")
-                .collection("Problems")
-                .findOne({ id: id }, { projection: { _id: 0, title: 1, details: 1 } });
-
-            if (!problemDetail) {
-                return Api.NotFound('Problem not found');
-            }
-
-            return Api.Response(true, "Problem fetched", {
-                problemDetail,
-                result: {
-                    // ac: ac_result,
-                    // wa: wa_result,
-                }
-            });
+            projection = { _id: 0, title: 1, details: 1 };
+        } else {
+            projection = { _id: 0 };
         }
+
+        const problemDetail = await client
+            .db("Judge")
+            .collection("Problems")
+            .findOne({ id: id }, { projection });
+
+        if (!problemDetail) {
+            return Api.NotFound('Problem not found');
+        }
+
+        return Api.Response(true, "Problem fetched", {
+            problemDetail,
+            result: {
+                // ac: ac_result,
+                // wa: wa_result,
+            }
+        });
     } catch (err) {
         return Api.ServerError(err);
     }
