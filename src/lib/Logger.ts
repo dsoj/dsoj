@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export default function Logger(message: string, type: "INFO" | "ERR" | "WARN" = "INFO", category?: "DB" | "API" | "SERVER") {
+export default function Logger(message: string, type: "INFO" | "ERR" | "WARN" = "INFO", category?: "DB" | "AUTH" | "API" | "SERVER") {
     if (process.env.NODE_ENV === "development") {
         return;
     }
