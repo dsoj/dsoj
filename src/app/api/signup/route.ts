@@ -2,7 +2,7 @@ import { connectMongoClient } from '@/lib/db';
 import { genUniqueId } from '@/lib/RandomUtils';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { ApiResponse } from '@/lib/ApiUtils';
+import Api from '@/lib/ApiUtils';
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
         // Check if the request body is valid
         if (!name || !email || !password) {
-            return ApiResponse('Invalid request body', false, 400);
+            return Api.Response(false, 'Invalid request body');
         }
 
         // Check if the email and username already exist in the database
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
             .findOne({ email: email })
             .then((user) => {
                 if (user) {
-                    return ApiResponse('Email already exists', false, 400);
+                    return Api.Response(false, 'Email already exists');
                 }
             });
 
@@ -29,13 +29,13 @@ export async function POST(req: NextRequest) {
             .findOne({ name: name })
             .then((user) => {
                 if (user) {
-                    return ApiResponse('Username already exists', false, 400);
+                    return Api.Response(false, 'Username already exists');
                 }
             });
 
         if (existedEmail) return existedEmail;
         if (existedUsername) return existedUsername;
-        
+
         // hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -51,9 +51,8 @@ export async function POST(req: NextRequest) {
                 createdAt: new Date(),
             });
 
-        return ApiResponse('User created successfully', true, 200);
+        return Api.Response(true, 'User created successfully');
     } catch (err) {
-        console.error(err);
-        return ApiResponse('Internal Server Error', false, 500);
+        return Api.Response(false, 'Internal Server Error');
     }
 }
