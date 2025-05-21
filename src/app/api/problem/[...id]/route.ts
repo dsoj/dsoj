@@ -23,13 +23,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
                 return Api.NotFound('Problem not found');
             }
 
-        return Api.Response(true, "Problem fetched", {
-            problemDetail,
-            result: {
-                // ac: ac_result,
-                // wa: wa_result,
-            }
-        });
+            return Api.Response(true, "Problem fetched", {
+                problemDetail,
+                result: {
+                    // ac: ac_result,
+                    // wa: wa_result,
+                }
+            });
+        }
     } catch (err) {
         return Api.ServerError(err);
     }
