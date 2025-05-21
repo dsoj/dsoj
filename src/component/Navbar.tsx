@@ -41,7 +41,7 @@ export default function NavComponent() {
             .catch((err) => {
                 console.error(err);
             });
-    }, [setIsLoggedIn]);
+    }, [setIsLoggedIn, setUsername]);
 
     useEffect(() => {
         // check page privileges

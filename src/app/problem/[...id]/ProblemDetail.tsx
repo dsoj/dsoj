@@ -51,7 +51,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                     setSubmissionResult(data.data);
                 }
             });
-    }, [problem_id, isLoggedIn]);
+    }, [problem_id, isLoggedIn, username]);
 
 
 
