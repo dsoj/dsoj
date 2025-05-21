@@ -2,8 +2,8 @@ import { connectMongoClient } from '@/lib/db';
 import { NextRequest } from 'next/server';
 import Api from '@/lib/ApiUtils';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string[] } }) {
-    const id = params.id[0];
+export async function GET(req: NextRequest, { params }: { params: { id: string[]; }; }) {
+    const id = (await params)?.id[0];
     const searchParams = req.nextUrl.searchParams;
     const isSimple = searchParams.get('simple') === '1' ? true : false;
 
