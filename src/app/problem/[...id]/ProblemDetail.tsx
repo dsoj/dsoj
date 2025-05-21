@@ -4,8 +4,7 @@ import { DifficultyElement, TagElement } from "@/component/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Editor as CodeEditor } from "@monaco-editor/react";
+import CodeEditor from '@monaco-editor/react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
@@ -52,7 +51,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                     setSubmissionResult(data.data);
                 }
             });
-    }, [problem_id, isLoggedIn]);
+    }, [problem_id, isLoggedIn, username]);
 
 
 
@@ -142,14 +141,14 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 {samples.map((sample, index) => {
                     return (
                         <div className="row" style={{ margin: '0px' }} key={index}>
-                            <div className="col-md-6" onClick={() => doCopy(sample.input)} role="button" style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
+                            <div className="col-md-6" onClick={() => doCopy(sample.input)} style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
                                 <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                                     <h4>Sample Input {index}</h4>
                                     <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
                                 </div>
                             </div>
 
-                            <div className="col-md-6" onClick={() => doCopy(sample.output)} role="button" style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
+                            <div className="col-md-6" onClick={() => doCopy(sample.output)} style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
                                 <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                                     <h4>Sample Output {index}</h4>
                                     <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>

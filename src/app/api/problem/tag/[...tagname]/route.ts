@@ -2,7 +2,7 @@ import { connectMongoClient } from '@/lib/db';
 import { NextRequest } from 'next/server';
 import Api from '@/lib/ApiUtils';
 
-export async function GET(req: NextRequest, { params }: { params: { tagname: string[]; }; }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ tagname: string[]; }> }) {
     const tag = (await params)?.tagname[0];
 
     if (!tag) {
