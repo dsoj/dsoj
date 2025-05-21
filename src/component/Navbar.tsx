@@ -13,7 +13,7 @@ import { getCookie } from 'cookies-next';
 export default function NavComponent() {
     const pathname = usePathname() ?? '';
 
-    const { isLoggedIn, setIsLoggedIn } = useSession();
+    const { isLoggedIn, setIsLoggedIn, setUsername } = useSession();
 
     useEffect(() => {
         // import bootstrap
@@ -28,8 +28,12 @@ export default function NavComponent() {
         })
             .then((res) => res.json())
             .then(json => {
-                if (json.session) {
+                if (json.success) {
                     setIsLoggedIn(true);
+                    const username = getCookie('username') ?? '';
+                    if (username) {
+                        setUsername(username.toString());
+                    }
                 } else {
                     setIsLoggedIn(false);
                 }

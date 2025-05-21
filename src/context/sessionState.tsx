@@ -4,8 +4,8 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 type TsessionState = {
   isLoggedIn: boolean | undefined;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-  username?: string;
-  setUsername?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  username: string | undefined;
+  setUsername: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 const SessionContext = createContext<TsessionState | null>(null);
