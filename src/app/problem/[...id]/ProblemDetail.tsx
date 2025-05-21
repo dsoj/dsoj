@@ -4,8 +4,7 @@ import { DifficultyElement, TagElement } from "@/component/ListElement";
 import { IProblem } from "@/interface/IProblem";
 import AlertMessage from "@/component/Alert";
 import { useEffect, useState } from "react";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Editor as CodeEditor } from "@monaco-editor/react";
+import CodeEditor from '@monaco-editor/react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
@@ -52,7 +51,7 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                     setSubmissionResult(data.data);
                 }
             });
-    }, [problem_id, isLoggedIn]);
+    }, [problem_id, isLoggedIn, username]);
 
 
 
