@@ -1,4 +1,4 @@
-import { ApiResponse, ApiServerError } from '@/lib/ApiUtils';
+import Api from '@/lib/ApiUtils';
 import { connectMongoClient } from '@/lib/db';
 import { NextRequest } from 'next/server';
 
@@ -11,18 +11,17 @@ export async function GET(req: NextRequest) {
         const client = await connectMongoClient();
 
         if (!problem_id || !username) {
-            return ApiResponse('Missing problem_id or username', false);
+            return Api.Response(false, 'Missing problem_id or username');
         }
-        
+
         const result = await client.db('Judge').collection('Submissions').find({
             problem_id: problem_id,
             username: username,
         }).toArray();
 
 
-        return ApiResponse('', true, result);
+        return Api.Response(true, '', result);
     } catch (error) {
-        console.error('Error fetching submission:', error);
-        return ApiServerError();
+        return Api.ServerError(error);
     }
 }
