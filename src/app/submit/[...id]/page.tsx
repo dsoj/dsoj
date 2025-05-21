@@ -1,5 +1,5 @@
 import envVars from '@/constant/EnvVars';
-import ProblemDetail from './ProblemDetail';
+import Submit from './Submit';
 import { IProblem } from '@/interface/IProblem';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string[]; }>; }) {
@@ -9,14 +9,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
     const problemDetail: IProblem = res.problemDetail;
     return {
-        title: `${id}. ${problemDetail.title}`,
+        title: `Submit - ${id}. ${problemDetail.title}`,
         description: problemDetail.details,
     };
 }
 
-export default async function ProblemDetailPage({ params }: { params: Promise<{ id: string[]; }>; }) {
+export default async function SubmitPage({ params }: { params: Promise<{ id: string[]; }>; }) {
     const id = (await params).id[0];
     return (
-        <ProblemDetail problem_id={id ?? ''} />
+        <Submit problem_id={id} />
     );
 }

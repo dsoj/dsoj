@@ -4,16 +4,10 @@ import { Button } from "react-bootstrap";
 import { usePathname } from "next/navigation";
 import logo from '@/asset/logo_s.png';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSession } from '@/context/sessionState';
-
-const LoginRequired = [
-    "/problem",
-];
-
-const LogoutRequired = [
-    "/login",
-];
+import { LoginRequiredPages, LogoutRequiredPages } from '@/constant/Session';
+import { getCookie } from 'cookies-next';
 
 
 export default function NavComponent() {
@@ -21,8 +15,10 @@ export default function NavComponent() {
 
     const { isLoggedIn, setIsLoggedIn } = useSession();
 
-
     useEffect(() => {
+        // import bootstrap
+        import('bootstrap');
+
         // check if user is already logged in
         fetch('/api/auth/session', {
             method: 'GET',
@@ -37,12 +33,11 @@ export default function NavComponent() {
                 } else {
                     setIsLoggedIn(false);
                 }
-
             })
             .catch((err) => {
                 console.error(err);
             });
-    }, []);
+    }, [setIsLoggedIn]);
 
     useEffect(() => {
         // check page privileges
@@ -50,28 +45,33 @@ export default function NavComponent() {
             return;
         } else if (isLoggedIn == true) {
             // check LogoutRequired with logged in session
-            for (const path of LogoutRequired) {
-                if (pathname == path) {
+            for (const path of LogoutRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
                     window.location.href = '/';
                     return;
                 }
             }
         } else if (isLoggedIn == false) {
             // check LoginRequired with logged out session
-            for (const path of LoginRequired) {
-                if (pathname == path) {
-                    window.location.href = '/login';
+            for (const path of LoginRequiredPages) {
+                if (pathname == path || pathname.startsWith(path)) {
+                    const callbackUrl = encodeURIComponent('/');
+                    window.location.href = `/login?callbackUrl=${callbackUrl}`;
                     return;
                 }
             }
         }
-    }, [isLoggedIn, pathname]);
+    }, [isLoggedIn, pathname, setIsLoggedIn]);
 
     function AccountPart({ isLoggedIn }: { isLoggedIn: boolean | undefined; }) {
         if (isLoggedIn == true) {
             return <Button variant="primary" href="/api/auth/logout">Log out</Button>;
         } else if (isLoggedIn == false) {
-            return <Button variant="primary" href="/login">Log in</Button>;
+            if (pathname == '/login') {
+                return <Button variant="primary" href={`/login`}>Log in</Button>;
+            } else {
+                return <Button variant="primary" href={`/login?callbackUrl=${window.location.href}`}>Log in</Button>;
+            }
         } else if (isLoggedIn == undefined) {
             return (
                 <Button variant="primary" disabled>
@@ -107,7 +107,6 @@ export default function NavComponent() {
                     </Nav>
                     <AccountPart isLoggedIn={isLoggedIn} />
                 </Navbar.Collapse>
-
             </Container>
         </Navbar>
     );

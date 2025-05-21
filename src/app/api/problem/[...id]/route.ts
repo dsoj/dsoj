@@ -4,6 +4,8 @@ import Api from '@/lib/ApiUtils';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string[]; }; }) {
     const id = (await params)?.id[0];
+    const searchParams = req.nextUrl.searchParams;
+    const isSimple = searchParams.get('simple') === '1' ? true : false;
 
     if (!id) {
         return Api.Response(false, 'Invalid problem id');
@@ -11,27 +13,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
 
     const client = await connectMongoClient();
     try {
-        const problemDetail = await client
-            .db("Judge")
-            .collection("Problems")
-            .findOne({ id: id }, { projection: { _id: 0 } });
-        // TODO: fix result fetching
-        // const ac_result = (await connectMongoClient())
-        //     .db("Judge")
-        //     .collection("Submissions")
-        //     .find({ problem_id: id, username: req.cookies.username, status: { $not: { $eq: "Failed" } } }, { projection: { _id: 0 } })
-        //     .toArray()
+        if (isSimple) {
+            const problemDetail = await client
+                .db("Judge")
+                .collection("Problems")
+                .findOne({ id: id }, { projection: { _id: 0, title: 1, details: 1 } });
 
-        // const wa_result = (await mongo
-        //     .db("Judge")
-        //     .collection("Submissions")
-        //     .find({ problem_id: id, username: context.req.cookies.username, status: "Failed" }, { projection: { _id: 0 } })
-        //     .toArray()
-        // );
-
-        if (!problemDetail) {
-            return Api.NotFound('Problem not found');
-        }
+            if (!problemDetail) {
+                return Api.NotFound('Problem not found');
+            }
 
         return Api.Response(true, "Problem fetched", {
             problemDetail,

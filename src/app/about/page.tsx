@@ -1,8 +1,12 @@
-import about_info from "@/constant/about_information";
+import about_info from "@/constant/About";
 import Link from "next/link";
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Github } from 'react-bootstrap-icons';
 
+export const metadata = {
+    title: 'About DSOJ',
+    description: 'DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.',
+};
 
 export default function About() {
     const { github_data } = about_info;
