@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import Api from '@/lib/ApiUtils';
+import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
     const session = req.cookies.get("session");
     if (!session) {
-        return NextResponse.json({ session: false });
+        return Api.Response(false);
     }
-    return NextResponse.json({ session: true });
+    return Api.Response(true);
 }

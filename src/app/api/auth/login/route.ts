@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import EnvVars from "@/constant/EnvVars";
 import { connectMongoClient } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import Api from '@/lib/ApiUtils';
 
 export async function POST(req: Request) {
     try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
         // validate credentials
         if (!username || !password) {
-            return NextResponse.json({ message: "Invalid request", success: false });
+            return Api.Response(false, "Invalid request");
         }
 
         // db fetching
@@ -26,14 +26,13 @@ export async function POST(req: Request) {
             const session = jwt.sign({ user_id: user.id }, EnvVars.session.secret, {
                 expiresIn: EnvVars.session.maxAge,
             });
-            const res = NextResponse.json({ success: true });;
+            const res = Api.Response(true);
             res.cookies.set("session", session);
             res.cookies.set("username", username);
             return res;
         }
-        return NextResponse.json({ message: "Wrong username or password", success: false });
+        return Api.Response(false, "Wrong username or password");
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ message: "Server Error", success: false });
+        return Api.ServerError(err);
     }
 }

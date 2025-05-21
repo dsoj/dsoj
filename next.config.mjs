@@ -5,6 +5,9 @@ const nextConfig = {
     config.resolve.alias["@"] = "./src";
     return config;
   },
+  logging: {
+
+  }
 };
 
 export default nextConfig;

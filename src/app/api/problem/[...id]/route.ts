@@ -1,11 +1,12 @@
 import { connectMongoClient } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import Api from '@/lib/ApiUtils';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string[]; }; }) {
     const id = (await params)?.id[0];
 
     if (!id) {
-        return NextResponse.json({ error: 'Invalid problem id' }, { status: 400 });
+        return Api.Response(false, 'Invalid problem id');
     }
 
     const client = await connectMongoClient();
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
         const problemDetail = await client
             .db("Judge")
             .collection("Problems")
-            .findOne({ id: id }, { projection: { _id: 0 } })
+            .findOne({ id: id }, { projection: { _id: 0 } });
         // TODO: fix result fetching
         // const ac_result = (await connectMongoClient())
         //     .db("Judge")
@@ -29,10 +30,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
         // );
 
         if (!problemDetail) {
-            return NextResponse.json({ error: 'Problem not found' }, { status: 404 });
+            return Api.NotFound('Problem not found');
         }
 
-        return NextResponse.json({
+        return Api.Response(true, "Problem fetched", {
             problemDetail,
             result: {
                 // ac: ac_result,
@@ -40,8 +41,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string[]
             }
         });
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        return Api.ServerError(err);
     }
 
 

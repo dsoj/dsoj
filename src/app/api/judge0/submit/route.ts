@@ -1,5 +1,5 @@
 import EnvVars from "@/constant/EnvVars";
-import { ApiResponse } from '@/lib/ApiUtils';
+import Api from '@/lib/ApiUtils';
 import { connectMongoClient } from '@/lib/db';
 import { Base64 } from 'js-base64';
 import { NextRequest } from 'next/server';
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
             .findOne({ id: problem_id }, { projection: { _id: 0, id: 1, title: 1 } });
 
         if (!problemDetail) {
-            return ApiResponse('Problem not found', false);
+            return Api.Response(false, "Problem not found");
         }
 
         // Get tasks of the problem
@@ -70,9 +70,8 @@ export async function POST(req: NextRequest) {
             client.close();
         });
 
-        return ApiResponse('Submit successful', true);
+        return Api.Response(true, "Submit successful");
     } catch (err) {
-        console.error(err);
-        return ApiResponse('Internal Server Error', false);
+        return Api.ServerError(err);
     }
 }

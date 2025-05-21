@@ -4,6 +4,10 @@ import { MongoClient } from "mongodb";
 
 let cacheClient: MongoClient | null = null;
 
+export function dbError(err: any) {
+  console.log(`[ERR] ${new Date().toISOString()} | ${err}`);
+}
+
 export async function connectMongoClient() {
   const uri = EnvVars.DB.URI;
   if (cacheClient) {
