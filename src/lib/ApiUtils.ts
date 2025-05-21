@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import Logger from './Logger';
 
 function Response(success: boolean, message?: string, data?: any) {
     let j;
@@ -28,7 +29,7 @@ function Response(success: boolean, message?: string, data?: any) {
 }
 
 function ServerError(err: any) {
-    console.log(`[ERR] ${new Date().toISOString()} | ${err}`);
+    Logger(err, 'ERR', 'SERVER');
     return Response(false, 'ServerError');
 }
 
