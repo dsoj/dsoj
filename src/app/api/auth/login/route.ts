@@ -33,7 +33,7 @@ export async function POST(req: Request) {
                 .sign(new TextEncoder().encode(secret));
             Logger(`User ${username} logged in`, "INFO", "AUTH");
             const res = Api.Response(true);
-            res.cookies.set("session_token", token);
+            res.cookies.set("session_token", token, { maxAge: 3600 });
             res.cookies.set("username", username);
             return res;
         }

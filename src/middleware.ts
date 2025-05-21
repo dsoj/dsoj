@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Logger from './lib/Logger';
 
 export function middleware(req: NextRequest) {
-    const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+    const ip = req.headers.get('x-forwarded-for') ?? req.ip ?? 'unknown';
     const ua = req.headers.get('user-agent') ?? 'unknown';
     const path = req.nextUrl.pathname;
 
