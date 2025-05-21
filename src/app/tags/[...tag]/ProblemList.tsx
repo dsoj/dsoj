@@ -16,12 +16,13 @@ export default function ProblemList({ tag }: { tag: string; }) {
     useEffect(() => {
         fetch(`/api/problem/tag/${tag}`)
             .then((res) => res.json())
-            .then((data) => {
-                if (!data.problemList) {
+            .then((res) => {
+                const data = res.data;
+                if (!data) {
                     setIsNotFound(true);
                     return;
                 }
-                setProblems(data.problemList);
+                setProblems(data);
                 setIsNotFound(false);
             });
     }, [tag]);

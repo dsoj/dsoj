@@ -46,7 +46,6 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
         fetch(`/api/submission?problem_id=${problem_id}&username=${username}`)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data.data);
                 if (data.success) {
                     setSubmissionResult(data.data);
                 }
