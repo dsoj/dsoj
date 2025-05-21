@@ -4,22 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Carousel, Spinner } from "react-bootstrap";
-import { getCookie } from 'cookies-next';
 import { useSession } from '@/context/sessionState';
 
 export default function HomePage() {
     const banner_images = ['1']; // TODO: get path from db
-    const [username, setUsername] = useState<string | undefined>(undefined);
     // TODO: change any to the correct type
     const [favourites, setFavourites] = useState<any[]>([]);
     const [recent, setRecent] = useState<any[]>([]);
     const [my_submissions, setMySubmissions] = useState<any[]>([]);
     const [top_hits, setTopHits] = useState<any[]>([]);
 
-    const { isLoggedIn } = useSession();
+    const { isLoggedIn, username } = useSession();
 
     useEffect(() => {
-        setUsername(getCookie('username'));
         fetch('/api/info')
             .then((res) => res.json())
             .then((result) => {
@@ -64,7 +61,7 @@ export default function HomePage() {
                 {
                     (isLoggedIn) ?
                         <span style={{ color: "var(--bs-gray-600)" }}>
-                            Welcome back,&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span>, to
+                            Welcome&nbsp;<span style={{ fontWeight: "bold" }}>{username ?? ''}</span> back to
                         </span>
                         :
                         <span style={{ color: "var(--bs-gray-600)" }}>

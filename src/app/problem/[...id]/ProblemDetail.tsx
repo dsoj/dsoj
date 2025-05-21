@@ -10,7 +10,6 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
 import { Language } from '@/constant/Judge';
-import { getCookie } from 'cookies-next';
 import { useSession } from '@/context/sessionState';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
@@ -23,13 +22,14 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
 
-    const { isLoggedIn, setIsLoggedIn } = useSession();
+    const { isLoggedIn, username } = useSession();
 
     // Fetch Detail data
     useEffect(() => {
         fetch(`/api/problem/${problem_id}`)
             .then((res) => res.json())
-            .then((data) => {
+            .then((res) => {
+                const data = res.data;
                 if (!data.problemDetail) {
                     setIsNotFound(true);
                     return;
@@ -44,7 +44,6 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
         if (!isLoggedIn) {
             return;
         }
-        const username = getCookie('username');
         fetch(`/api/submission?problem_id=${problem_id}&username=${username}`)
             .then((res) => res.json())
             .then((data) => {
