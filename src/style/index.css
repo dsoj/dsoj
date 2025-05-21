@@ -1,7 +1,7 @@
-@import "./bootstrap/Bootstrap-DataTables.css";
-@import "./bootstrap/Dark-NavBar-Navigation-with-Button.css";
-@import "./bootstrap/Dark-NavBar-Navigation-with-Search.css";
-@import "./bootstrap/Dark-NavBar.css";
+@import "@/lib/bootstrap/Bootstrap-DataTables.css";
+@import "@/lib/bootstrap/Dark-NavBar-Navigation-with-Button.css";
+@import "@/lib/bootstrap/Dark-NavBar-Navigation-with-Search.css";
+@import "@/lib/bootstrap/Dark-NavBar.css";
 
 table {
     border-collapse: collapse;

@@ -29,7 +29,7 @@ function Response(success: boolean, message?: string, data?: any) {
 }
 
 function ServerError(err: any) {
-    Logger(String(err), 'ERR', 'API');
+    Logger(err, 'ERR', 'SERVER');
     return Response(false, 'ServerError');
 }
 

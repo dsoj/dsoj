@@ -1,11 +1,9 @@
 import { ILoginForm } from "@/interface/IUser";
 import bcrypt from "bcryptjs";
-import { SignJWT } from 'jose';
+import jwt from "jsonwebtoken";
 import EnvVars from "@/constant/EnvVars";
 import { connectMongoClient } from '@/lib/db';
 import Api from '@/lib/ApiUtils';
-import envVars from '@/constant/EnvVars';
-import Logger from '@/lib/Logger';
 
 export async function POST(req: Request) {
     try {
@@ -24,16 +22,12 @@ export async function POST(req: Request) {
         const user = await client.db('Main').collection('Accounts')
             .findOne({ name: username }, { projection: { _id: 0 } });
 
-        const secret = envVars.session.secret ?? '';
-
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
-            const token = await new SignJWT({ userId: user.id })
-                .setProtectedHeader({ alg: 'HS256' })
-                .setExpirationTime('1h')
-                .sign(new TextEncoder().encode(secret));
-            Logger(`User ${username} logged in`, "INFO", "AUTH");
+            const session = jwt.sign({ user_id: user.id }, EnvVars.session.secret, {
+                expiresIn: EnvVars.session.maxAge,
+            });
             const res = Api.Response(true);
-            res.cookies.set("session_token", token, { maxAge: 3600 });
+            res.cookies.set("session", session);
             res.cookies.set("username", username);
             return res;
         }
