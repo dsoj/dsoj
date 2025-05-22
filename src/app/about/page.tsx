@@ -21,7 +21,7 @@ export default function About() {
                 </Col>
             </Row>
             <Row className="mt-4">
-                {/* {generateAboutCard()} */}
+                <p>DSOJ is an Online Judge platform developed by DSCS-Club, designed to meet the needs of coding enthusiasts. It supports technical growth, learning, culture, and beliefs, providing a space where coders can improve both their skills and sense of identity.</p>
             </Row>
             <Row className="mt-4">
                 <Col>
@@ -36,9 +36,7 @@ export default function About() {
                     </Button>
                 </Col>
                 <Col>
-                    <Link className="link-secondary" href={github_data.project_link}>
-                        Wanna Contribute? View more on GitHub Project!
-                    </Link>
+                    © 2025 DSOJ. All rights reserved.
                 </Col>
             </Row>
         </Container>
