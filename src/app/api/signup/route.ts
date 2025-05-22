@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             });
 
         const existedUsername = await client.db('Main').collection('Accounts')
-            .findOne({ name: username })
+            .findOne({ username: username })
             .then((user) => {
                 if (user) {
                     return Api.Response(false, 'Username already exists');
