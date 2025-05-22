@@ -7,13 +7,13 @@ import { UserRole, UserStatus } from '@/constant/User';
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { name, email, password, nickname } = body;
+    const { username, email, password, nickname } = body;
 
     try {
         const client = await connectMongoClient();
 
         // Check if the request body is valid
-        if (!name || !email || !password) {
+        if (!username || !email || !password) {
             return Api.Response(false, 'Invalid request body');
         }
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             });
 
         const existedUsername = await client.db('Main').collection('Accounts')
-            .findOne({ name: name })
+            .findOne({ name: username })
             .then((user) => {
                 if (user) {
                     return Api.Response(false, 'Username already exists');
@@ -41,11 +41,10 @@ export async function POST(req: NextRequest) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save to db
-
         await client.db('Main').collection('Accounts')
             .insertOne({
-                id: genUniqueId(client.db('Main').collection('Accounts')),
-                name: name,
+                id: await genUniqueId(client.db('Main').collection('Accounts')),
+                username: username,
                 email: email,
                 passwordHash: hashedPassword,
                 nickname: nickname,

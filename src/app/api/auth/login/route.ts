@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         // db fetching
         const client = await connectMongoClient();
         const user = await client.db('Main').collection('Accounts')
-            .findOne({ name: username }, { projection: { _id: 0 } });
+            .findOne({ username: username }, { projection: { _id: 0 } });
 
         const secret = EnvVars.session.secret ?? '';
 
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
                 .setExpirationTime('1h')
                 .sign(new TextEncoder().encode(secret));
             await client.db('Main').collection('Accounts')
-                .updateOne({ name: username }, { $set: { lastLogin: new Date() } });
+                .updateOne({ username: username }, { $set: { lastLogin: new Date() } });
             Logger(`User ${username} logged in`, "INFO", "AUTH");
             const res = Api.Response(true);
             res.cookies.set("session_token", token);
