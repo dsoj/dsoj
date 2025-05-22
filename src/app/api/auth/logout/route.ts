@@ -1,4 +1,4 @@
-import envVars from '@/constant/EnvVars';
+import EnvVars from '@/constant/EnvVars';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
         (callbackUrl) ?
             `/login?callbackUrl=${callbackUrl}` :
             `/login`,
-        envVars.host_url));
+        EnvVars.host_url));
     res.cookies.delete("session");
     res.cookies.delete("username");
     return res;

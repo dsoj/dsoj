@@ -1,11 +1,10 @@
 import { ILoginForm } from "@/interface/IUser";
 import bcrypt from "bcryptjs";
 import { SignJWT } from 'jose';
-import EnvVars from "@/constant/EnvVars";
 import { connectMongoClient } from '@/lib/db';
 import Api from '@/lib/ApiUtils';
-import envVars from '@/constant/EnvVars';
 import Logger from '@/lib/Logger';
+import EnvVars from '@/constant/EnvVars';
 
 export async function POST(req: Request) {
     try {
@@ -24,13 +23,15 @@ export async function POST(req: Request) {
         const user = await client.db('Main').collection('Accounts')
             .findOne({ name: username }, { projection: { _id: 0 } });
 
-        const secret = envVars.session.secret ?? '';
+        const secret = EnvVars.session.secret ?? '';
 
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
-            const token = await new SignJWT({ userId: user.id })
+            const token = await new SignJWT({ userId: user.id, username: user.name, role: user.role })
                 .setProtectedHeader({ alg: 'HS256' })
                 .setExpirationTime('1h')
                 .sign(new TextEncoder().encode(secret));
+            await client.db('Main').collection('Accounts')
+                .updateOne({ name: username }, { $set: { lastLogin: new Date() } });
             Logger(`User ${username} logged in`, "INFO", "AUTH");
             const res = Api.Response(true);
             res.cookies.set("session_token", token);

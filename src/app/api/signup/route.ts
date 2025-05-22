@@ -3,6 +3,7 @@ import { genUniqueId } from '@/lib/RandomUtils';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import Api from '@/lib/ApiUtils';
+import { UserRole, UserStatus } from '@/constant/User';
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -49,6 +50,9 @@ export async function POST(req: NextRequest) {
                 passwordHash: hashedPassword,
                 nickname: nickname,
                 createdAt: new Date(),
+                role: UserRole.USER,
+                status: UserStatus.ACTIVE,
+                lastLogin: null,
             });
 
         return Api.Response(true, 'User created successfully');
