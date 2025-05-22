@@ -4,12 +4,15 @@ import { SignJWT } from 'jose';
 import { connectMongoClient } from '@/lib/db';
 import Api from '@/lib/ApiUtils';
 import Logger from '@/lib/Logger';
-import EnvVars from '@/constant/EnvVars';
 
-export async function POST(req: Request) {
+// JWT secret
+import EnvVars from '@/constant/EnvVars';
+import { NextRequest } from 'next/server';
+const secret = EnvVars.session.secret ?? '';
+
+export async function POST(req: NextRequest) {
     try {
         const body: ILoginForm = await req.json();
-
         const username = body.username;
         const password = body.password;
 
@@ -23,16 +26,22 @@ export async function POST(req: Request) {
         const user = await client.db('Main').collection('Accounts')
             .findOne({ username: username }, { projection: { _id: 0 } });
 
-        const secret = EnvVars.session.secret ?? '';
-
+        // compare password
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
+            // create JWT token
             const token = await new SignJWT({ userId: user.id, username: user.name, role: user.role })
                 .setProtectedHeader({ alg: 'HS256' })
                 .setExpirationTime('1h')
                 .sign(new TextEncoder().encode(secret));
+
+            // update last login time
             await client.db('Main').collection('Accounts')
                 .updateOne({ username: username }, { $set: { lastLogin: new Date() } });
+                
+            // log the login event
             Logger(`User ${username} logged in`, "INFO", "AUTH");
+
+            // set cookies
             const res = Api.Response(true);
             res.cookies.set("session_token", token);
             res.cookies.set("username", username);
