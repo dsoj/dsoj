@@ -8,6 +8,7 @@ import Logger from '@/lib/Logger';
 // JWT secret
 import EnvVars from '@/constant/EnvVars';
 import { NextRequest } from 'next/server';
+import { UserStatus } from '@/constant/User';
 const secret = EnvVars.session.secret ?? '';
 
 export async function POST(req: NextRequest) {
@@ -28,6 +29,11 @@ export async function POST(req: NextRequest) {
 
         // compare password
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
+            // check if user is banned
+            if (user.status === UserStatus.BANNED) {
+                return Api.Response(false, "User is banned");
+            } 
+
             // create JWT token
             const token = await new SignJWT({ userId: user.id, username: user.name, role: user.role })
                 .setProtectedHeader({ alg: 'HS256' })
