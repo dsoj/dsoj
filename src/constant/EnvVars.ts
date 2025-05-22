@@ -1,6 +1,6 @@
 import { getMongoURI } from '@/lib/db';
 
-const envVars = {
+const EnvVars = {
   NodeEnv: (process.env.NODE_ENV ?? ''),
   isDev: () => (process.env.NODE_ENV === 'development'),
   Port: (process.env.PORT ?? 0),
@@ -22,4 +22,4 @@ const envVars = {
   }
 } as const;
 
-export default envVars; 
+export default EnvVars; 
