@@ -37,31 +37,10 @@ This project is powered by the frameworks [Next.js](https://nextjs.org/) and [Re
 
  *Note: This project is currently in development.*
 
-# Installation
- **Node.js environment required**
+# Get Started
+Get started by [Installation](https://github.com/dsoj/dsoj/wiki/Installation).
 
- ### 1. Clone the repository
- Clone the git repository. You can obtain the source code by running:
- ```bash
- git clone https://github.com/dscs-club/dsoj.git
- cd dsoj
- ```
- ### 2. Install dependencies
- Install packages by running:
- ``` bash
- npm install
- ```
-
- ### 3. Set Up Environment Variables
- Edit the `.env` file according to the format in `.env.example` and fill in the required environment variables such like `judge0`, `session`, `mongodb` settings.
-
- ### 4. Run the development server
- After installing the dependencies and setting the environment variables, you can start the server by running:
- ```bash
- npm run dev
- ```
-
- # Screenshots
+# Screenshots
 
  ### Home Page
  <div align="center">
