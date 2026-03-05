@@ -33,9 +33,9 @@ export function difficulty_text(difficulty: number): string {
 
 export function DifficultyElement(props: { difficulty: number; }) {
     return (
-        <button className="btn btn-warning" type="button" disabled style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", borderStyle: "none", borderTopStyle: "none" }}>
+        <Button variant="warning" type="button" disabled style={{ height: "1.5rem", padding: 0, fontSize: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0.5rem", marginRight: "0.3rem", borderStyle: "none", borderTopStyle: "none" }}>
             {difficulty_text(props.difficulty)}
-        </button>
+        </Button>
     );
 }
 

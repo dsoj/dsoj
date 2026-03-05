@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import logo from '@/asset/logo_s.png';
 import { useCallback, useState } from 'react';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 export default function SignUp() {
     const [username, setUsername] = useState('');
@@ -41,96 +42,92 @@ export default function SignUp() {
 
     return (
         <div className="position-relative py-4 py-xl-5">
-            <div className="container">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-md-6 col-xl-4">
-                        <div className="card mb-5">
-                            <div className="card-body d-flex flex-column align-items-center">
+            <Container>
+                <Row className="d-flex justify-content-center">
+                    <Col md={6} xl={4}>
+                        <Card className="mb-5">
+                            <Card.Body className="d-flex flex-column align-items-center">
                                 <h2 style={{ marginBottom: "2rem" }}>
                                     <Image src={logo.src} width={40} height={40} alt="logo" />
                                     &nbsp; Sign up
                                 </h2>
-                                <form className="text-center" method="post" style={{ width: "20rem" }}>
-                                    <div className="mb-3">
+                                <Form className="text-center" method="post" style={{ width: "20rem" }}>
+                                    <Form.Group className="mb-3">
                                         <p style={{ color: "red" }}>{message}</p>
                                         <p style={{ textAlign: "left", marginBottom: "0.5rem" }}>
                                             Username
                                         </p>
-                                        <input
-                                            className="form-control"
+                                        <Form.Control
                                             type="text"
                                             placeholder="Username"
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             disabled={isFetching}
                                         />
-                                    </div>
-                                    <div className="mb-3">
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
                                         <p style={{ textAlign: "left", marginBottom: "0.5rem" }}>Email</p>
-                                        <input
-                                            className="form-control"
+                                        <Form.Control
                                             type="email"
                                             placeholder="Email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             disabled={isFetching}
                                         />
-                                    </div>
-                                    <div className="mb-3">
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
                                         <p style={{ textAlign: "left", marginBottom: "0.5rem" }}>
                                             Password
                                         </p>
-                                        <input
-                                            className="form-control"
+                                        <Form.Control
                                             type="password"
                                             placeholder="Password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             disabled={isFetching}
                                         />
-                                    </div>
-                                    <div className="mb-3">
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
                                         <p style={{ textAlign: "left", marginBottom: "0.5rem" }}>
                                             Password (again)
                                         </p>
-                                        <input
-                                            className="form-control"
+                                        <Form.Control
                                             type="password"
                                             placeholder="Password (again)"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             disabled={isFetching}
                                         />
-                                    </div>
-                                    <div className="mb-3">
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
                                         <p style={{ textAlign: "left", marginBottom: "0.5rem" }}>
                                             Nickname (hidden)
                                         </p>
-                                        <input
-                                            className="form-control"
+                                        <Form.Control
                                             type="text"
                                             placeholder="Name"
                                             value={nickname}
                                             onChange={(e) => setNickname(e.target.value)}
                                             disabled={isFetching}
                                         />
-                                    </div>
-                                    <div className="mb-3">
-                                        <button
-                                            className="btn btn-primary d-block w-100"
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Button
+                                            variant="primary"
+                                            className="d-block w-100"
                                             style={{ background: "#4CAF50", marginTop: "2rem" }}
                                             onClick={SignUp}
                                             disabled={isFetching}
                                         >
                                             Sign up
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                        </Button>
+                                    </Form.Group>
+                                </Form>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 };;

@@ -7,6 +7,7 @@ import { IProblem } from '@/interface/IProblem';
 import { Language, SubmitMethodID } from '@/constant/Judge';
 import { TextLeft, FileEarmarkCode } from 'react-bootstrap-icons';
 import Link from 'next/link';
+import { Dropdown, Button, Row, Col } from 'react-bootstrap';
 
 export default function Submit({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
@@ -93,47 +94,40 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
             {/* Heading END */}
 
             {/* Compiler selector START*/}
-            <div className="dropdown" style={{ marginBottom: "1rem" }}>
-                <button
-                    className="btn btn-primary dropdown-toggle"
-                    aria-expanded="false"
-                    data-bs-toggle="dropdown"
-                    type="button"
-                    id="dropdownMenuButton"
-                >
+            <Dropdown style={{ marginBottom: "1rem" }}>
+                <Dropdown.Toggle variant="primary" id="dropdownMenuButton">
                     {Language[language_id][0]}&nbsp;
-                </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
                     {
                         Object.entries(Language).map((item) => {
                             return (
-                                <a
+                                <Dropdown.Item
                                     key={Number(item[0])}
-                                    className="dropdown-item"
                                     href="#"
                                     onClick={() => {
                                         setCompilerID(Number(item[0]));
                                     }}
                                 >
                                     {item[1][0]}
-                                </a>
+                                </Dropdown.Item>
                             );
                         })
                     }
-                </div>
-            </div>
+                </Dropdown.Menu>
+            </Dropdown>
             {/* Compiler selector END */}
 
             {/* Method Select START */}
-            <div className="col-md-6">
-                <div className="row" style={{ margin: 0, marginBottom: "1rem" }}>
+            <Col md={6}>
+                <Row style={{ margin: 0, marginBottom: "1rem" }}>
                     {/* Text Editor */}
-                    <div
-                        className="col"
+                    <Col
                         style={{ paddingRight: "0.5rem", paddingLeft: 0 }}
                     >
-                        <div
-                            className="btn sample w-100"
+                        <Button
+                            variant="light"
+                            className="sample w-100"
                             style={{
                                 borderRadius: 29,
                                 padding: "1rem",
@@ -148,15 +142,15 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
                         >
                             <TextLeft fontSize={35} width={'1em'} height={'1em'} />
                             <span>Text editor</span>
-                        </div>
-                    </div>
+                        </Button>
+                    </Col>
                     {/* File Upload */}
-                    <div
-                        className="col"
+                    <Col
                         style={{ paddingRight: "0.5rem", paddingLeft: 0 }}
                     >
-                        <div
-                            className="btn sample w-100"
+                        <Button
+                            variant="light"
+                            className="sample w-100"
                             style={{
                                 borderRadius: 29,
                                 padding: "1rem",
@@ -171,10 +165,10 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
                         >
                             <FileEarmarkCode fontSize={35} width={'1em'} height={'1em'} />
                             <span>File Upload</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </Button>
+                    </Col>
+                </Row>
+            </Col>
             {/* Method Select END */}
 
             {/* Code Editor START */}
@@ -217,14 +211,14 @@ export default function Submit({ problem_id }: { problem_id: string; }) {
             {/* File Upload END */}
 
             {/* Submit Button START */}
-            <button
-                className="btn btn-primary"
+            <Button
+                variant="primary"
                 type="button"
                 style={{ background: "var(--bs-form-valid-color)", borderStyle: "none" }}
                 onClick={Submit}
             >
                 Submit
-            </button>
+            </Button>
             {/* Submit Button END */}
         </div>
     );
