@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import Link from 'next/link';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 
 export default function Login() {
@@ -58,27 +59,27 @@ export default function Login() {
 
     return (
         <div className="position-relative py-4 py-xl-5">
-            <div className="container">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-md-6 col-xl-4">
-                        <div className="card mb-5">
-                            <div className="card-body d-flex flex-column align-items-center">
+            <Container>
+                <Row className="d-flex justify-content-center">
+                    <Col md={6} xl={4}>
+                        <Card className="mb-5">
+                            <Card.Body className="d-flex flex-column align-items-center">
                                 <h2 style={{ marginBottom: '2rem' }}><Image src={logo.src} width={40} height={40} alt="logo" /> Log in</h2>
                                 <div className="text-center">
                                     <p style={{ color: "red" }}>{message}</p>
-                                    <div className="mb-3">
-                                        <input className="form-control" disabled={isFetching} type="text" name="username" placeholder="User Name" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={onKeyDown} />
-                                    </div>
+                                    <Form.Group className="mb-3">
+                                        <Form.Control disabled={isFetching} type="text" name="username" placeholder="User Name" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={onKeyDown} />
+                                    </Form.Group>
 
-                                    <div className="mb-3">
-                                        <input className="form-control" type="password" disabled={isFetching} name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={onKeyDown} />
-                                    </div>
+                                    <Form.Group className="mb-3">
+                                        <Form.Control type="password" disabled={isFetching} name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={onKeyDown} />
+                                    </Form.Group>
 
-                                    <div className="mb-3">
-                                        <button className="btn btn-primary d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
+                                    <Form.Group className="mb-3">
+                                        <Button variant="primary" className="d-block w-100" type="button" disabled={isFetching} style={{ marginTop: "2rem" }} onClick={Login}>
                                             <span>Login</span>
-                                        </button>
-                                    </div>
+                                        </Button>
+                                    </Form.Group>
 
                                     {/* <p className="text-muted">Forgot password?</p> */}
                                     <p style={{ borderTop: "1px solid var(--bs-body-color)", marginBottom: "0.5rem", paddingTop: "1rem" }}>Wanna start a new journey with <strong>DSOJ</strong>?</p>
@@ -87,11 +88,11 @@ export default function Login() {
                                     </Link>
                                     <br />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 }

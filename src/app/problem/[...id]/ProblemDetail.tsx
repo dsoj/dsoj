@@ -10,6 +10,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Link from 'next/link';
 import { Language } from '@/constant/Judge';
 import { useSession } from '@/context/sessionState';
+import { Button, Row, Col, Container, Card, Modal, Accordion, Badge } from 'react-bootstrap';
 
 export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [problemDetail, setProblemDetail] = useState<IProblem | null>(null);
@@ -20,6 +21,9 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
     const [alertStatus, setAlertStatus] = useState<boolean>(false);
     const [alert_text, setAlertText] = useState<string>('');
     const [alert_variant, setAlertVariant] = useState<string>('success');
+
+    // modal state: index of the open modal, or -1 if none
+    const [openModalIndex, setOpenModalIndex] = useState<number>(-1);
 
     const { isLoggedIn, username } = useSession();
 
@@ -95,13 +99,13 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 <div style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                     <h2>{id}. {title}&nbsp;
                         <Link href={`/submit/${problem_id}/`}>
-                            <button
-                                className="btn btn-primary"
+                            <Button
+                                variant="primary"
                                 type="button"
                                 style={{ background: "var(--bs-form-valid-color)", borderStyle: "none" }}
                             >
                                 Submit
-                            </button>
+                            </Button>
                         </Link></h2>
 
                     <div style={{ marginBottom: "1rem" }}>
@@ -139,21 +143,21 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                 {/* Examples */}
                 {samples.map((sample, index) => {
                     return (
-                        <div className="row" style={{ margin: '0px' }} key={index}>
-                            <div className="col-md-6" onClick={() => doCopy(sample.input)} style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
+                        <Row style={{ margin: '0px' }} key={index}>
+                            <Col md={6} onClick={() => doCopy(sample.input)} style={{ paddingRight: '0.5rem', paddingLeft: '0px' }}>
                                 <div className="sample" style={{ background: '#ffffff', borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem' }}>
                                     <h4>Sample Input {index}</h4>
                                     <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.input}</span>
                                 </div>
-                            </div>
+                            </Col>
 
-                            <div className="col-md-6" onClick={() => doCopy(sample.output)} style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
+                            <Col md={6} onClick={() => doCopy(sample.output)} style={{ paddingLeft: '0.5rem', paddingRight: '0px' }}>
                                 <div className="sample" style={{ borderRadius: '29px', padding: '1.5rem', boxShadow: '0px 0px 3px 0px', marginBottom: '1rem', background: '#ffffff' }}>
                                     <h4>Sample Output {index}</h4>
                                     <span style={{ color: 'rgb(51, 51, 51)', whiteSpace: 'pre-line' }}>{sample.output}</span>
                                 </div>
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                     );
                 })}
 
@@ -166,183 +170,154 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                                 const title = `${item.status} ${new Date(item.send_time).toLocaleDateString()}-${Language[item.language_id][0]}`;
                                 return (
                                     <Tab eventKey={index} title={title} key={index}>
-                                        <div className="container" style={{ textAlign: 'center' }}>
-                                            <div className="row mb-1">
-                                                <div className="col-md-6">
+                                        <Container style={{ textAlign: 'center' }}>
+                                            <Row className="mb-1">
+                                                <Col md={6}>
                                                     <span>Time: &nbsp; {new Date(item.send_time).toLocaleString()}</span>
-                                                </div>
-                                                <div className="col-md-6">
+                                                </Col>
+                                                <Col md={6}>
                                                     <span>Language: &nbsp; {Language[item.language_id][0]}</span>
-                                                </div>
-                                            </div>
+                                                </Col>
+                                            </Row>
 
-                                            <div className="row mb-1">
-                                                <div className="col-md-6">
+                                            <Row className="mb-1">
+                                                <Col md={6}>
                                                     <span>Status: &nbsp;
                                                         {(item.status === "Accepted") ?
-                                                            <span className="badge text-bg-success">{item.status}</span> :
-                                                            <span className="badge text-bg-danger">{item.status}</span>
+                                                            <Badge bg="success">{item.status}</Badge> :
+                                                            <Badge bg="danger">{item.status}</Badge>
                                                         }
                                                     </span>
-                                                </div>
+                                                </Col>
 
                                                 {/* Modal Trigger */}
-                                                <div className="col-md-6">
-                                                    <button
-                                                        className="btn btn-primary btn-sm"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target={`#subTaskModal-${index}`}
+                                                <Col md={6}>
+                                                    <Button
+                                                        variant="primary"
+                                                        size="sm"
+                                                        onClick={() => setOpenModalIndex(index)}
                                                     >
                                                         SubTasks
-                                                    </button>
-                                                </div>
-                                            </div>
+                                                    </Button>
+                                                </Col>
+                                            </Row>
 
                                             {/* Modal */}
-                                            <div
-                                                className="modal fade"
-                                                id={`subTaskModal-${index}`}
-                                                tabIndex={-1}
-                                                aria-labelledby={`subTaskModalLabel-${index}`}
-                                                aria-hidden="true"
+                                            <Modal
+                                                show={openModalIndex === index}
+                                                onHide={() => setOpenModalIndex(-1)}
                                             >
-                                                <div className="modal-dialog">
-                                                    <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h1 className="modal-title fs-5" id={`subTaskModalLabel-${index}`}>
-                                                                {title}
-                                                            </h1>
-                                                            <button
-                                                                type="button"
-                                                                className="btn-close"
-                                                                data-bs-dismiss="modal"
-                                                                aria-label="Close"
-                                                            />
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            {/* Modal Body */}
-                                                            <div className="container">
-                                                                <div className="pb-1 pt-0">Submission ID: {item.submission_id}</div>
-                                                                <div className="accordion py-2" id="accordionSubtask">
-                                                                    {item.submissions.map((subTask: any, subIndex: number) => {
-                                                                        return (
-                                                                            <div className="accordion-item" key={subIndex}>
-                                                                                <h2 className="accordion-header">
-                                                                                    <button
-                                                                                        className="accordion-button collapsed"
-                                                                                        type="button"
-                                                                                        data-bs-toggle="collapse"
-                                                                                        data-bs-target={`#collapse-${subIndex}`}
-                                                                                        aria-expanded="false"
-                                                                                        aria-controls={`collapse-${subIndex}`}
-                                                                                    >
-                                                                                        #{subIndex} {subTask.status}
-                                                                                    </button>
-                                                                                </h2>
-                                                                                <div
-                                                                                    id={`collapse-${subIndex}`}
-                                                                                    className="accordion-collapse collapse"
-                                                                                    data-bs-parent="#accordionSubtask"
-                                                                                >
-                                                                                    <div className="accordion-body">
-                                                                                        {/* Compile Output */}
-                                                                                        {subTask.compile_output &&
-                                                                                            <div className="card mb-3">
-                                                                                                <div className="card-header">Compile Output</div>
-                                                                                                <div className="card-body bg-light">
-                                                                                                    <pre className="mb-0">
-                                                                                                        <code>
-                                                                                                            {subTask.compile_output}
-                                                                                                        </code>
-                                                                                                    </pre>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        }
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title className="fs-5">
+                                                        {title}
+                                                    </Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    {/* Modal Body */}
+                                                    <Container>
+                                                        <div className="pb-1 pt-0">Submission ID: {item.submission_id}</div>
+                                                        <Accordion className="py-2">
+                                                            {item.submissions.map((subTask: any, subIndex: number) => {
+                                                                return (
+                                                                    <Accordion.Item eventKey={String(subIndex)} key={subIndex}>
+                                                                        <Accordion.Header>
+                                                                            #{subIndex} {subTask.status}
+                                                                        </Accordion.Header>
+                                                                        <Accordion.Body>
+                                                                            {/* Compile Output */}
+                                                                            {subTask.compile_output &&
+                                                                                <Card className="mb-3">
+                                                                                    <Card.Header>Compile Output</Card.Header>
+                                                                                    <Card.Body className="bg-light">
+                                                                                        <pre className="mb-0">
+                                                                                            <code>
+                                                                                                {subTask.compile_output}
+                                                                                            </code>
+                                                                                        </pre>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            }
 
-                                                                                        {/* stdout */}
-                                                                                        {subTask.stdout &&
-                                                                                            <div className="card mb-3">
-                                                                                                <div className="card-header">stdout</div>
-                                                                                                <div className="card-body bg-light">
-                                                                                                    <pre className="mb-0">
-                                                                                                        <code>
-                                                                                                            {subTask.stdout}
-                                                                                                        </code>
-                                                                                                    </pre>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        }
+                                                                            {/* stdout */}
+                                                                            {subTask.stdout &&
+                                                                                <Card className="mb-3">
+                                                                                    <Card.Header>stdout</Card.Header>
+                                                                                    <Card.Body className="bg-light">
+                                                                                        <pre className="mb-0">
+                                                                                            <code>
+                                                                                                {subTask.stdout}
+                                                                                            </code>
+                                                                                        </pre>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            }
 
-                                                                                        {/* stderr */}
-                                                                                        {subTask.stderr &&
-                                                                                            <div className="card mb-3">
-                                                                                                <div className="card-header">stderr</div>
-                                                                                                <div className="card-body bg-light">
-                                                                                                    <pre className="mb-0">
-                                                                                                        <code>
-                                                                                                            {subTask.stderr}
-                                                                                                        </code>
-                                                                                                    </pre>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        }
+                                                                            {/* stderr */}
+                                                                            {subTask.stderr &&
+                                                                                <Card className="mb-3">
+                                                                                    <Card.Header>stderr</Card.Header>
+                                                                                    <Card.Body className="bg-light">
+                                                                                        <pre className="mb-0">
+                                                                                            <code>
+                                                                                                {subTask.stderr}
+                                                                                            </code>
+                                                                                        </pre>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            }
 
-                                                                                        {/* Message */}
-                                                                                        {subTask.message &&
-                                                                                            <div className="card mb-3">
-                                                                                                <div className="card-header">Message</div>
-                                                                                                <div className="card-body bg-light">
-                                                                                                    <pre className="mb-0">
-                                                                                                        <code>
-                                                                                                            {subTask.message}
-                                                                                                        </code>
-                                                                                                    </pre>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        }
+                                                                            {/* Message */}
+                                                                            {subTask.message &&
+                                                                                <Card className="mb-3">
+                                                                                    <Card.Header>Message</Card.Header>
+                                                                                    <Card.Body className="bg-light">
+                                                                                        <pre className="mb-0">
+                                                                                            <code>
+                                                                                                {subTask.message}
+                                                                                            </code>
+                                                                                        </pre>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            }
 
-                                                                                        {/* Statistics */}
-                                                                                        <div className="row">
-                                                                                            {subTask.time &&
-                                                                                                <div className="col-md-6">
-                                                                                                    <p>Time: {subTask.time}</p>
-                                                                                                </div>
-                                                                                            }
-                                                                                            {subTask.memory &&
-                                                                                                <div className="col-md-6">
-                                                                                                    <p>Memory: {subTask.memory}</p>
-                                                                                                </div>
-                                                                                            }
-                                                                                        </div>
+                                                                            {/* Statistics */}
+                                                                            <Row>
+                                                                                {subTask.time &&
+                                                                                    <Col md={6}>
+                                                                                        <p>Time: {subTask.time}</p>
+                                                                                    </Col>
+                                                                                }
+                                                                                {subTask.memory &&
+                                                                                    <Col md={6}>
+                                                                                        <p>Memory: {subTask.memory}</p>
+                                                                                    </Col>
+                                                                                }
+                                                                            </Row>
 
-                                                                                        {/* Token */}
-                                                                                        <div className="row mb-0">
-                                                                                            <div className="col-md-12">
-                                                                                                <p>Token: {subTask.token}</p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="modal-footer">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-secondary"
-                                                                data-bs-dismiss="modal"
-                                                            >
-                                                                Close
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                                            {/* Token */}
+                                                                            <Row className="mb-0">
+                                                                                <Col md={12}>
+                                                                                    <p>Token: {subTask.token}</p>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Accordion.Body>
+                                                                    </Accordion.Item>
+                                                                );
+                                                            })}
+                                                        </Accordion>
+                                                    </Container>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button
+                                                        variant="secondary"
+                                                        onClick={() => setOpenModalIndex(-1)}
+                                                    >
+                                                        Close
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
 
-                                            <div className="row mb-1">
+                                            <Row className="mb-1">
                                                 <div style={{ marginBottom: "1rem" }}>
                                                     <CodeEditor
                                                         height="20rem"
@@ -356,8 +331,8 @@ export default function ProblemDetail({ problem_id }: { problem_id: string; }) {
                                                         }}
                                                     />
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </Row>
+                                        </Container>
                                     </Tab>
                                 );
                             })}

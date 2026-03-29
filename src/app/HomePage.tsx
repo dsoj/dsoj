@@ -3,7 +3,7 @@ import { DifficultyElement, SubmissionStatusElement, TagElement } from "@/compon
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Carousel, Spinner } from "react-bootstrap";
+import { Carousel, Spinner, Card, Table, Container, Row, Col, Button } from "react-bootstrap";
 import { useSession } from '@/context/sessionState';
 
 export default function HomePage() {
@@ -76,13 +76,11 @@ export default function HomePage() {
 
             {/* Card Start */}
             <div
-                className="card-group"
                 style={{ marginLeft: "2rem", marginRight: "2rem", marginBottom: "2rem" }}
                 hidden={true}
             >
                 {/* Favourites Section Start */}
-                <div
-                    className="card"
+                <Card
                     style={{
                         borderRadius: 10,
                         marginRight: "1rem",
@@ -90,8 +88,7 @@ export default function HomePage() {
                     }}
                 >
 
-                    <div
-                        className="card-body"
+                    <Card.Body
                         style={{ borderRightWidth: 1, borderRightColor: "var(--bs-gray-600)" }}
                     >
                         {/* TODO: change icon into bi or component */}
@@ -104,29 +101,28 @@ export default function HomePage() {
                         </span>
                         <div>
                             <div className="table-responsive">
-                                <table className="table">
+                                <Table>
                                     <tbody>
                                         {/* {favourites.map((item: any) => problemCardElement(item.id, item.title, item.status))} */}
                                         {/* TODO: temp fix status */}
                                         {favourites.map((item: any) => problemCardElement(item.id, item.title, 0))}
                                     </tbody>
-                                </table>
+                                </Table>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </Card.Body>
+                </Card>
                 {/* Favourites Section End */}
 
                 {/* Recent Section Start */}
-                <div
-                    className="card"
+                <Card
                     style={{
                         marginRight: "1rem",
                         boxShadow: "0px 0px 3px",
                         borderRadius: 10
                     }}
                 >
-                    <div className="card-body">
+                    <Card.Body>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="1em"
@@ -144,22 +140,21 @@ export default function HomePage() {
                             <strong>Recent Views</strong>
                         </span>
                         <div className="table-responsive">
-                            <table className="table">
+                            <Table>
                                 <tbody>
                                     {recent.map((item: any) => problemCardElement(item.id, item.title, item.status))}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
-                    </div>
-                </div>
+                    </Card.Body>
+                </Card>
                 {/* Recent Section End */}
 
                 {/* MySubmissions Section Start */}
-                <div
-                    className="card"
+                <Card
                     style={{ boxShadow: "0px 0px 3px", borderRadius: 10 }}
                 >
-                    <div className="card-body">
+                    <Card.Body>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="1em"
@@ -175,14 +170,14 @@ export default function HomePage() {
                             <strong>My Submissions</strong>
                         </span>
                         <div className="table-responsive">
-                            <table className="table">
+                            <Table>
                                 <tbody>
                                     {my_submissions.map((item: any) => problemCardElement(item.id, item.title, item.status))}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
-                    </div>
-                </div>
+                    </Card.Body>
+                </Card>
                 {/* MySubmissions Section End */}
             </div>
             {/* Card End */}
@@ -190,8 +185,8 @@ export default function HomePage() {
 
             {/* Top Hits Start */}
             <div style={{ paddingRight: "10rem", paddingLeft: "10rem" }}>
-                <div className="card" style={{ border: "none", backgroundColor: "transparent" }}>
-                    <div className="card-body">
+                <Card style={{ border: "none", backgroundColor: "transparent" }}>
+                    <Card.Body>
                         <span style={{ fontSize: "3rem" }}>
                             <strong>Top Hits</strong>
                         </span>
@@ -200,7 +195,7 @@ export default function HomePage() {
                                 (top_hits.length === 0) ?
                                     <Spinner animation="grow" />
                                     :
-                                    <table className="table table-striped no-wrap user-table mb-0">
+                                    <Table striped className="no-wrap user-table mb-0">
                                         <thead>
                                             <tr>
                                                 <th
@@ -284,39 +279,41 @@ export default function HomePage() {
                                                     );
                                                 })}
                                         </tbody>
-                                    </table>
+                                    </Table>
                             }
                         </div>
-                    </div>
-                </div>
+                    </Card.Body>
+                </Card>
             </div>
             {/* Top Hits End */}
 
             {/* Coder Start */}
             <section className="py-4 py-xl-5">
-                <div className="container h-100">
-                    <div className="row h-100">
-                        <div className="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
+                <Container className="h-100">
+                    <Row className="h-100">
+                        <Col md={10} xl={8} className="text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
                             <div>
                                 <h2 className="text-uppercase fw-bold mb-3" style={{ fontFamily: "Copperplate", fontSize: "2.5rem" }}>
                                     <span>&quot;Coders together strong.&quot;</span>
                                 </h2>
-                                <button
-                                    className="btn btn-primary fs-5 me-2 py-2 px-4"
+                                <Button
+                                    variant="primary"
+                                    className="fs-5 me-2 py-2 px-4"
                                     type="button"
                                 >
                                     About us
-                                </button>
-                                <button
-                                    className="btn btn-outline-primary fs-5 py-2 px-4"
+                                </Button>
+                                <Button
+                                    variant="outline-primary"
+                                    className="fs-5 py-2 px-4"
                                     type="button"
                                 >
                                     Github
-                                </button>
+                                </Button>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </Col>
+                    </Row>
+                </Container>
             </section>
             {/* Coder End */}
         </>
