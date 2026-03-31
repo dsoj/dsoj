@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
             });
 
         const existedUsername = await client.db('Main').collection('Accounts')
-            .findOne({ name: name })
+            .findOne({ $or: [{ name: name }, { username: name }] })
             .then((user) => {
                 if (user) {
                     return Api.Response(false, 'Username already exists');
